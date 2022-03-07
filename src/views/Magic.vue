@@ -39,7 +39,7 @@
                 <tr class="text-right">
                   <td class="p-2 border">確殺数</td>
                   <td class="p-2 border">{{ Math.ceil(enemy.hp / total_min_damage) }}</td>
-                  <td class="p-2 border">{{ Math.ceil(enemy.hp / total_max_damage_adj) }}</td>
+                  <td class="p-2 border">{{ Math.ceil(enemy.hp / total_min_damage_adj) }}</td>
                   <td class="p-2 border"></td>
                 </tr>
               </tbody>
