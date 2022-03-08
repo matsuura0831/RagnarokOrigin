@@ -278,7 +278,7 @@ export default {
       const { element_up, div_mdef } = this;
 
       const additional_damage = status.additional_damage
-        + this.getGearHandler('コアオーバクロック').run(isMaximum, isMaximum)
+        + this.getGearHandler('コアオーバクロック').run(isMinimum, isMaximum)
         ;
 
       const damage = Math.floor(
