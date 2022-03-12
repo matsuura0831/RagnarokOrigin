@@ -143,7 +143,7 @@
           <WeaponInput v-model="weapon" />
 
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用ギア</h1>
-              
+
           <div class="flex items-center mb-1" v-for="(v, k, i) in gear_data" :key="k">
             <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
 
@@ -393,7 +393,23 @@ export default {
         const persistent_data = this.parsePersistentString(persistent_str);
 
         Object.keys(persistent_data).forEach(k => {
-          Object.assign(this[k], persistent_data[k]); 
+          let v = persistent_data[k];
+
+          Object.assign(this[k], v);
+
+          if(k === "enemy") {
+            this.target_enemy = v.name;
+          }
+          if(k === "skill") {
+            this.target_skill = v.name;
+            this.target_skill_level = v.level;
+          }
+          if(k === "gear") {
+            v.forEach(g => this.target_gear_level[g.name] = g.level);
+          }
+          if(k === "sub_skill") {
+            v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
+          }
         })
       } catch(e) {
         this.$toast.show(e, { type: 'error', position: 'top-right', duration: 4000})
