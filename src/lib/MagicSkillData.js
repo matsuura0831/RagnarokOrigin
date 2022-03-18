@@ -72,11 +72,11 @@ const DATA = [
         element: "念",
         ignore_mdef: 100,
         records: [
-            { level: 5, mul: 400, add: 30, vcast: 5.0, fcast: 5.33, delay: 5.0, hit: 20, time: 10.0 },
-            { level: 4, mul: 330, add: 25, vcast: 5.0, fcast: 5.33, delay: 5.0, hit: 20, time: 10.0 },
-            { level: 3, mul: 260, add: 20, vcast: 5.0, fcast: 5.33, delay: 5.0, hit: 20, time: 10.0 },
-            { level: 2, mul: 190, add: 15, vcast: 5.0, fcast: 5.33, delay: 5.0, hit: 20, time: 10.0 },
-            { level: 1, mul: 120, add: 10, vcast: 5.0, fcast: 5.33, delay: 5.0, hit: 20, time: 10.0 },
+            { level: 5, mul: 400, add: 30, vcast: 5.33, fcast: 1.0, delay: 5.0, hit: 20, time: 10.0 },
+            { level: 4, mul: 330, add: 25, vcast: 5.33, fcast: 1.0, delay: 5.0, hit: 20, time: 10.0 },
+            { level: 3, mul: 260, add: 20, vcast: 5.33, fcast: 1.0, delay: 5.0, hit: 20, time: 10.0 },
+            { level: 2, mul: 190, add: 15, vcast: 5.33, fcast: 1.0, delay: 5.0, hit: 20, time: 10.0 },
+            { level: 1, mul: 120, add: 10, vcast: 5.33, fcast: 1.0, delay: 5.0, hit: 20, time: 10.0 },
         ]
     },
     {
