@@ -42,6 +42,29 @@
                   <td class="p-2 border">{{ Math.ceil(enemy.hp / total_min_damage_adj) }}</td>
                   <td class="p-2 border"></td>
                 </tr>
+
+                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                  <td class="p-2 border text-left">DPS</td>
+                  <td class="p-2 border">{{ total_dps.toLocaleString() }}</td>
+                  <td class="p-2 border">{{ total_dps_adj.toLocaleString() }}</td>
+                  <td class="p-2 border">
+                    {{ Math.floor((total_dps_adj - total_dps) / total_dps * 100 * 10) / 10 }}
+                  </td>
+                </tr>
+                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                  <td class="p-2 border">CT</td>
+                  <td class="p-2 border">{{ Math.round(total_cast_time * 100) / 100 }}</td>
+                  <td class="p-2 border">{{ Math.round(total_cast_time_adj * 100) / 100 }}</td>
+                  <td class="p-2 border"></td>
+                </tr>
+                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                  <td class="p-2 border">CD</td>
+                  <td class="p-2 border">{{ Math.round(total_cast_delay * 100) / 100 }}</td>
+                  <td class="p-2 border">{{ Math.round(total_cast_delay_adj * 100) / 100 }}</td>
+                  <td class="p-2 border"></td>
+                </tr>
+
+
               </tbody>
             </table>
 
@@ -307,6 +330,25 @@ export default {
       if(isMaximum) return Math.floor(damage * 1.03);
       return damage;
     },
+    
+    getVcast(status) {
+      const { skill } = this;
+      const { status_int: int, status_dex: dex, equip_variable_cast: equip } = status;
+
+      return skill.vcast * (1 - Math.sqrt((int/2 + dex) / 265)) * (1 - equip / 100);
+    },
+    getFcast(status) {
+      const { skill } = this;
+      const { equip_fix_cast: equip } = status;
+
+      return skill.fcast * (1 - equip / 100);
+    },
+    getDelay(status) {
+      const { skill } = this;
+      const { equip_delay: equip } = status;
+
+      return skill.delay * (1 - equip / 100);
+    },
 
     getPersistentString(data) {
       const persistent_data = {}
@@ -383,6 +425,46 @@ export default {
     total_max_damage_adj() {
       return this.getDamage(this.status_adjustment, false, true);
     },
+
+    total_cast_time() {
+      return this.getFcast(this.status) + this.getVcast(this.status);
+    },
+    total_cast_time_adj() {
+      return this.getFcast(this.status_adjustment) + this.getVcast(this.status_adjustment);
+    },
+    total_cast_delay() {
+      return this.getDelay(this.status);
+    },
+    total_cast_delay_adj() {
+      return this.getDelay(this.status_adjustment);
+    },
+
+    total_cast_per_second() {
+      const { skill, total_cast_time: ct, total_cast_delay: cd } = this;
+      return skill.time / (ct + cd);
+    },
+    total_cast_per_second_adj() {
+      const { skill, total_cast_time_adj: ct, total_cast_delay_adj: cd } = this;
+      return skill.time / (ct + cd);
+    },
+
+    total_hit_per_second() {
+      const { skill, total_cast_per_second: n } = this;
+      return skill.hit / skill.time * n;
+    },
+    total_hit_per_second_adj() {
+      const { skill, total_cast_per_second_adj: n } = this;
+      return skill.hit / skill.time * n;
+    },
+
+    total_dps() {
+      return Math.floor(this.total_hit_per_second * this.total_damage)
+    },
+    total_dps_adj() {
+      return Math.floor(this.total_hit_per_second_adj * this.total_damage_adj)
+    },
+
+
   },
 
   created() {
