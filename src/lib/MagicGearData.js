@@ -1,5 +1,5 @@
 class MagicGear {
-    static VERSION = [1, 0];    // major, minor
+    static VERSION = [2, 0];    // major, minor
 
     constructor(
         name, level,
@@ -48,6 +48,20 @@ const DATA = [
                 if(isMinimum) return _adj[0];
                 if(isMaximum) return _adj[1];
                 return (_adj[0] + _adj[1]) / 2;
+        },
+    },
+    {
+        name: "ME高速詠唱",
+        levels: [7, 6, 5, 3, 2, 1, 0],
+
+        handler: (level, isMinimum=false, isMaximum=false) => {
+                const _adj = {
+                    7: 1.1, 6: 1.0,
+                    4: 0.8, 3: 0.7,
+                    2: 0.6, 1: 0.5,
+                    0: 0.0
+                }[level];
+                return _adj;
         },
     },
 ];

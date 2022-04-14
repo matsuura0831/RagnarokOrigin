@@ -43,7 +43,7 @@
                   <td class="p-2 border"></td>
                 </tr>
 
-                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                <tr class="text-right" v-if="skill.time > 0">
                   <td class="p-2 border text-left">DPS</td>
                   <td class="p-2 border">{{ total_dps.toLocaleString() }}</td>
                   <td class="p-2 border">{{ total_dps_adj.toLocaleString() }}</td>
@@ -51,16 +51,28 @@
                     {{ Math.floor((total_dps_adj - total_dps) / total_dps * 100 * 10) / 10 }}
                   </td>
                 </tr>
-                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                <tr class="text-right" v-if="skill.time > 0">
                   <td class="p-2 border">CT</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_time * 100) / 100 }}</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_time_adj * 100) / 100 }}</td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_time * 100) / 100 }}
+                    ({{ Math.round(getFcast(status) * 100) / 100 }} + {{ Math.round(getVcast(status) * 100) / 100 }})
+                  </td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_time_adj * 100) / 100 }}
+                    ({{ Math.round(getFcast(status_adjustment) * 100) / 100 }} + {{ Math.round(getVcast(status_adjustment) * 100) / 100 }})
+                  </td>
                   <td class="p-2 border"></td>
                 </tr>
-                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                <tr class="text-right" v-if="skill.time > 0">
                   <td class="p-2 border">CD</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_delay * 100) / 100 }}</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_delay_adj * 100) / 100 }}</td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_delay * 100) / 100 }}
+                    ({{ skill.ct }}, {{ getDelay(status) }})
+                  </td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_delay_adj * 100) / 100 }}
+                    ({{ skill.ct }}, {{ getDelay(status_adjustment) }})
+                  </td>
                   <td class="p-2 border"></td>
                 </tr>
 
@@ -84,7 +96,7 @@
    * (100% + 属性相性%[{{ element_up }}]) * (100% + 属性ダメージUP%[{{ status.element_damage_up }}])
    * (100% + 種族モンスターダメUP%[{{ status.race_up }}])
    * (100% + サイズモンスターダメUP%[{{ status.size_up }}])
-   * スキル倍率%[{{ skill.mul }}] * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
+   * スキル倍率%[{{ skill.mul + weapon.skill_mul_up }}] * (100% + 精錬スキルダメージUP%[{{ weapon.skill_up }}]) * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
    * 敵除算MDEF%[{{ getDivMdef(status) }}]
 + 追加ダメージ[{{ status.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
               </pre>
@@ -95,7 +107,7 @@
    * (100% + 属性相性%[{{ element_up }}]) * (100% + 属性ダメージUP%[{{ status_adjustment.element_damage_up }}])
    * (100% + 種族モンスターダメUP%[{{ status_adjustment.race_up }}])
    * (100% + サイズモンスターダメUP%[{{ status_adjustment.size_up }}])
-   * スキル倍率%[{{ skill.mul }}] * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
+   * スキル倍率%[{{ skill.mul + weapon.skill_mul_up }}] * (100% + 精錬スキルダメージUP%[{{ weapon.skill_up }}]) * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
    * 敵除算MDEF%[{{ getDivMdef(status_adjustment) }}]
 + 追加ダメージ[{{ status_adjustment.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
               </pre>
@@ -297,8 +309,8 @@ export default {
     },
 
     getDivMdef(status) {
-      const { skill, enemy } = this;
-      const _ignore_mdef = Math.min(100, skill.ignore_mdef + status.ignore_mdef);
+      const { skill, enemy, weapon } = this;
+      const _ignore_mdef = Math.min(100, skill.ignore_mdef + status.ignore_mdef + weapon.ignore_mdef);
       const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
       return (1000 + _mdef) / (1000 + _mdef * 10);
     },
@@ -319,21 +331,10 @@ export default {
           * (1 + element_up / 100) * (1 + status.element_damage_up / 100)
           * (1 + status.race_up / 100)
           * (1 + status.size_up / 100)
-          * (skill.mul / 100) * (1 + weapon.custom_skill_up / 100)
+          * ((skill.mul + weapon.skill_mul_up) / 100) * (1 + weapon.skill_up / 100) * (1 + weapon.custom_skill_up / 100)
           * div_mdef
       ) + status.extra_damage + skill.add
       ;
-
-      console.log(
-          (status.base_atk + status.equip_atk + status.refine_atk),
-          (1 + additional_damage / 100 + status.element_enemy_up / 100 + status.boss_up / 100)
-          * (1 + element_up / 100) * (1 + status.element_damage_up / 100)
-          * (1 + status.race_up / 100)
-          * (1 + status.size_up / 100)
-          * (skill.mul / 100) * (1 + weapon.custom_skill_up / 100),
-          div_mdef,
-          status.extra_damage + skill.add
-      );
 
       if(isMinimum) return Math.floor(damage * 0.97);
       if(isMaximum) return Math.floor(damage * 1.03);
@@ -341,17 +342,24 @@ export default {
     },
     
     getVcast(status) {
-      const { skill } = this;
+      const { skill, weapon } = this;
       const { status_int: int, status_dex: dex, equip_variable_cast: equip } = status;
 
-      return skill.vcast * (1 - Math.sqrt((int/2 + dex) / 265)) * (1 - equip / 100);
+      return skill.vcast * (1 - Math.sqrt((int/2 + dex) / 265)) * (1 - equip / 100) * (1 - weapon.vcast_p / 100);
     },
     getFcast(status) {
-      const { skill } = this;
+      const { skill, weapon } = this;
       const { equip_fix_cast: equip } = status;
 
-      return skill.fcast * (1 - equip / 100);
+      let t = weapon.fcast_s;
+
+      if(skill.name == "マグヌスエクソシズム") {
+        t += this.getGearHandler('ME高速詠唱').run();
+      }
+
+      return Math.max(0, skill.fcast * (1 - equip / 100) - t);
     },
+    
     getDelay(status) {
       const { skill } = this;
       const { equip_delay: equip } = status;
@@ -440,10 +448,10 @@ export default {
       return this.getFcast(this.status_adjustment) + this.getVcast(this.status_adjustment);
     },
     total_cast_delay() {
-      return this.getDelay(this.status);
+      return Math.max(this.skill.ct, this.getDelay(this.status));
     },
     total_cast_delay_adj() {
-      return this.getDelay(this.status_adjustment);
+      return Math.max(this.skill.ct, this.getDelay(this.status_adjustment));
     },
 
     total_cast_per_second() {

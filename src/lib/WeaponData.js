@@ -6,16 +6,16 @@ class Weapon {
         skill_up,
         skill_mul_up,
         ignore_mdef,
-        vcast,
-        fcast,
+        vcast_p,
+        fcast_s,
         // 改造
         custom_skill_up
     ) {
         this.skill_up = skill_up || 0;
         this.skill_mul_up = skill_mul_up || 0;
         this.ignore_mdef = ignore_mdef || 0;
-        this.vcast = vcast || 0;
-        this.fcast = fcast || 0;
+        this.vcast_p = vcast_p || 0;
+        this.fcast_s = fcast_s || 0;
         
         this.custom_skill_up = custom_skill_up || 0;
     }
@@ -26,8 +26,8 @@ class Weapon {
             this.skill_up,
             this.skill_mul_up,
             this.ignore_mdef,
-            this.vcast,
-            this.fcast,
+            this.vcast_p,
+            this.fcast_s,
             this.custom_skill_up,
         ];
     }
