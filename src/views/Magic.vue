@@ -376,10 +376,14 @@ export default {
 
       const data = {};
       persistent_list.forEach(v => {
-        if(Array.isArray(v.clazz)) {
-          data[v.key] = v.clazz.map((c, i) => c.deserialize(inflated_data[v.key][i]));
-        } else {
-          data[v.key] = v.clazz.deserialize(inflated_data[v.key]);
+        try {
+          if(Array.isArray(v.clazz)) {
+            data[v.key] = v.clazz.map((c, i) => c.deserialize(inflated_data[v.key][i]));
+          } else {
+            data[v.key] = v.clazz.deserialize(inflated_data[v.key]);
+          }
+        } catch(e) {
+          this.$toast.show(e, { type: 'error', position: 'top-right', duration: 4000})
         }
       })
       return data;
@@ -471,31 +475,26 @@ export default {
     if(location.hash.startsWith(url_prefix) && location.hash.length > url_prefix.length) {
       const persistent_str = location.hash.slice(url_prefix.length + 1);
 
-      try {
-        const persistent_data = this.parsePersistentString(persistent_str);
+      const persistent_data = this.parsePersistentString(persistent_str);
 
-        Object.keys(persistent_data).forEach(k => {
-          let v = persistent_data[k];
+      Object.keys(persistent_data).forEach(k => {
+        let v = persistent_data[k];
+        Object.assign(this[k], v);
 
-          Object.assign(this[k], v);
-
-          if(k === "enemy") {
-            this.target_enemy = v.name;
-          }
-          if(k === "skill") {
-            this.target_skill = v.name;
-            this.target_skill_level = v.level;
-          }
-          if(k === "gear") {
-            v.forEach(g => this.target_gear_level[g.name] = g.level);
-          }
-          if(k === "sub_skill") {
-            v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
-          }
-        })
-      } catch(e) {
-        this.$toast.show(e, { type: 'error', position: 'top-right', duration: 4000})
-      }
+        if(k === "enemy") {
+          this.target_enemy = v.name;
+        }
+        if(k === "skill") {
+          this.target_skill = v.name;
+          this.target_skill_level = v.level;
+        }
+        if(k === "gear") {
+          v.forEach(g => this.target_gear_level[g.name] = g.level);
+        }
+        if(k === "sub_skill") {
+          v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
+        }
+      });
     }
   },
 };
