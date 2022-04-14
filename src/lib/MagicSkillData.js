@@ -402,6 +402,22 @@ const DATA = [
             { level:  1, mul:  67, add: 0, vcast: 0.7, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 2, time:  5 },
         ]
     },
+    {
+        name: "ジュデックス",
+        element: "聖",
+        records: [
+            { level: 10, mul: 700, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  9, mul: 660, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  8, mul: 620, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  7, mul: 580, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  6, mul: 540, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  5, mul: 500, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  4, mul: 460, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  3, mul: 420, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  2, mul: 380, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level:  1, mul: 340, add: 0, vcast: 1.6, fcast: 0, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+        ]
+    },
 ];
 
 const CONVERT_DATA = {};
