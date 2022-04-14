@@ -168,7 +168,7 @@
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用ギア</h1>
 
           <div class="flex items-center mb-1" v-for="(v, k, i) in gear_data" :key="k">
-            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
+            <label class="inline-block flex-none w-32 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
 
             <select
                 :name="`gear${i}_level`"
@@ -298,7 +298,7 @@ export default {
 
     getDivMdef(status) {
       const { skill, enemy } = this;
-      const _ignore_mdef = Math.min(100, skill.ignore_mdef || status.ignore_mdef);
+      const _ignore_mdef = Math.min(100, skill.ignore_mdef + status.ignore_mdef);
       const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
       return (1000 + _mdef) / (1000 + _mdef * 10);
     },
