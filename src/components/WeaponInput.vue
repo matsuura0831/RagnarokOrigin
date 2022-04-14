@@ -46,6 +46,7 @@ export default {
         { key: 'skill_mul_up',  label: 'スキルダメージ倍率UP[%]',  editable: 1, number: 1},
         { key: 'ignore_mdef',   label: 'スキル防御無視[%]',  editable: 1, number: 1},
         { key: 'vcast_p',       label: 'スキル変動時間減少[%]',  editable: 1, number: 1},
+        { key: 'fcast_p',       label: 'スキル固定時間減少[%]',  editable: 1, number: 1},
         { key: 'fcast_s',       label: 'スキル固定時間減少[s]',  editable: 1, number: 1},
       ],
       inputs_custom: [

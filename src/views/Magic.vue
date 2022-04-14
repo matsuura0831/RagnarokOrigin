@@ -357,9 +357,9 @@ export default {
         t += this.getGearHandler('ME高速詠唱').run();
       }
 
-      return Math.max(0, skill.fcast * (1 - equip / 100) - t);
+      return Math.max(0, skill.fcast * (1 - equip / 100) * (1 - equip.fcast_p / 100) - t);
     },
-    
+
     getDelay(status) {
       const { skill } = this;
       const { equip_delay: equip } = status;
