@@ -387,11 +387,19 @@ const DATA = [
         ]
     },
     {
-        // TODO: vcast,fcastは他の受け売りなのであとで確認する
         name: "マグヌスエクソシズム",
         element: "聖",
         records: [
-            { level: 10, mul: 867, add: 0, vcast: 7.96, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 7, time: 14 },
+            { level: 10, mul: 867, add: 0, vcast: 6.6, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 7, time: 14 },
+            { level:  9, mul: 750, add: 0, vcast: 5.9, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 13 },
+            { level:  8, mul: 733, add: 0, vcast: 5.3, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 12 },
+            { level:  7, mul: 583, add: 0, vcast: 4.6, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 5, time: 11 },
+            { level:  6, mul: 450, add: 0, vcast: 3.9, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 5, time: 10 },
+            { level:  5, mul: 444, add: 0, vcast: 3.3, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 4, time:  9 },
+            { level:  4, mul: 311, add: 0, vcast: 2.6, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 4, time:  8 },
+            { level:  3, mul: 200, add: 0, vcast: 2.0, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 3, time:  7 },
+            { level:  2, mul: 167, add: 0, vcast: 1.3, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 3, time:  6 },
+            { level:  1, mul:  67, add: 0, vcast: 0.7, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 2, time:  5 },
         ]
     },
 ];
