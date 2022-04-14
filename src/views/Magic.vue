@@ -85,7 +85,7 @@
    * (100% + 種族モンスターダメUP%[{{ status.race_up }}])
    * (100% + サイズモンスターダメUP%[{{ status.size_up }}])
    * スキル倍率%[{{ skill.mul }}] * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
-   * 敵除算MDEF%[{{ div_mdef }}]
+   * 敵除算MDEF%[{{ getDivMdef(status) }}]
 + 追加ダメージ[{{ status.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
               </pre>
 
@@ -96,7 +96,7 @@
    * (100% + 種族モンスターダメUP%[{{ status_adjustment.race_up }}])
    * (100% + サイズモンスターダメUP%[{{ status_adjustment.size_up }}])
    * スキル倍率%[{{ skill.mul }}] * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
-   * 敵除算MDEF%[{{ div_mdef }}]
+   * 敵除算MDEF%[{{ getDivMdef(status_adjustment) }}]
 + 追加ダメージ[{{ status_adjustment.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
               </pre>
             </div>
@@ -296,13 +296,22 @@ export default {
       this.$toast.show('URLの更新とコピーを完了しました', { type: 'info', position: 'top-right', duration: 4000})
     },
 
+    getDivMdef(status) {
+      const { skill, enemy } = this;
+      const _ignore_mdef = Math.min(100, skill.ignore_mdef || status.ignore_mdef);
+      const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
+      return (1000 + _mdef) / (1000 + _mdef * 10);
+    },
+
     getDamage(status, isMinimum=false, isMaximum=false) {
       const { skill, weapon } = this;
-      const { element_up, div_mdef } = this;
+      const { element_up } = this;
 
       const additional_damage = status.additional_damage
         + this.getGearHandler('コアオーバクロック').run(isMinimum, isMaximum)
         ;
+      
+      const div_mdef = this.getDivMdef(status);
 
       const damage = Math.floor(
           (status.base_atk + status.equip_atk + status.refine_atk)
@@ -391,12 +400,6 @@ export default {
   },
 
   computed: {
-    div_mdef() {
-      const { status, skill, enemy } = this;
-      const _ignore_mdef = Math.min(100, skill.ignore_mdef || status.ignore_mdef);
-      const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
-      return (1000 + _mdef) / (1000 + _mdef * 10);
-    },
     element_up() {
       const { skill, enemy, sub_skill } = this;
       const v = ElementalRelation[skill.element][enemy.element];
