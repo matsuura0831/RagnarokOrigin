@@ -29,6 +29,7 @@ export default {
         { key: 'vcast',   label: '変動詠唱',  editable: 1, number: 1},
         { key: 'fcast',   label: '固定詠唱',  editable: 1, number: 1},
         { key: 'delay',   label: 'ディレイ',  editable: 1, number: 1},
+        { key: 'ct',      label: 'クールタイム',  editable: 1, number: 1},
         { key: 'hit',     label: 'ヒット数',  editable: 1, number: 1},
         { key: 'time',    label: '持続時間',  editable: 1, number: 1},
       ]

@@ -43,7 +43,7 @@
                   <td class="p-2 border"></td>
                 </tr>
 
-                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                <tr class="text-right" v-if="skill.time > 0">
                   <td class="p-2 border text-left">DPS</td>
                   <td class="p-2 border">{{ total_dps.toLocaleString() }}</td>
                   <td class="p-2 border">{{ total_dps_adj.toLocaleString() }}</td>
@@ -51,16 +51,28 @@
                     {{ Math.floor((total_dps_adj - total_dps) / total_dps * 100 * 10) / 10 }}
                   </td>
                 </tr>
-                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                <tr class="text-right" v-if="skill.time > 0">
                   <td class="p-2 border">CT</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_time * 100) / 100 }}</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_time_adj * 100) / 100 }}</td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_time * 100) / 100 }}
+                    ({{ Math.round(getFcast(status) * 100) / 100 }} + {{ Math.round(getVcast(status) * 100) / 100 }})
+                  </td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_time_adj * 100) / 100 }}
+                    ({{ Math.round(getFcast(status_adjustment) * 100) / 100 }} + {{ Math.round(getVcast(status_adjustment) * 100) / 100 }})
+                  </td>
                   <td class="p-2 border"></td>
                 </tr>
-                <tr class="text-right" v-if="skill.name == 'グラビテーションフィールド'">
+                <tr class="text-right" v-if="skill.time > 0">
                   <td class="p-2 border">CD</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_delay * 100) / 100 }}</td>
-                  <td class="p-2 border">{{ Math.round(total_cast_delay_adj * 100) / 100 }}</td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_delay * 100) / 100 }}
+                    ({{ skill.ct }}, {{ getDelay(status) }})
+                  </td>
+                  <td class="p-2 border">
+                    {{ Math.round(total_cast_delay_adj * 100) / 100 }}
+                    ({{ skill.ct }}, {{ getDelay(status_adjustment) }})
+                  </td>
                   <td class="p-2 border"></td>
                 </tr>
 
@@ -84,8 +96,8 @@
    * (100% + 属性相性%[{{ element_up }}]) * (100% + 属性ダメージUP%[{{ status.element_damage_up }}])
    * (100% + 種族モンスターダメUP%[{{ status.race_up }}])
    * (100% + サイズモンスターダメUP%[{{ status.size_up }}])
-   * スキル倍率%[{{ skill.mul }}] * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
-   * 敵除算MDEF%[{{ div_mdef }}]
+   * スキル倍率%[{{ skill.mul + weapon.skill_mul_up }}] * (100% + 精錬スキルダメージUP%[{{ weapon.skill_up }}]) * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
+   * 敵除算MDEF%[{{ getDivMdef(status) }}]
 + 追加ダメージ[{{ status.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
               </pre>
 
@@ -95,8 +107,8 @@
    * (100% + 属性相性%[{{ element_up }}]) * (100% + 属性ダメージUP%[{{ status_adjustment.element_damage_up }}])
    * (100% + 種族モンスターダメUP%[{{ status_adjustment.race_up }}])
    * (100% + サイズモンスターダメUP%[{{ status_adjustment.size_up }}])
-   * スキル倍率%[{{ skill.mul }}] * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
-   * 敵除算MDEF%[{{ div_mdef }}]
+   * スキル倍率%[{{ skill.mul + weapon.skill_mul_up }}] * (100% + 精錬スキルダメージUP%[{{ weapon.skill_up }}]) * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
+   * 敵除算MDEF%[{{ getDivMdef(status_adjustment) }}]
 + 追加ダメージ[{{ status_adjustment.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
               </pre>
             </div>
@@ -168,7 +180,7 @@
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用ギア</h1>
 
           <div class="flex items-center mb-1" v-for="(v, k, i) in gear_data" :key="k">
-            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
+            <label class="inline-block flex-none w-32 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
 
             <select
                 :name="`gear${i}_level`"
@@ -296,13 +308,22 @@ export default {
       this.$toast.show('URLの更新とコピーを完了しました', { type: 'info', position: 'top-right', duration: 4000})
     },
 
+    getDivMdef(status) {
+      const { skill, enemy, weapon } = this;
+      const _ignore_mdef = Math.min(100, skill.ignore_mdef + status.ignore_mdef + weapon.ignore_mdef);
+      const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
+      return (1000 + _mdef) / (1000 + _mdef * 10);
+    },
+
     getDamage(status, isMinimum=false, isMaximum=false) {
       const { skill, weapon } = this;
-      const { element_up, div_mdef } = this;
+      const { element_up } = this;
 
       const additional_damage = status.additional_damage
         + this.getGearHandler('コアオーバクロック').run(isMinimum, isMaximum)
         ;
+      
+      const div_mdef = this.getDivMdef(status);
 
       const damage = Math.floor(
           (status.base_atk + status.equip_atk + status.refine_atk)
@@ -310,21 +331,10 @@ export default {
           * (1 + element_up / 100) * (1 + status.element_damage_up / 100)
           * (1 + status.race_up / 100)
           * (1 + status.size_up / 100)
-          * (skill.mul / 100) * (1 + weapon.custom_skill_up / 100)
+          * ((skill.mul + weapon.skill_mul_up) / 100) * (1 + weapon.skill_up / 100) * (1 + weapon.custom_skill_up / 100)
           * div_mdef
       ) + status.extra_damage + skill.add
       ;
-
-      console.log(
-          (status.base_atk + status.equip_atk + status.refine_atk),
-          (1 + additional_damage / 100 + status.element_enemy_up / 100 + status.boss_up / 100)
-          * (1 + element_up / 100) * (1 + status.element_damage_up / 100)
-          * (1 + status.race_up / 100)
-          * (1 + status.size_up / 100)
-          * (skill.mul / 100) * (1 + weapon.custom_skill_up / 100),
-          div_mdef,
-          status.extra_damage + skill.add
-      );
 
       if(isMinimum) return Math.floor(damage * 0.97);
       if(isMaximum) return Math.floor(damage * 1.03);
@@ -332,17 +342,24 @@ export default {
     },
     
     getVcast(status) {
-      const { skill } = this;
+      const { skill, weapon } = this;
       const { status_int: int, status_dex: dex, equip_variable_cast: equip } = status;
 
-      return skill.vcast * (1 - Math.sqrt((int/2 + dex) / 265)) * (1 - equip / 100);
+      return skill.vcast * (1 - Math.sqrt((int/2 + dex) / 265)) * (1 - equip / 100) * (1 - weapon.vcast_p / 100);
     },
     getFcast(status) {
-      const { skill } = this;
+      const { skill, weapon } = this;
       const { equip_fix_cast: equip } = status;
 
-      return skill.fcast * (1 - equip / 100);
+      let t = weapon.fcast_s;
+
+      if(skill.name == "マグヌスエクソシズム") {
+        t += this.getGearHandler('ME高速詠唱').run();
+      }
+
+      return Math.max(0, skill.fcast * (1 - equip / 100) * (1 - equip.fcast_p / 100) - t);
     },
+
     getDelay(status) {
       const { skill } = this;
       const { equip_delay: equip } = status;
@@ -376,10 +393,14 @@ export default {
 
       const data = {};
       persistent_list.forEach(v => {
-        if(Array.isArray(v.clazz)) {
-          data[v.key] = v.clazz.map((c, i) => c.deserialize(inflated_data[v.key][i]));
-        } else {
-          data[v.key] = v.clazz.deserialize(inflated_data[v.key]);
+        try {
+          if(Array.isArray(v.clazz)) {
+            data[v.key] = v.clazz.map((c, i) => c.deserialize(inflated_data[v.key][i]));
+          } else {
+            data[v.key] = v.clazz.deserialize(inflated_data[v.key]);
+          }
+        } catch(e) {
+          this.$toast.show(e, { type: 'error', position: 'top-right', duration: 4000})
         }
       })
       return data;
@@ -387,12 +408,6 @@ export default {
   },
 
   computed: {
-    div_mdef() {
-      const { status, skill, enemy } = this;
-      const _ignore_mdef = Math.min(100, skill.ignore_mdef || status.ignore_mdef);
-      const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
-      return (1000 + _mdef) / (1000 + _mdef * 10);
-    },
     element_up() {
       const { skill, enemy, sub_skill } = this;
       const v = ElementalRelation[skill.element][enemy.element];
@@ -433,10 +448,10 @@ export default {
       return this.getFcast(this.status_adjustment) + this.getVcast(this.status_adjustment);
     },
     total_cast_delay() {
-      return this.getDelay(this.status);
+      return Math.max(this.skill.ct, this.getDelay(this.status));
     },
     total_cast_delay_adj() {
-      return this.getDelay(this.status_adjustment);
+      return Math.max(this.skill.ct, this.getDelay(this.status_adjustment));
     },
 
     total_cast_per_second() {
@@ -471,31 +486,26 @@ export default {
     if(location.hash.startsWith(url_prefix) && location.hash.length > url_prefix.length) {
       const persistent_str = location.hash.slice(url_prefix.length + 1);
 
-      try {
-        const persistent_data = this.parsePersistentString(persistent_str);
+      const persistent_data = this.parsePersistentString(persistent_str);
 
-        Object.keys(persistent_data).forEach(k => {
-          let v = persistent_data[k];
+      Object.keys(persistent_data).forEach(k => {
+        let v = persistent_data[k];
+        Object.assign(this[k], v);
 
-          Object.assign(this[k], v);
-
-          if(k === "enemy") {
-            this.target_enemy = v.name;
-          }
-          if(k === "skill") {
-            this.target_skill = v.name;
-            this.target_skill_level = v.level;
-          }
-          if(k === "gear") {
-            v.forEach(g => this.target_gear_level[g.name] = g.level);
-          }
-          if(k === "sub_skill") {
-            v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
-          }
-        })
-      } catch(e) {
-        this.$toast.show(e, { type: 'error', position: 'top-right', duration: 4000})
-      }
+        if(k === "enemy") {
+          this.target_enemy = v.name;
+        }
+        if(k === "skill") {
+          this.target_skill = v.name;
+          this.target_skill_level = v.level;
+        }
+        if(k === "gear") {
+          v.forEach(g => this.target_gear_level[g.name] = g.level);
+        }
+        if(k === "sub_skill") {
+          v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
+        }
+      });
     }
   },
 };
