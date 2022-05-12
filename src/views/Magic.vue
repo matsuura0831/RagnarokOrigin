@@ -67,11 +67,11 @@
                   <td class="p-2 border">CD</td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_delay * 100) / 100 }}
-                    ({{ skill.ct }}, {{ getDelay(status) }})
+                    ({{ skill.ct }}, {{ Math.round(getDelay(status) * 100) / 100 }})
                   </td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_delay_adj * 100) / 100 }}
-                    ({{ skill.ct }}, {{ getDelay(status_adjustment) }})
+                    ({{ skill.ct }}, {{ Math.round(getDelay(status_adjustment) * 100) / 100 }})
                   </td>
                   <td class="p-2 border"></td>
                 </tr>
