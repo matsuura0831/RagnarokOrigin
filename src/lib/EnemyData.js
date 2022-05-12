@@ -123,6 +123,25 @@ const DATA = [
     { name: "狂暴なミミック", race: "無形", element: "無", size: "中", base: 113, hp: 88554, def: 162, mdef: 213, vit: 10, agi: 162, type: "通常" },
     { name: "タイムキーパー", race: "無形", element: "無", size: "大", base: 114, hp: 636580, def: 60, mdef: 120, vit: 72, agi: 60, type: "通常" },
     { name: "チェペット", race: "人間", element: "火", size: "中", base: 115, hp: 675655, def: 35, mdef: 32, vit: 35, agi: 35, type: "通常" },
+
+    { name: "タオグンカ", race: "悪魔", element: "地", size: "大", base: 120, hp: 0, def: 175, mdef: 199, vit: 98, agi: 175, type: "MVP" },
+    { name: "ミュータントドラゴン", race: "竜", element: "火", size: "大", base: 122, hp: 0, def: 35, mdef: 98, vit: 30, agi: 35, type: "MVP" },
+    { name: "チンピラリーダ", race: "人間", element: "無", size: "中", base: 114, hp: 0, def: 36, mdef: 41, vit: 33, agi: 36, type: "MINI" },
+    { name: "怒りのストラクタイトゴーレム", race: "無形", element: "地", size: "大", base: 115, hp: 0, def: 61, mdef: 69, vit: 48, agi: 61, type: "MINI" },
+    { name: "メデューサクイーン", race: "悪魔", element: "水", size: "大", base: 117, hp: 0, def: 68, mdef: 69, vit: 65, agi: 68, type: "MINI" },
+    { name: "カニ", race: "魚介", element: "水", size: "小", base: 106, hp: 188220, def: 14, mdef: 28, vit: 24, agi: 14, type: "NORMAL" },
+    { name: "ネレイド", race: "動物", element: "地", size: "小", base: 108, hp: 180372, def: 45, mdef: 69, vit: 60, agi: 45, type: "NORMAL" },
+    { name: "ヒトデ", race: "魚介", element: "地", size: "小", base: 111, hp: 197899, def: 14, mdef: 28, vit: 15, agi: 14, type: "NORMAL" },
+    { name: "メデューサ", race: "悪魔", element: "無", size: "中", base: 112, hp: 616326, def: 68, mdef: 69, vit: 65, agi: 68, type: "NORMAL" },
+    { name: "チンピラ", race: "人間", element: "無", size: "中", base: 113, hp: 661490, def: 36, mdef: 41, vit: 33, agi: 36, type: "NORMAL" },
+    { name: "スタラクタイトゴーレム", race: "無形", element: "無", size: "大", base: 114, hp: 653367, def: 47, mdef: 63, vit: 48, agi: 47, type: "NORMAL" },
+    { name: "お化け貝", race: "魚介", element: "水", size: "小", base: 115, hp: 206946, def: 11, mdef: 26, vit: 48, agi: 11, type: "NORMAL" },
+    { name: "怒りのペノメナ", race: "魚介", element: "毒", size: "中", base: 116, hp: 193212, def: 49, mdef: 107, vit: 35, agi: 49, type: "NORMAL" },
+    { name: "メガリス", race: "無形", element: "無", size: "大", base: 117, hp: 717217, def: 14, mdef: 90, vit: 35, agi: 14, type: "NORMAL" },
+    { name: "レグルロ", race: "動物", element: "風", size: "小", base: 117, hp: 197931, def: 42, mdef: 54, vit: 38, agi: 42, type: "NORMAL" },
+    { name: "グリーンイグアナ", race: "動物", element: "地", size: "中", base: 118, hp: 199804, def: 42, mdef: 45, vit: 22, agi: 42, type: "NORMAL" },
+    { name: "アリゲータ", race: "動物", element: "水", size: "中", base: 119, hp: 683544, def: 48, mdef: 36, vit: 24, agi: 48, type: "NORMAL" },
+    
 ];
 
 export default {
