@@ -52,6 +52,10 @@ export default class CharacterStatus {
         return new CharacterStatus(...rest);
     }
 
+    clone() {
+        return CharacterStatus.deserialize(this.serialize());
+    }
+
     adjust(adj) {
         function _adj(a, b, k) {
             return Math.round(

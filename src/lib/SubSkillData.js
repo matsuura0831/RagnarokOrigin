@@ -1,3 +1,5 @@
+import { MagicDamageHandler } from "@/lib/MagicDamage";
+
 class SubSkillData {
     static VERSION = [1, 0];    // major, minor
 
@@ -38,18 +40,20 @@ const DATA = [
         name: "属性感知",
         levels: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
 
-        handler: {
-            element_up(level, {element_up, skill}) {
-                const _adj = {
-                    10: 25, 9: 22, 8: 19, 7: 16, 6: 13,
-                    5: 10, 4: 8, 3: 6, 2: 4, 1: 2, 0: 0,
-                }[level];
+        handler(level) {
+            const _adj = {
+                10: 25, 9: 22, 8: 19, 7: 16, 6: 13,
+                5: 10, 4: 8, 3: 6, 2: 4, 1: 2, 0: 0,
+            }[level];
 
-                if(element_up > 0 && ['風', '地', '火', '水', '念'].includes(skill.element)) {
-                    return _adj;
+            return new class extends MagicDamageHandler {
+                element_relation_up(v, obj, ismin, ismax) {
+                    if(v > 100 && ['風', '地', '火', '水', '念'].includes(obj.skill.element)) {
+                        return v + _adj;
+                    }
+                    return v;
                 }
-                return 0;
-            },
+            }
         },
     },
 ];
@@ -60,7 +64,7 @@ DATA.forEach(({ name, levels, handler }) => {
     levels.forEach(i => {
         m[i] = {
             instance: new SubSkillData(name, i),
-            handler: handler,
+            handler: handler(i),
         };
     });
     CONVERT_DATA[name] = m;
@@ -76,7 +80,7 @@ export default {
         const lv = level || 0;
         return m[lv].instance.clone();
     },
-    getSkillHandler({name, level}) {
+    getHandler({name, level}) {
         return CONVERT_DATA[name][level].handler;
     }
 }

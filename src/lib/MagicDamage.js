@@ -63,13 +63,13 @@ class MagicDamageHandler {
         return v;
     }
     
-    f_cast(v, obj, ismin, ismax) {
+    f_cast(v, obj) {
         return v;
     }
-    v_cast(v, obj, ismin, ismax) {
+    v_cast(v, obj) {
         return v;
     }
-    delay(v, obj, ismin, ismax) {
+    delay(v, obj) {
         return v;
     }
 }
@@ -135,7 +135,8 @@ class MagicDamageCalculator {
    }
 
    div_mdef(ismin=false, ismax=false) {
-       const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef + this.weapon.ignore_mdef);
+       const w_ignore = this.weapon.ignore_mdef || 0;
+       const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef + w_ignore);
        const mdef = this.enemy.mdef * (100 - ignore) / 100;
        const v = (1000 + mdef) / (1000 + mdef * 10);
 
@@ -190,36 +191,50 @@ class MagicDamageCalculator {
        if(ismax) return Math.floor(d * 1.03);
        return d;
    }
+   get_min() {
+       return this.get(1, 0);
+   }
+   get_max() {
+       return this.get(0, 1);
+   }
    
-   v_cast(ismin=false, ismax=false) {
-       const { skill, weapon } = this;
+   v_cast() {
+       const { skill, weapon, status } = this;
        const { status_int: int, status_dex: dex, equip_variable_cast: equip } = status;
+
+       const w_vcast_p = weapon.vcast_p || 0;
 
        const t = skill.vcast
             * (1 - Math.sqrt((int/2 + dex) / 265))
             * (1 - equip / 100)
-            * (1 - weapon.vcast_p / 100);
+            * (1 - w_vcast_p / 100);
        
-       return Math.max(0, this.handlers.reduce((v, h) => h.v_cast(v, this, ismin, ismax), t));
+       return Math.max(0, this.handlers.reduce((v, h) => h.v_cast(v, this), t));
    }
-
-   f_cast(ismin=false, ismax=false) {
-       const { skill, weapon } = this;
+   f_cast() {
+       const { skill, weapon, status } = this;
        const {equip_fix_cast: equip } = status;
 
-       const t = skill.fcast * (1 - equip / 100) * (1 - weapon.fcast_p / 100);
+       const w_fcast_p = weapon.fcast_p || 0;
+       const w_fcast_s = weapon.fcast_s || 0;
+       const t = skill.fcast * (1 - equip / 100) * (1 - w_fcast_p / 100) - w_fcast_s;
+       console.log(t, skill.fcast * (1 - equip / 100) * (1 - w_fcast_p / 100) - w_fcast_s);
 
-       return Math.max(0, this.handlers.reduce((v, h) => h.f_cast(v, this, ismin, ismax), t);
+       return Math.max(0, this.handlers.reduce((v, h) => h.f_cast(v, this), t));
    }
-   delay(ismin=false, ismax=false) {
-       const { skill } = this;
+   cast_time() {
+       return this.v_cast() + this.f_cast();
+   }
+
+   delay() {
+       const { skill, status } = this;
        const { equip_delay: equip } = status;
 
        const t = skill.delay * (1 - equip / 100);
-       return Math.max(0, this.handlers.reduce((v, h) => h.delay(v, this, ismin, ismax), t);
+       return Math.max(0, this.handlers.reduce((v, h) => h.delay(v, this), t));
    }
-   delay_with_ct(ismin=false, ismax=false) {
-       const d = this.delay(ismin, ismax);
+   cast_delay() {
+       const d = this.delay();
        return Math.max(this.skill.ct, d);
    }
 }
