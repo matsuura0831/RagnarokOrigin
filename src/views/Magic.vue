@@ -271,7 +271,6 @@ export default {
     const target_sub_skill_level = {};
     data.sub_skill.forEach(o => target_sub_skill_level[o.name] = o.level );
 
-console.log("init target_weapon", data.weapon);
     return Object.assign(data, {
       enemy_data: EnemyData.data,
       skill_data: MagicSkillData.data,
@@ -319,6 +318,11 @@ console.log("init target_weapon", data.weapon);
     changeWeapon() {
       const weapon = WeaponData.getWeapon(this.target_weapon);
       Object.assign(this.weapon, weapon);
+      
+      const tips = WeaponData.getTips(this.target_weapon);
+      if(tips) {
+        this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
+      }
     },
 
     async setPersistentUrl() {
@@ -383,7 +387,6 @@ console.log("init target_weapon", data.weapon);
 
   computed: {
     calc() {
-      console.log("call calc");
       const { status, weapon, skill, enemy } = this;
       return this.getCalculator(status, weapon, skill, enemy);
     },
