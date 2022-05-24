@@ -51,6 +51,10 @@ class MagicDamageHandler {
         return v;
     }
 
+    ignore_mdef(v, obj, ismin, ismax) {
+        return v;
+    }
+
     div_mdef(v, obj, ismin, ismax) {
         return v;
     }
@@ -135,9 +139,10 @@ class MagicDamageCalculator {
    }
 
    div_mdef(ismin=false, ismax=false) {
-       const w_ignore = this.weapon.ignore_mdef || 0;
-       const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef + w_ignore);
-       const mdef = this.enemy.mdef * (100 - ignore) / 100;
+       const ignore = this.skill.ignore_mdef + this.status.ignore_mdef;
+       const i = Math.min(100, this.handlers.reduce((v, h) => h.ignore_mdef(v, this, ismin, ismax), ignore))
+       
+       const mdef = this.enemy.mdef * (100 - i) / 100;
        const v = (1000 + mdef) / (1000 + mdef * 10);
 
        return this.handlers.reduce((v, h) => h.div_mdef(v, this, ismin, ismax), v);
@@ -201,24 +206,16 @@ class MagicDamageCalculator {
    v_cast() {
        const { skill, weapon, status } = this;
        const { status_int: int, status_dex: dex, equip_variable_cast: equip } = status;
-
-       const w_vcast_p = weapon.vcast_p || 0;
-
        const t = skill.vcast
             * (1 - Math.sqrt((int/2 + dex) / 265))
-            * (1 - equip / 100)
-            * (1 - w_vcast_p / 100);
+            * (1 - equip / 100);
        
        return Math.max(0, this.handlers.reduce((v, h) => h.v_cast(v, this), t));
    }
    f_cast() {
        const { skill, weapon, status } = this;
        const {equip_fix_cast: equip } = status;
-
-       const w_fcast_p = weapon.fcast_p || 0;
-       const w_fcast_s = weapon.fcast_s || 0;
-       const t = skill.fcast * (1 - equip / 100) * (1 - w_fcast_p / 100) - w_fcast_s;
-       console.log(t, skill.fcast * (1 - equip / 100) * (1 - w_fcast_p / 100) - w_fcast_s);
+       const t = skill.fcast * (1 - equip / 100);
 
        return Math.max(0, this.handlers.reduce((v, h) => h.f_cast(v, this), t));
    }
