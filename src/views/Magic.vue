@@ -195,6 +195,18 @@
           </div>
           <WeaponInput v-model="weapon" />
 
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">アクセサリーセット効果</h1>
+
+          <div class="flex items-center mb-2">
+            <select
+                name="accessory"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_accessory" @change="changeAccessory">
+              <option v-for="j in Object.keys(accessory_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
+          <AccessoryInput v-model="accessory" />
+
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用ギア</h1>
 
           <div class="flex items-center mb-1" v-for="(v, k, i) in gear_data" :key="k">
@@ -218,6 +230,7 @@ import StatusInput from "@/components/StatusInput.vue";
 import EnemyInput from "@/components/EnemyInput.vue";
 import SkillInput from "@/components/SkillInput.vue";
 import WeaponInput from "@/components/WeaponInput.vue";
+import AccessoryInput from "@/components/AccessoryInput.vue";
 import Accordion from "@/components/Accordion.vue";
 
 import CharacterStatus from "@/lib/CharacterStatus";
@@ -225,6 +238,7 @@ import EnemyData from "@/lib/EnemyData";
 import MagicSkillData from "@/lib/MagicSkillData";
 import SubSkillData from "@/lib/SubSkillData";
 import WeaponData from "@/lib/WeaponData";
+import AccessoryData from "@/lib/AccessoryData";
 import MagicGearData from "@/lib/MagicGearData";
 
 import { MagicDamageCalculator, MagicDamageHandler } from "@/lib/MagicDamage";
@@ -241,9 +255,11 @@ const persistent_list = [
   { key: 'enemy', clazz: EnemyData.clazz },
   { key: 'skill', clazz: MagicSkillData.clazz },
   { key: 'weapon', clazz: WeaponData.clazz },
+  { key: 'accessory', clazz: AccessoryData.clazz },
   { key: 'gear', clazz: [...Object.keys(MagicGearData.data).map(_ => MagicGearData.clazz)] },
   { key: 'sub_skill', clazz: [...Object.keys(SubSkillData.data).map(_ => SubSkillData.clazz)] },
 ];
+
 
 export default {
   components: {
@@ -251,6 +267,7 @@ export default {
     EnemyInput,
     SkillInput,
     WeaponInput,
+    AccessoryInput,
     Accordion,
   },
   data() {
@@ -260,6 +277,7 @@ export default {
       enemy: EnemyData.getEnemy('カカシ(中)'),
       skill: MagicSkillData.getSkill('グラビテーションフィールド'),
       weapon: WeaponData.getWeapon('その他'),
+      accessory: AccessoryData.getWeapon('その他'),
 
       gear: [...Object.keys(MagicGearData.data).map(k => MagicGearData.getGear(k))],
       sub_skill: [...Object.keys(SubSkillData.data).map(k => SubSkillData.getSkill(k))],
@@ -277,6 +295,7 @@ export default {
       gear_data: MagicGearData.data,
       sub_skill_data: SubSkillData.data,
       weapon_data: WeaponData.data,
+      accessory_data: AccessoryData.data,
       
       target_enemy: data.enemy.name,
       target_skill: data.skill.name,
@@ -284,6 +303,7 @@ export default {
       target_gear_level: target_gear_level,
       target_sub_skill_level: target_sub_skill_level,
       target_weapon: data.weapon.name,
+      target_accessory: data.accessory.name,
     });
   },
   methods: {
@@ -320,6 +340,15 @@ export default {
       Object.assign(this.weapon, weapon);
       
       const tips = WeaponData.getTips(this.target_weapon);
+      if(tips) {
+        this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
+      }
+    },
+    changeAccessory() {
+      const accessory = AccessoryData.getWeapon(this.target_accessory);
+      Object.assign(this.accessory, accessory);
+      
+      const tips = AccessoryData.getTips(this.target_accessory);
       if(tips) {
         this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
       }
@@ -380,6 +409,7 @@ export default {
       this.gear.map(g => d.handler(MagicGearData.getHandler(g)));
 
       d.handler(WeaponData.getHandler(this.weapon));
+      d.handler(AccessoryData.getHandler(this.accessory));  // TODO ブラギとはANDを取る
       return d;
     }
     
@@ -469,6 +499,9 @@ export default {
         }
         if(k === "weapon") {
           this.target_weapon = v.name;
+        }
+        if(k === "accessory") {
+          this.target_accessory = v.name;
         }
       });
     }

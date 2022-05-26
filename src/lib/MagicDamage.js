@@ -194,7 +194,7 @@ class MagicDamageCalculator {
        
        if(ismin) return Math.floor(d * 0.97);
        if(ismax) return Math.floor(d * 1.03);
-       return d;
+       return Math.floor(d);
    }
    get_min() {
        return this.get(1, 0);
