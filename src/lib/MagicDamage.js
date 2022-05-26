@@ -73,6 +73,9 @@ class MagicDamageHandler {
     v_cast(v, obj) {
         return v;
     }
+    delay_pre(v, obj) {
+        return v;
+    }
     delay(v, obj) {
         return v;
     }
@@ -227,7 +230,9 @@ class MagicDamageCalculator {
        const { skill, status } = this;
        const { equip_delay: equip } = status;
 
-       const t = skill.delay * (1 - equip / 100);
+       const d = this.handlers.reduce((v, h) => h.delay_pre(v, this), equip);
+
+       const t = skill.delay * (1 - d / 100);
        return Math.max(0, this.handlers.reduce((v, h) => h.delay(v, this), t));
    }
    cast_delay() {

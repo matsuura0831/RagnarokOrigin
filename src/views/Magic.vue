@@ -180,6 +180,20 @@
 
           </div>
 
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">踊りスキル</h1>
+
+          <div class="flex items-center mb-1" v-for="(v, k, i) in dance_skill_data" :key="k">
+            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
+
+            <select
+                :name="`dance_skill${i}_level`"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_dance_skill_level[k]" @change="changeDanceSkill(k)">
+              <option v-for="j in Object.keys(dance_skill_data[k]).sort((a, b) => b - a)" :value="j" :key="j">{{ j }}</option>
+            </select>
+
+          </div>
+
         </div>
 
         <div class="bg-white shadow text-sm p-4">
@@ -237,6 +251,7 @@ import CharacterStatus from "@/lib/CharacterStatus";
 import EnemyData from "@/lib/EnemyData";
 import MagicSkillData from "@/lib/MagicSkillData";
 import SubSkillData from "@/lib/SubSkillData";
+import DanceSkillData from "@/lib/DanceSkillData";
 import WeaponData from "@/lib/WeaponData";
 import AccessoryData from "@/lib/AccessoryData";
 import MagicGearData from "@/lib/MagicGearData";
@@ -258,6 +273,7 @@ const persistent_list = [
   { key: 'accessory', clazz: AccessoryData.clazz },
   { key: 'gear', clazz: [...Object.keys(MagicGearData.data).map(_ => MagicGearData.clazz)] },
   { key: 'sub_skill', clazz: [...Object.keys(SubSkillData.data).map(_ => SubSkillData.clazz)] },
+  { key: 'dance_skill', clazz: [...Object.keys(DanceSkillData.data).map(_ => DanceSkillData.clazz)] },
 ];
 
 
@@ -281,6 +297,7 @@ export default {
 
       gear: [...Object.keys(MagicGearData.data).map(k => MagicGearData.getGear(k))],
       sub_skill: [...Object.keys(SubSkillData.data).map(k => SubSkillData.getSkill(k))],
+      dance_skill: [...Object.keys(DanceSkillData.data).map(k => DanceSkillData.getSkill(k))],
     };
 
     const target_gear_level = {};
@@ -289,11 +306,16 @@ export default {
     const target_sub_skill_level = {};
     data.sub_skill.forEach(o => target_sub_skill_level[o.name] = o.level );
 
+    const target_dance_skill_level = {};
+    data.dance_skill.forEach(o => target_dance_skill_level[o.name] = o.level );
+
+
     return Object.assign(data, {
       enemy_data: EnemyData.data,
       skill_data: MagicSkillData.data,
       gear_data: MagicGearData.data,
       sub_skill_data: SubSkillData.data,
+      dance_skill_data: DanceSkillData.data,
       weapon_data: WeaponData.data,
       accessory_data: AccessoryData.data,
       
@@ -302,6 +324,7 @@ export default {
       target_skill_level: data.skill.level,
       target_gear_level: target_gear_level,
       target_sub_skill_level: target_sub_skill_level,
+      target_dance_skill_level: target_dance_skill_level,
       target_weapon: data.weapon.name,
       target_accessory: data.accessory.name,
     });
@@ -334,6 +357,13 @@ export default {
     changeSubSkill(k) {
       const skill = SubSkillData.getSkill(k, this.target_sub_skill_level[k]);
       Object.assign(this.getSubSkill(k), skill);
+    },
+    getDanceSkill(k) {
+      return this.dance_skill.filter(o => o.name == k)[0];
+    },
+    changeDanceSkill(k) {
+      const skill = DanceSkillData.getSkill(k, this.target_dance_skill_level[k]);
+      Object.assign(this.getDanceSkill(k), skill);
     },
     changeWeapon() {
       const weapon = WeaponData.getWeapon(this.target_weapon);
@@ -409,7 +439,20 @@ export default {
       this.gear.map(g => d.handler(MagicGearData.getHandler(g)));
 
       d.handler(WeaponData.getHandler(this.weapon));
-      d.handler(AccessoryData.getHandler(this.accessory));  // TODO ブラギとはANDを取る
+
+      let accessory_handler = AccessoryData.getHandler(this.accessory);
+
+      this.dance_skill.forEach(s => {
+        const dance_handler = DanceSkillData.getHandler(s);
+
+        if(s.name == 'アドバンスブラギの詩' && ['ヴァルキリーの栄耀'].includes(this.accessory.name)) {
+          accessory_handler = MagicDamageHandler.add_mul(accessory_handler, dance_handler);
+        } else {
+          d.handler(dance_handler);
+        }
+      });
+      d.handler(accessory_handler);
+
       return d;
     }
     
@@ -496,6 +539,9 @@ export default {
         }
         if(k === "sub_skill") {
           v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
+        }
+        if(k === "dance_skill") {
+          v.forEach(s => this.target_dance_skill_level[s.name] = s.level);
         }
         if(k === "weapon") {
           this.target_weapon = v.name;

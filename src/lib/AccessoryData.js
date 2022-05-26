@@ -41,13 +41,11 @@ const DATA = [
     {
         name: "ヴァルキリーの栄耀",
         handler(w) {
-            return [
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        return v * (100 + w.set_effects.skill_up * w.set_effects.repeated) / 100;
-                    }
-                },
-            ];
+            return new class extends MagicDamageHandler {
+                skill_up(v, obj, ismin, ismax) {
+                    return v * (100 + w.set_effects.skill_up * w.set_effects.repeated) / 100;
+                }
+            };
         },
         set_effects: {
             skill_up: 5,
@@ -57,19 +55,17 @@ const DATA = [
     {
         name: "ゲンドゥルの意思",
         handler(w) {
-            return [
-                new class extends MagicDamageHandler {
-                    last(v, obj, ismin, ismax) {
-                        if(ismin) return v;
+            return new class extends MagicDamageHandler {
+                last(v, obj, ismin, ismax) {
+                    if(ismin) return v;
 
-                        const matk = obj.total_atk(ismin, ismax);
-                        const d = Math.min(matk * w.set_effects.matk_limit / 100, v * w.set_effects.skill_up / 100);
+                    const matk = obj.total_atk(ismin, ismax);
+                    const d = Math.min(matk * w.set_effects.matk_limit / 100, v * w.set_effects.skill_up / 100);
 
-                        if(ismax) return Math.max(v, d);
-                        return v * 0.9 + d * 0.1;
-                    }
-                },
-            ];
+                    if(ismax) return Math.max(v, d);
+                    return v * 0.9 + d * 0.1;
+                }
+            };
         },
         set_effects: {
             skill_up: 250,
