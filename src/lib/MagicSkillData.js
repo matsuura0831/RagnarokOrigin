@@ -81,7 +81,7 @@ const DATA = [
         ]
     },
     {
-        name: "ファイアボルト",
+        name: "ファイアーボルト",
         element: "火",
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 0.10, fcast: 1.49, delay: 1.6, ct: 0, hit: 1, time: 0 },

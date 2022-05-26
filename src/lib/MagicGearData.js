@@ -1,3 +1,5 @@
+import { MagicDamageHandler } from "@/lib/MagicDamage";
+
 class MagicGear {
     static VERSION = [2, 0];    // major, minor
 
@@ -37,31 +39,43 @@ const DATA = [
     {
         name: "コアオーバクロック",
         levels: [7, 6, 5, 3, 2, 1, 0],
+        
+        handler(level) {
+            const _adj = {
+                7: [-15, 40], 6: [-15, 36], 5: [-15, 32],
+                3: [-15, 28], 2: [-15, 24], 1: [-15, 20],
+                0: [0, 0],
+            }[level];
 
-        handler: (level, isMinimum=false, isMaximum=false) => {
-                const _adj = {
-                    7: [-15, 40], 6: [-15, 36], 5: [-15, 32],
-                    3: [-15, 28], 2: [-15, 24], 1: [-15, 20],
-                    0: [0, 0],
-                }[level];
-
-                if(isMinimum) return _adj[0];
-                if(isMaximum) return _adj[1];
-                return (_adj[0] + _adj[1]) / 2;
+            return new class extends MagicDamageHandler {
+                damage_up(v, obj, ismin, ismax) {
+                    if(ismin) return v + _adj[0];
+                    if(ismax) return v + _adj[1];
+                    return v + (_adj[0] + _adj[1]) / 2;
+                }
+            }
         },
     },
     {
         name: "ME高速詠唱",
-        levels: [7, 6, 5, 3, 2, 1, 0],
+        levels: [7, 6, 4, 3, 2, 1, 0],
 
-        handler: (level, isMinimum=false, isMaximum=false) => {
-                const _adj = {
-                    7: 1.1, 6: 1.0,
-                    4: 0.8, 3: 0.7,
-                    2: 0.6, 1: 0.5,
-                    0: 0.0
-                }[level];
-                return _adj;
+        handler(level) {
+            const _adj = {
+                7: 1.1, 6: 1.0,
+                4: 0.8, 3: 0.7,
+                2: 0.6, 1: 0.5,
+                0: 0.0
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                f_cast(v, obj) {
+                    if(obj.skill.name == "マグヌスエクソシズム") {
+                        return v - _adj;
+                    }
+                    return v;
+                }
+            }
         },
     },
 ];
@@ -72,7 +86,7 @@ DATA.forEach(({ name, levels, handler }) => {
     levels.forEach(i => {
         m[i] = {
             instance: new MagicGear(name, i),
-            handler: handler,
+            handler: handler(i),
         };
     });
     CONVERT_DATA[name] = m;
@@ -87,7 +101,7 @@ export default {
         const lv = level || 0;
         return m[lv].instance.clone();
     },
-    getGearHandler({name, level}) {
-        return { run: (...args) => CONVERT_DATA[name][level].handler(level, ...args) };
+    getHandler({name, level}) {
+        return CONVERT_DATA[name][level].handler;
     }
 }

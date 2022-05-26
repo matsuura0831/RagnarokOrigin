@@ -73,17 +73,6 @@
             まずは自分の入力した値が正しいかどうか，未実装のギア(インファイト等)による効果が現れていないかをご確認ください．
             それでも合わない場合，将来的に投稿フォームも用意する予定なので実装をお待ちください．
           </p>
-          <p>
-            なお装備に関してはどのように入力すれば良いかわからない場合もあるかと思いサンプルを用意しました．
-            値が変動している箇所を参考にしてください(いずれも精練値15を想定しています)．
-            なお〇〇ステータスにも一部補正という形で入力していますが，既に装備済みの場合は反映されたステータスになっているので，当該部分は0にしてください．
-            <ul class="list-disc ml-12">
-              <li>WIZ: <a class="text-green-600" href="https://bit.ly/3Ebly5o">烈火の杖Ⅳ＋FB10</a></li>
-              <li>WIZ: <a class="text-green-600" href="https://bit.ly/3xslBZ9">疾風の杖Ⅳ＋LB10</a></li>
-              <li>WIZ: <a class="text-green-600" href="https://bit.ly/36d6NT7">古代海龍の杖＋CB10</a>(泡の計算は未実装です)</li>
-              <li>PRI: <a class="text-green-600" href="https://bit.ly/3jAqasn">ホーリーステッキⅣ＋ME10</a></li>
-            </ul>
-          </p>
           </template>
         </Accordion>
 

@@ -21,7 +21,7 @@
                   <td class="p-2 border">{{ total_damage.toLocaleString() }}</td>
                   <td class="p-2 border">{{ total_damage_adj.toLocaleString() }}</td>
                   <td class="p-2 border">
-                    {{ Math.floor((total_damage_adj - total_damage) / total_damage * 100 * 10) / 10 }}
+                    {{ Math.floor((total_damage_adj  - total_damage) / total_damage * 100 * 10) / 10 }}
                   </td>
                 </tr>
                 <tr class="text-right">
@@ -55,11 +55,9 @@
                   <td class="p-2 border">CT</td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_time * 100) / 100 }}
-                    ({{ Math.round(getFcast(status) * 100) / 100 }} + {{ Math.round(getVcast(status) * 100) / 100 }})
                   </td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_time_adj * 100) / 100 }}
-                    ({{ Math.round(getFcast(status_adjustment) * 100) / 100 }} + {{ Math.round(getVcast(status_adjustment) * 100) / 100 }})
                   </td>
                   <td class="p-2 border"></td>
                 </tr>
@@ -67,15 +65,12 @@
                   <td class="p-2 border">CD</td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_delay * 100) / 100 }}
-                    ({{ skill.ct }}, {{ Math.round(getDelay(status) * 100) / 100 }})
                   </td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_delay_adj * 100) / 100 }}
-                    ({{ skill.ct }}, {{ Math.round(getDelay(status_adjustment) * 100) / 100 }})
                   </td>
                   <td class="p-2 border"></td>
                 </tr>
-
 
               </tbody>
             </table>
@@ -86,31 +81,45 @@
           </template>
         </Accordion>
 
+
         <Accordion>
           <template #title>計算式</template>
           <template #content>
             <div class="flex flex-col lg:grid lg:grid-cols-2 lg:gap-x-2 w-full justify-center">
-              <pre class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
-(魔法攻撃[{{ status.base_atk + status.equip_atk }}] + 精練魔法攻撃[{{ status.refine_atk }}]) 
-   * (100% + 魔法ダメージ%[{{ status.additional_damage }} + ギア効果] + 属性モンスターダメUP%[{{ status.element_enemy_up }}] + BOSSダメUP%[{{ status.boss_up }}])
-   * (100% + 属性相性%[{{ element_up }}]) * (100% + 属性ダメージUP%[{{ status.element_damage_up }}])
-   * (100% + 種族モンスターダメUP%[{{ status.race_up }}])
-   * (100% + サイズモンスターダメUP%[{{ status.size_up }}])
-   * スキル倍率%[{{ skill.mul + weapon.skill_mul_up }}] * (100% + 精錬スキルダメージUP%[{{ weapon.skill_up }}]) * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
-   * 敵除算MDEF%[{{ getDivMdef(status) }}]
-+ 追加ダメージ[{{ status.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
-              </pre>
+              <div class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
+                <p>
+魔法攻撃[{{ calc.total_atk() }}] 
+   * 魔法ダメージ%[{{ calc.damage_up()}}]
+   * 属性相性%[{{ calc.element_relation_up() }}]
+   * 属性ダメージUP%[{{ calc.element_damage_up() }}]
+   * 種族モンスターダメUP%[{{ calc.race_up() }}]
+   * サイズモンスターダメUP%[{{ calc.size_up() }}]
+   * スキル倍率%[{{ calc.skill_up() }}]
+   * 敵除算MDEF%[{{ calc.div_mdef() }}]
++ 追加ダメージ[{{ calc.extra_damage() }}]
+                </p>
 
-              <pre class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
-(魔法攻撃[{{ status_adjustment.base_atk + status_adjustment.equip_atk }}] + 精練魔法攻撃[{{ status_adjustment.refine_atk }}]) 
-   * (100% + 魔法ダメージ%[{{ status_adjustment.additional_damage }} + ギア効果] + 属性モンスターダメUP%[{{ status_adjustment.element_enemy_up }}] + BOSSダメUP%[{{ status_adjustment.boss_up }}])
-   * (100% + 属性相性%[{{ element_up }}]) * (100% + 属性ダメージUP%[{{ status_adjustment.element_damage_up }}])
-   * (100% + 種族モンスターダメUP%[{{ status_adjustment.race_up }}])
-   * (100% + サイズモンスターダメUP%[{{ status_adjustment.size_up }}])
-   * スキル倍率%[{{ skill.mul + weapon.skill_mul_up }}] * (100% + 精錬スキルダメージUP%[{{ weapon.skill_up }}]) * (100% + 改造スキルダメージUP%[{{ weapon.custom_skill_up }}])
-   * 敵除算MDEF%[{{ getDivMdef(status_adjustment) }}]
-+ 追加ダメージ[{{ status_adjustment.extra_damage }}] + スキル追加ダメージ[{{ skill.add }}]
-              </pre>
+                <p>
+                  固定詠唱[{{ calc.f_cast() }}]，変動詠唱[{{ calc.v_cast() }}]，ディレイ[{{ calc.delay() }}]
+                </p>
+              </div>
+
+              <div class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
+                <p>
+魔法攻撃[{{ calc_adj.total_atk() }}] 
+   * 魔法ダメージ%[{{ calc_adj.damage_up()}}]
+   * 属性相性%[{{ calc_adj.element_relation_up() }}]
+   * 属性ダメージUP%[{{ calc_adj.element_damage_up() }}]
+   * 種族モンスターダメUP%[{{ calc_adj.race_up() }}]
+   * サイズモンスターダメUP%[{{ calc_adj.size_up() }}]
+   * スキル倍率%[{{ calc_adj.skill_up() }}]
+   * 敵除算MDEF%[{{ calc_adj.div_mdef() }}]
++ 追加ダメージ[{{ calc_adj.extra_damage() }}]
+                </p>
+                <p>
+                  固定詠唱[{{ calc.f_cast() }}]，変動詠唱[{{ calc.v_cast() }}]，ディレイ[{{ calc.delay() }}]
+                </p>
+              </div>
             </div>
           </template>
         </Accordion>
@@ -171,11 +180,46 @@
 
           </div>
 
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">踊りスキル</h1>
+
+          <div class="flex items-center mb-1" v-for="(v, k, i) in dance_skill_data" :key="k">
+            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
+
+            <select
+                :name="`dance_skill${i}_level`"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_dance_skill_level[k]" @change="changeDanceSkill(k)">
+              <option v-for="j in Object.keys(dance_skill_data[k]).sort((a, b) => b - a)" :value="j" :key="j">{{ j }}</option>
+            </select>
+
+          </div>
+
         </div>
 
         <div class="bg-white shadow text-sm p-4">
-          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">装備改造</h1>
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">武器効果</h1>
+
+          <div class="flex items-center mb-2">
+            <select
+                name="weapon"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_weapon" @change="changeWeapon">
+              <option v-for="j in Object.keys(weapon_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
           <WeaponInput v-model="weapon" />
+
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">アクセサリーセット効果</h1>
+
+          <div class="flex items-center mb-2">
+            <select
+                name="accessory"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_accessory" @change="changeAccessory">
+              <option v-for="j in Object.keys(accessory_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
+          <AccessoryInput v-model="accessory" />
 
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用ギア</h1>
 
@@ -200,15 +244,19 @@ import StatusInput from "@/components/StatusInput.vue";
 import EnemyInput from "@/components/EnemyInput.vue";
 import SkillInput from "@/components/SkillInput.vue";
 import WeaponInput from "@/components/WeaponInput.vue";
+import AccessoryInput from "@/components/AccessoryInput.vue";
 import Accordion from "@/components/Accordion.vue";
 
 import CharacterStatus from "@/lib/CharacterStatus";
 import EnemyData from "@/lib/EnemyData";
 import MagicSkillData from "@/lib/MagicSkillData";
 import SubSkillData from "@/lib/SubSkillData";
+import DanceSkillData from "@/lib/DanceSkillData";
 import WeaponData from "@/lib/WeaponData";
+import AccessoryData from "@/lib/AccessoryData";
 import MagicGearData from "@/lib/MagicGearData";
-import ElementalRelation from "@/lib/ElementalRelation";
+
+import { MagicDamageCalculator, MagicDamageHandler } from "@/lib/MagicDamage";
 
 const zlib = require('zlib')
 
@@ -222,9 +270,12 @@ const persistent_list = [
   { key: 'enemy', clazz: EnemyData.clazz },
   { key: 'skill', clazz: MagicSkillData.clazz },
   { key: 'weapon', clazz: WeaponData.clazz },
+  { key: 'accessory', clazz: AccessoryData.clazz },
   { key: 'gear', clazz: [...Object.keys(MagicGearData.data).map(_ => MagicGearData.clazz)] },
   { key: 'sub_skill', clazz: [...Object.keys(SubSkillData.data).map(_ => SubSkillData.clazz)] },
+  { key: 'dance_skill', clazz: [...Object.keys(DanceSkillData.data).map(_ => DanceSkillData.clazz)] },
 ];
+
 
 export default {
   components: {
@@ -232,6 +283,7 @@ export default {
     EnemyInput,
     SkillInput,
     WeaponInput,
+    AccessoryInput,
     Accordion,
   },
   data() {
@@ -240,10 +292,12 @@ export default {
       status_adj: new CharacterStatus(),
       enemy: EnemyData.getEnemy('カカシ(中)'),
       skill: MagicSkillData.getSkill('グラビテーションフィールド'),
-      weapon: WeaponData.EMPTY(),
+      weapon: WeaponData.getWeapon('その他'),
+      accessory: AccessoryData.getWeapon('その他'),
 
       gear: [...Object.keys(MagicGearData.data).map(k => MagicGearData.getGear(k))],
       sub_skill: [...Object.keys(SubSkillData.data).map(k => SubSkillData.getSkill(k))],
+      dance_skill: [...Object.keys(DanceSkillData.data).map(k => DanceSkillData.getSkill(k))],
     };
 
     const target_gear_level = {};
@@ -252,16 +306,27 @@ export default {
     const target_sub_skill_level = {};
     data.sub_skill.forEach(o => target_sub_skill_level[o.name] = o.level );
 
+    const target_dance_skill_level = {};
+    data.dance_skill.forEach(o => target_dance_skill_level[o.name] = o.level );
+
+
     return Object.assign(data, {
       enemy_data: EnemyData.data,
       skill_data: MagicSkillData.data,
       gear_data: MagicGearData.data,
       sub_skill_data: SubSkillData.data,
+      dance_skill_data: DanceSkillData.data,
+      weapon_data: WeaponData.data,
+      accessory_data: AccessoryData.data,
+      
       target_enemy: data.enemy.name,
       target_skill: data.skill.name,
       target_skill_level: data.skill.level,
       target_gear_level: target_gear_level,
       target_sub_skill_level: target_sub_skill_level,
+      target_dance_skill_level: target_dance_skill_level,
+      target_weapon: data.weapon.name,
+      target_accessory: data.accessory.name,
     });
   },
   methods: {
@@ -282,9 +347,6 @@ export default {
     getGear(k) {
       return this.gear.filter(o => o.name == k)[0];
     },
-    getGearHandler(k) {
-      return MagicGearData.getGearHandler(this.getGear(k));
-    },
     changeGear(k) {
       const gear = MagicGearData.getGear(k, this.target_gear_level[k]);
       Object.assign(this.getGear(k), gear);
@@ -292,12 +354,34 @@ export default {
     getSubSkill(k) {
       return this.sub_skill.filter(o => o.name == k)[0];
     },
-    getSubSkillHandler(k) {
-      return SubSkillData.getSkillHandler(this.getSubSkill(k));
-    },
     changeSubSkill(k) {
       const skill = SubSkillData.getSkill(k, this.target_sub_skill_level[k]);
       Object.assign(this.getSubSkill(k), skill);
+    },
+    getDanceSkill(k) {
+      return this.dance_skill.filter(o => o.name == k)[0];
+    },
+    changeDanceSkill(k) {
+      const skill = DanceSkillData.getSkill(k, this.target_dance_skill_level[k]);
+      Object.assign(this.getDanceSkill(k), skill);
+    },
+    changeWeapon() {
+      const weapon = WeaponData.getWeapon(this.target_weapon);
+      Object.assign(this.weapon, weapon);
+      
+      const tips = WeaponData.getTips(this.target_weapon);
+      if(tips) {
+        this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
+      }
+    },
+    changeAccessory() {
+      const accessory = AccessoryData.getWeapon(this.target_accessory);
+      Object.assign(this.accessory, accessory);
+      
+      const tips = AccessoryData.getTips(this.target_accessory);
+      if(tips) {
+        this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
+      }
     },
 
     async setPersistentUrl() {
@@ -306,65 +390,6 @@ export default {
       await navigator.clipboard.writeText(location.href);
 
       this.$toast.show('URLの更新とコピーを完了しました', { type: 'info', position: 'top-right', duration: 4000})
-    },
-
-    getDivMdef(status) {
-      const { skill, enemy, weapon } = this;
-      const _ignore_mdef = Math.min(100, skill.ignore_mdef + status.ignore_mdef + weapon.ignore_mdef);
-      const _mdef = enemy.mdef * (1 - _ignore_mdef / 100);
-      return (1000 + _mdef) / (1000 + _mdef * 10);
-    },
-
-    getDamage(status, isMinimum=false, isMaximum=false) {
-      const { skill, weapon } = this;
-      const { element_up } = this;
-
-      const additional_damage = status.additional_damage
-        + this.getGearHandler('コアオーバクロック').run(isMinimum, isMaximum)
-        ;
-      
-      const div_mdef = this.getDivMdef(status);
-
-      const damage = Math.floor(
-          (status.base_atk + status.equip_atk + status.refine_atk)
-          * (1 + additional_damage / 100 + status.element_enemy_up / 100 + status.boss_up / 100)
-          * (1 + element_up / 100) * (1 + status.element_damage_up / 100)
-          * (1 + status.race_up / 100)
-          * (1 + status.size_up / 100)
-          * ((skill.mul + weapon.skill_mul_up) / 100) * (1 + weapon.skill_up / 100) * (1 + weapon.custom_skill_up / 100)
-          * div_mdef
-      ) + status.extra_damage + skill.add
-      ;
-
-      if(isMinimum) return Math.floor(damage * 0.97);
-      if(isMaximum) return Math.floor(damage * 1.03);
-      return damage;
-    },
-    
-    getVcast(status) {
-      const { skill, weapon } = this;
-      const { status_int: int, status_dex: dex, equip_variable_cast: equip } = status;
-
-      return skill.vcast * (1 - Math.sqrt((int/2 + dex) / 265)) * (1 - equip / 100) * (1 - weapon.vcast_p / 100);
-    },
-    getFcast(status) {
-      const { skill, weapon } = this;
-      const { equip_fix_cast: equip } = status;
-
-      let t = weapon.fcast_s;
-
-      if(skill.name == "マグヌスエクソシズム") {
-        t += this.getGearHandler('ME高速詠唱').run();
-      }
-
-      return Math.max(0, skill.fcast * (1 - equip / 100) * (1 - weapon.fcast_p / 100) - t);
-    },
-
-    getDelay(status) {
-      const { skill } = this;
-      const { equip_delay: equip } = status;
-
-      return skill.delay * (1 - equip / 100);
     },
 
     getPersistentString(data) {
@@ -404,82 +429,92 @@ export default {
         }
       })
       return data;
+    },
+
+    getCalculator(status, weapon, skill, enemy) {
+      const d = new MagicDamageCalculator(status, weapon, skill, enemy);
+
+      // ギアやスキル追加等もここで行う
+      this.sub_skill.map(s => d.handler(SubSkillData.getHandler(s)));
+      this.gear.map(g => d.handler(MagicGearData.getHandler(g)));
+
+      d.handler(WeaponData.getHandler(this.weapon));
+
+      let accessory_handler = AccessoryData.getHandler(this.accessory);
+
+      this.dance_skill.forEach(s => {
+        const dance_handler = DanceSkillData.getHandler(s);
+
+        if(s.name == 'アドバンスブラギの詩' && ['ヴァルキリーの栄耀'].includes(this.accessory.name)) {
+          accessory_handler = MagicDamageHandler.add_mul(accessory_handler, dance_handler);
+        } else {
+          d.handler(dance_handler);
+        }
+      });
+      d.handler(accessory_handler);
+
+      return d;
     }
+    
   },
 
   computed: {
-    element_up() {
-      const { skill, enemy, sub_skill } = this;
-      const v = ElementalRelation[skill.element][enemy.element];
-
-      const s = sub_skill.filter(o => o.name == '属性感知')[0];
-      const h = SubSkillData.getSkillHandler(s).element_up(s.level, this)
-
-      return v + h;
+    calc() {
+      const { status, weapon, skill, enemy } = this;
+      return this.getCalculator(status, weapon, skill, enemy);
     },
-
-    status_adjustment() {
-      return this.status.adjust(this.status_adj);
+    calc_adj() {
+      const { status, status_adj, weapon, skill, enemy } = this;
+      return this.getCalculator(status.adjust(status_adj), weapon, skill, enemy);
     },
 
     total_damage() {
-      return this.getDamage(this.status);
+      return this.calc.get();
     },
     total_min_damage() {
-      return this.getDamage(this.status, true, false);
+      return this.calc.get_min();
     },
     total_max_damage() {
-      return this.getDamage(this.status, false, true);
+      return this.calc.get_max();
     },
     total_damage_adj() {
-      return this.getDamage(this.status_adjustment);
+      return this.calc_adj.get();
     },
     total_min_damage_adj() {
-      return this.getDamage(this.status_adjustment, true, false);
+      return this.calc_adj.get_min();
     },
     total_max_damage_adj() {
-      return this.getDamage(this.status_adjustment, false, true);
+      return this.calc_adj.get_max();
     },
 
     total_cast_time() {
-      return this.getFcast(this.status) + this.getVcast(this.status);
+      return this.calc.cast_time();
     },
     total_cast_time_adj() {
-      return this.getFcast(this.status_adjustment) + this.getVcast(this.status_adjustment);
+      return this.calc_adj.cast_time();
     },
     total_cast_delay() {
-      return Math.max(this.skill.ct, this.getDelay(this.status));
+      return this.calc.cast_delay();
     },
     total_cast_delay_adj() {
-      return Math.max(this.skill.ct, this.getDelay(this.status_adjustment));
-    },
-
-    total_cast_per_second() {
-      const { skill, total_cast_time: ct, total_cast_delay: cd } = this;
-      return skill.time / (ct + cd);
-    },
-    total_cast_per_second_adj() {
-      const { skill, total_cast_time_adj: ct, total_cast_delay_adj: cd } = this;
-      return skill.time / (ct + cd);
-    },
-
-    total_hit_per_second() {
-      const { skill, total_cast_per_second: n } = this;
-      return skill.hit / skill.time * n;
-    },
-    total_hit_per_second_adj() {
-      const { skill, total_cast_per_second_adj: n } = this;
-      return skill.hit / skill.time * n;
+      return this.calc_adj.cast_delay();
     },
 
     total_dps() {
-      return Math.floor(this.total_hit_per_second * this.total_damage)
+      const { skill, total_cast_time: ct, total_cast_delay: cd } = this;
+
+      const n = skill.time / (ct + cd);
+      const hit = skill.hit / skill.time * n;
+
+      return Math.floor(hit * this.total_damage)
     },
     total_dps_adj() {
-      return Math.floor(this.total_hit_per_second_adj * this.total_damage_adj)
+      const { skill, total_cast_time_adj: ct, total_cast_delay_adj: cd } = this;
+      const n = skill.time / (ct + cd);
+      const hit = skill.hit / skill.time * n;
+
+      return Math.floor(hit * this.total_damage_adj)
     },
-
-
   },
 
   created() {
@@ -504,6 +539,15 @@ export default {
         }
         if(k === "sub_skill") {
           v.forEach(s => this.target_sub_skill_level[s.name] = s.level);
+        }
+        if(k === "dance_skill") {
+          v.forEach(s => this.target_dance_skill_level[s.name] = s.level);
+        }
+        if(k === "weapon") {
+          this.target_weapon = v.name;
+        }
+        if(k === "accessory") {
+          this.target_accessory = v.name;
         }
       });
     }
