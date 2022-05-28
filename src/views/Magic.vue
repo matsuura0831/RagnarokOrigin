@@ -117,7 +117,7 @@
 + 追加ダメージ[{{ calc_adj.extra_damage() }}]
                 </p>
                 <p>
-                  固定詠唱[{{ calc.f_cast() }}]，変動詠唱[{{ calc.v_cast() }}]，ディレイ[{{ calc.delay() }}]
+                  固定詠唱[{{ calc_adj.f_cast() }}]，変動詠唱[{{ calc_adj.v_cast() }}]，ディレイ[{{ calc_adj.delay() }}]
                 </p>
               </div>
             </div>
