@@ -45,116 +45,89 @@ export class Weapon {
 const DATA = [
     {
         name: "烈火の杖",
-        handler(w) {
-            return [
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        const name = obj.skill.name;
+        handler(w, skill) {
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+                    if(name == 'ファイアーボルト') status.specific_skill_up += w.refine_effects.skill_up_fb;
+                    if(name == 'ファイアーボール') status.specific_skill_up += w.refine_effects.skill_up_fbl;
+                    if(name == 'メテオストーム')   status.specific_skill_up += w.refine_effects.skill_up_ms;
 
-                        if(name == 'ファイアーボルト') return v * (100 + w.refine_effects.skill_up_fb) / 100;
-                        if(name == 'ファイアーボール') return v * (100 + w.refine_effects.skill_up_fbl) / 100;
-                        if(name == 'メテオストーム') return v * (100 + w.refine_effects.skill_up_ms) / 100;
-                        return v;
-                    }
-                },
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        return v * (100 + w.custom_effects.skill_up) / 100;
-                    }
-                },
-            ];
+                    if(skill.element == "火") status.element_damage_up += w.refine_effects.element_damage_up;
+                    status.custom_skill_up += w.custom_effects.skill_up;
+                }
+            };
         },
         refine_effects: {
-            skill_up_fb: 18,
-            skill_up_fbl: 18,
-            skill_up_ms: 14,
+            skill_up_fb: 19,
+            skill_up_fbl: 19,
+            skill_up_ms: 16,
+            element_damage_up: 19+9+16,
         },
-        tips: "武器効果「火属性ダメージ+」は特殊ステータス > 属性ダメージアップに手動で入力してください",
+        tips: "「火属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに反映済みの場合は武器効果欄の該当箇所を0にしてください",
     },
     {
         name: "疾風の杖",
-        handler(w) {
-            return [
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        const name = obj.skill.name;
+        handler(w, skill) {
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+                    if(name == 'ライトニングボルト') status.specific_skill_up += w.refine_effects.skill_up_lb;
+                    if(name == 'ユピテルサンダー') status.specific_skill_up += w.refine_effects.skill_up_jt;
+                    if(name == 'ロードオブヴァーミリオン')   status.specific_skill_up += w.refine_effects.skill_up_lov;
 
-                        if(name == 'ライトニングボルト') return v * (100 + w.refine_effects.skill_up_lb) / 100;
-                        if(name == 'ユピテルサンダー') return v * (100 + w.refine_effects.skill_up_jt) / 100;
-                        if(name == 'ロードオブヴァーミリオン') return v * (100 + w.refine_effects.skill_up_lov) / 100;
-                        return v;
-                    }
-                },
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        return v * (100 + w.custom_effects.skill_up) / 100;
-                    }
-                },
-            ];
+                    if(skill.element == "風") status.element_damage_up += w.refine_effects.element_damage_up;
+                    status.custom_skill_up += w.custom_effects.skill_up;
+                }
+            };
         },
         refine_effects: {
-            skill_up_lb: 18,
-            skill_up_jt: 18,
-            skill_up_lov: 14,
+            skill_up_lb: 19,
+            skill_up_jt: 19,
+            skill_up_lov: 16,
+            element_damage_up: 19+9+16,
         },
-        tips: "武器効果「風属性ダメージ+」は特殊ステータス > 属性ダメージアップに手動で入力してください",
+        tips: "「風属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに反映済みの場合は武器効果欄の該当箇所を0にしてください",
     },
     {
-        name: "古代海流の杖",
-        handler(w) {
-            return [
-                new class extends MagicDamageHandler {
-                    priority() { return 1; }
-                    skill_up(v, obj, ismin, ismax) {
-                        if(obj.skill.element == '水') return v + w.refine_effects.skill_mul_up_water;
-                        return v;
+        name: "古代海流の杖", 
+        handler(w, skill) {
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+                    if(skill.element == '水') {
+                        status.skill_add += w.refine_effects.skill_mul_up_water;
+                        status.fix_cast_div += w.refine_effects.fcast_water;
                     }
-                },
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        return v * (100 + w.custom_effects.skill_up) / 100;
-                    }
-                    f_cast(v, obj) {
-                        if(obj.skill.element == '水') return v * (100 - w.refine_effects.fcast_water) / 100;
-                        return v;
-                    }
-                },
-            ];
+
+                    if(skill.element == "水") status.element_damage_up += w.refine_effects.element_damage_up;
+                    status.custom_skill_up += w.custom_effects.skill_up;
+                }
+            };
         },
         refine_effects: {
             skill_mul_up_water: 200,
             fcast_water: 20,
+            element_damage_up: 15,
         },
-        tips: "武器効果「水属性ダメージ+」は特殊ステータス > 属性ダメージアップに手動で入力してください",
+        tips: "「水属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに反映済みの場合は武器効果欄の該当箇所を0にしてください．<br/>泡の計算は現在無効です",
     },
     {
         name: "ホーリーステッキ",
-        handler(w) {
-            return [
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        if(obj.skill.name == 'マグヌスエクソシズム') return v * (100 + w.refine_effects.skill_up_me) / 100;
-                        return v;
+        handler(w, skill) {
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+                    if(name == 'マグヌスエクソシズム') {
+                        status.specific_skill_up += w.refine_effects.skill_up_me;
+                        status.ignore_mdef_div += w.refine_effects.ignore_mdef_me;
+                        status.variable_cast_div += w.refine_effects.vcast_me;
+                        status.fix_cast_sub += w.refine_effects.fcast_me;
                     }
-                    ignore_mdef(v, obj, ismin, ismax) {
-                        if(obj.skill.name == 'マグヌスエクソシズム') return v + w.refine_effects.ignore_mdef_me;
-                        return v;
-                    }
-                    v_cast(v, obj) {
-                        if(obj.skill.name == 'マグヌスエクソシズム') return v * (100 - w.refine_effects.vcast_me) / 100;
-                        return v;
-                    }
-                    f_cast(v, obj) {
-                        if(obj.skill.name == 'マグヌスエクソシズム') return v - w.refine_effects.fcast_me;
-                        return v;
-                    }
-                },
-                new class extends MagicDamageHandler {
-                    skill_up(v, obj, ismin, ismax) {
-                        return v * (100 + w.custom_effects.skill_up) / 100;
-                    }
-                },
-            ];
+                    
+                    status.custom_skill_up += w.custom_effects.skill_up;
+                }
+            };
         },
         refine_effects: {
             skill_up_me: 14,
@@ -187,7 +160,7 @@ DATA.forEach(obj => {
     CONVERT_DATA[name] = {
         instance: w,
         tips: tips,
-        handler: (w) => handler(w)
+        handler: (w, s) => handler(w, s)
     }
 })
 
@@ -200,8 +173,8 @@ export default {
     getWeapon(name) {
         return CONVERT_DATA[name].instance.clone();
     },
-    getHandler(w) {
-        return CONVERT_DATA[w.name].handler(w);
+    getHandler(w, skill) {
+        return CONVERT_DATA[w.name].handler(w, skill);
     },
     getTips(name) {
         return CONVERT_DATA[name].tips || "";

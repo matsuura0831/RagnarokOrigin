@@ -26,8 +26,10 @@ export default {
     return {
       inputs: [
         { key: 'skill_up',   label: 'スキルダメージ[%]',  number: 1},
-        { key: 'matk_limit', label: '魔法攻撃上限倍率[%]',  number: 1},
-        { key: 'repeated',   label: '重複回数',  number: 1},
+        { key: 'skill_up_repeated',   label: '重複回数',  number: 1},
+
+        { key: 'last_up', label: '最終倍率[%]',  number: 1},
+        { key: 'last_atk_limit', label: '魔法攻撃上限[%]',  number: 1},
         
       ],
     }

@@ -46,12 +46,12 @@ export default {
           { label: "精練魔法攻撃", key: "refine_atk", disabled: 0 },
         ]},
         { label: "上級ステータス", records: [
-          { label: "魔法ダメージ増加[%]", key: "additional_damage", disabled: 0 },
-          { label: "魔法防御無視[%]", key: "ignore_mdef", disabled: 0 },
+          { label: "魔法ダメージ増加[%]", key: "magic_damage_up", disabled: 0 },
+          { label: "魔法防御無視[%]", key: "ignore_mdef_div", disabled: 0 },
           { label: "追加魔法ダメージ", key: "extra_damage", disabled: 0 },
         ]},
         { label: "特殊ステータス", records: [
-          { label: "魔法攻撃[%]", key: "magic_damage_up", disabled: 0 },
+          { label: "魔法攻撃[%]", key: "magic_up", disabled: 0 },
           { label: "サイズモンスターダメージアップ[%]", key: "size_up", disabled: 0 },
           { label: "種族モンスターダメージアップ[%]", key: "race_up", disabled: 0 },
           { label: "属性モンスターダメージアップ[%]", key: "element_enemy_up", disabled: 0 },
@@ -61,9 +61,24 @@ export default {
         { label: "詠唱に関わるステータス", records: [
           { label: "INT", key: "status_int", disabled: 0 },
           { label: "DEX", key: "status_dex", disabled: 0 },
-          { label: "装備固定詠唱減少[%]", key: "equip_fix_cast", disabled: 0 },
-          { label: "装備変動詠唱減少[%]", key: "equip_variable_cast", disabled: 0 },
-          { label: "装備ディレイ減少[%]", key: "equip_delay", disabled: 0 },
+          { label: "固定詠唱減少[%]", key: "fix_cast_div", disabled: 0 },
+          { label: "変動詠唱減少[%]", key: "variable_cast_div", disabled: 0 },
+          { label: "装備ディレイ減少[%]", key: "delay_div", disabled: 0 },
+        ]},
+        { label: "内部ステータス(基本は装備変更で対応すること)", records: [
+          { label: "固定詠唱減少[s]", key: "fix_cast_sub", disabled: 0 },
+          { label: "変動詠唱減少[s]", key: "variable_cast_sub", disabled: 0 },
+
+          { label: "最終倍率[%]", key: "last_up", disabled: 0 },
+          { label: "最終確率[%]", key: "last_up_prob", disabled: 0 },
+          { label: "魔法攻撃上限[%]", key: "last_atk_limit", disabled: 0 },
+
+          { label: "スキル倍率アップ[%]", key: "skill_add", disabled: 0 },
+          { label: "スキルダメージアップ[%]", key: "skill_up", disabled: 0 },
+          { label: "改造スキルダメージアップ[%]", key: "custom_skill_up", disabled: 0 },
+          { label: "特定スキルダメージアップ[%]", key: "specific_skill_up", disabled: 0 },
+
+          { label: "追加属性相性[%]", key: "element_relation_add", disalbed: 0 },
         ]},
       ]
     }

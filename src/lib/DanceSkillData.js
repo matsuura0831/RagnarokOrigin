@@ -45,8 +45,8 @@ const DATA = [
             }[level];
 
             return new class extends MagicDamageHandler {
-                delay_pre(v, obj) {
-                    return v + _adj;
+                run(status, ismin, ismax) {
+                    status.delay_div += _adj;
                 }
             }
         }
@@ -63,8 +63,8 @@ const DATA = [
             }[level];
             
             return new class extends MagicDamageHandler {
-                skill_up(v, obj, ismin, ismax) {
-                    return v * (100 + _adj) / 100;
+                run(status, ismin, ismax) {
+                    status.skill_up += _adj;
                 }
             }
         }

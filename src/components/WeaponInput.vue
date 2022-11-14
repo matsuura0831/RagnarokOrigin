@@ -48,6 +48,8 @@ export default {
         { key: 'skill_mul_up_water',  label: '水属性ダメージ倍率UP[%]',  number: 1},
         { key: 'fcast_water',         label: '水属性スキル固定時間減少[%]',  number: 1},
         
+        { key: 'element_damage_up',  label: '属性ダメージアップ[%]',  number: 1},
+
         { key: 'skill_up_me',      label: 'MEスキルダメージUP[%]',  number: 1},
         { key: 'ignore_mdef_me',   label: 'MEスキル防御無視[%]',  number: 1},
         { key: 'vcast_me',       label: 'MEスキル変動時間減少[%]',  number: 1},

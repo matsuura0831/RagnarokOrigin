@@ -1,7 +1,7 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 
 export class Accessory {
-    static VERSION = [1, 0];    // major, minor
+    static VERSION = [2, 0];    // major, minor
 
     constructor(
         name,
@@ -42,34 +42,30 @@ const DATA = [
         name: "ヴァルキリーの栄耀",
         handler(w) {
             return new class extends MagicDamageHandler {
-                skill_up(v, obj, ismin, ismax) {
-                    return v * (100 + w.set_effects.skill_up * w.set_effects.repeated) / 100;
+                run(status, ismin, ismax) {
+                    status.skill_up += w.set_effects.skill_up * w.set_effects.skill_up_repeated;
                 }
             };
         },
         set_effects: {
             skill_up: 5,
-            repeated: 4,
+            skill_up_repeated: 4,
         },
     },
     {
         name: "ゲンドゥルの意思",
         handler(w) {
             return new class extends MagicDamageHandler {
-                last(v, obj, ismin, ismax) {
-                    if(ismin) return v;
-
-                    const matk = obj.total_atk(ismin, ismax);
-                    const d = Math.min(matk * w.set_effects.matk_limit / 100, v * w.set_effects.skill_up / 100);
-
-                    if(ismax) return Math.max(v, d);
-                    return v * 0.9 + d * 0.1;
+                run(status, ismin, ismax) {
+                    status.last_up += w.set_effects.last_up;
+                    status.last_up_prob += 10;
+                    status.last_atk_limit += w.set_effects.last_atk_limit;
                 }
             };
         },
         set_effects: {
-            skill_up: 250,
-            matk_limit: 5000,
+            last_up: 250,
+            last_atk_limit: 5000,
         },
         tips: "DPS計算にクールタイム(1s)は考慮されない点にご注意ください",
     },

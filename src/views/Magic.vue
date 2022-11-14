@@ -89,14 +89,14 @@
               <div class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
                 <p>
 魔法攻撃[{{ calc.total_atk() }}] 
-   * 魔法ダメージ%[{{ calc.damage_up()}}]
-   * 属性相性%[{{ calc.element_relation_up() }}]
-   * 属性ダメージUP%[{{ calc.element_damage_up() }}]
-   * 種族モンスターダメUP%[{{ calc.race_up() }}]
-   * サイズモンスターダメUP%[{{ calc.size_up() }}]
-   * スキル倍率%[{{ calc.skill_up() }}]
-   * 敵除算MDEF%[{{ calc.div_mdef() }}]
-+ 追加ダメージ[{{ calc.extra_damage() }}]
+   * 魔法ダメージ%[{{ calc.total_damage_up()}}]
+   * 属性相性%[{{ calc.total_element_relation_up() }}]
+   * 属性ダメージUP%[{{ calc.total_element_damage_up() }}]
+   * 種族モンスターダメUP%[{{ calc.total_race_up() }}]
+   * サイズモンスターダメUP%[{{ calc.total_size_up() }}]
+   * スキル倍率%[{{ calc.total_skill_up() }}]
+   * 敵除算MDEF%[{{ calc.total_enemy_mdef_div() }}]
++ 追加ダメージ[{{ calc.total_extra_damage() }}]
                 </p>
 
                 <p>
@@ -107,14 +107,14 @@
               <div class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
                 <p>
 魔法攻撃[{{ calc_adj.total_atk() }}] 
-   * 魔法ダメージ%[{{ calc_adj.damage_up()}}]
-   * 属性相性%[{{ calc_adj.element_relation_up() }}]
-   * 属性ダメージUP%[{{ calc_adj.element_damage_up() }}]
-   * 種族モンスターダメUP%[{{ calc_adj.race_up() }}]
-   * サイズモンスターダメUP%[{{ calc_adj.size_up() }}]
-   * スキル倍率%[{{ calc_adj.skill_up() }}]
-   * 敵除算MDEF%[{{ calc_adj.div_mdef() }}]
-+ 追加ダメージ[{{ calc_adj.extra_damage() }}]
+   * 魔法ダメージ%[{{ calc_adj.total_damage_up()}}]
+   * 属性相性%[{{ calc_adj.total_element_relation_up() }}]
+   * 属性ダメージUP%[{{ calc_adj.total_element_damage_up() }}]
+   * 種族モンスターダメUP%[{{ calc_adj.total_race_up() }}]
+   * サイズモンスターダメUP%[{{ calc_adj.total_size_up() }}]
+   * スキル倍率%[{{ calc_adj.total_skill_up() }}]
+   * 敵除算MDEF%[{{ calc_adj.total_enemy_mdef_div() }}]
++ 追加ダメージ[{{ calc_adj.total_extra_damage() }}]
                 </p>
                 <p>
                   固定詠唱[{{ calc_adj.f_cast() }}]，変動詠唱[{{ calc_adj.v_cast() }}]，ディレイ[{{ calc_adj.delay() }}]
@@ -256,7 +256,7 @@ import WeaponData from "@/lib/WeaponData";
 import AccessoryData from "@/lib/AccessoryData";
 import MagicGearData from "@/lib/MagicGearData";
 
-import { MagicDamageCalculator, MagicDamageHandler } from "@/lib/MagicDamage";
+import { MagicDamageBuilder, MagicDamageHandler } from "@/lib/MagicDamage";
 
 const zlib = require('zlib')
 
@@ -431,60 +431,61 @@ export default {
       return data;
     },
 
-    getCalculator(status, weapon, skill, enemy) {
-      const d = new MagicDamageCalculator(status, weapon, skill, enemy);
+    getCalculator(status, weapon, skill, enemy, ismin, ismax) {
+      const b = new MagicDamageBuilder(status, weapon, skill, enemy);
 
       // ギアやスキル追加等もここで行う
-      this.sub_skill.map(s => d.handler(SubSkillData.getHandler(s)));
-      this.gear.map(g => d.handler(MagicGearData.getHandler(g)));
+      b.handler(WeaponData.getHandler(weapon, skill));
+      b.handler(AccessoryData.getHandler(this.accessory));
 
-      d.handler(WeaponData.getHandler(this.weapon));
+      this.sub_skill.map(s => b.handler(SubSkillData.getHandler(s, skill, enemy)));
+      this.gear.map(g => b.handler(MagicGearData.getHandler(g, skill)));
+      
+      this.dance_skill.map(s => b.handler(DanceSkillData.getHandler(s)));
 
-      let accessory_handler = AccessoryData.getHandler(this.accessory);
-
-      this.dance_skill.forEach(s => {
-        const dance_handler = DanceSkillData.getHandler(s);
-
-        if(s.name == 'アドバンスブラギの詩' && ['ヴァルキリーの栄耀'].includes(this.accessory.name)) {
-          accessory_handler = MagicDamageHandler.add_mul(accessory_handler, dance_handler);
-        } else {
-          d.handler(dance_handler);
-        }
-      });
-      d.handler(accessory_handler);
-
-      return d;
+      return b.build(ismin, ismax);
     }
     
   },
 
   computed: {
     calc() {
-      const { status, weapon, skill, enemy } = this;
-      return this.getCalculator(status, weapon, skill, enemy);
+      return this.getCalculator(this.status, this.weapon, this.skill, this.enemy, 0, 0);
     },
+    calc_min() {
+      return this.getCalculator(this.status, this.weapon, this.skill, this.enemy, 1, 0);
+    },
+    calc_max() {
+      return this.getCalculator(this.status, this.weapon, this.skill, this.enemy, 0, 1);
+    },
+
     calc_adj() {
-      const { status, status_adj, weapon, skill, enemy } = this;
-      return this.getCalculator(status.adjust(status_adj), weapon, skill, enemy);
+      return this.getCalculator(this.status.adjust(this.status_adj), this.weapon, this.skill, this.enemy, 0, 0);
+    },
+    calc_adj_min() {
+      return this.getCalculator(this.status.adjust(this.status_adj), this.weapon, this.skill, this.enemy, 1, 0);
+    },
+    calc_adj_max() {
+      return this.getCalculator(this.status.adjust(this.status_adj), this.weapon, this.skill, this.enemy, 0, 1);
     },
 
     total_damage() {
       return this.calc.get();
     },
     total_min_damage() {
-      return this.calc.get_min();
+      return this.calc_min.get();
     },
     total_max_damage() {
-      return this.calc.get_max();
+      return this.calc_max.get();
     },
     total_damage_adj() {
       return this.calc_adj.get();
     },
     total_min_damage_adj() {
-      return this.calc_adj.get_min();
+      return this.calc_adj_min.get();
     },
     total_max_damage_adj() {
-      return this.calc_adj.get_max();
+      return this.calc_adj_max.get();
     },
 
     total_cast_time() {

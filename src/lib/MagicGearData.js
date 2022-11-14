@@ -40,7 +40,7 @@ const DATA = [
         name: "コアオーバクロック",
         levels: [7, 6, 5, 3, 2, 1, 0],
         
-        handler(level) {
+        handler(level, skill) {
             const _adj = {
                 7: [-15, 40], 6: [-15, 36], 5: [-15, 32],
                 3: [-15, 28], 2: [-15, 24], 1: [-15, 20],
@@ -48,10 +48,14 @@ const DATA = [
             }[level];
 
             return new class extends MagicDamageHandler {
-                damage_up(v, obj, ismin, ismax) {
-                    if(ismin) return v + _adj[0];
-                    if(ismax) return v + _adj[1];
-                    return v + (_adj[0] + _adj[1]) / 2;
+                run(status, ismin, ismax) {
+                    if(ismin) {
+                        status.magic_damage_up += _adj[0];
+                    } else if(ismax) {
+                        status.magic_damage_up += _adj[1];
+                    } else {
+                        status.magic_damage_up += (_adj[0] + _adj[1]) / 2;
+                    }
                 }
             }
         },
@@ -60,7 +64,7 @@ const DATA = [
         name: "ME高速詠唱",
         levels: [7, 6, 4, 3, 2, 1, 0],
 
-        handler(level) {
+        handler(level, skill) {
             const _adj = {
                 7: 1.1, 6: 1.0,
                 4: 0.8, 3: 0.7,
@@ -69,11 +73,10 @@ const DATA = [
             }[level];
 
             return new class extends MagicDamageHandler {
-                f_cast(v, obj) {
-                    if(obj.skill.name == "マグヌスエクソシズム") {
-                        return v - _adj;
+                run(status, ismin, ismax) {
+                    if(skill.name == "マグヌスエクソシズム") {
+                        status.fix_cast_sub += _adj;
                     }
-                    return v;
                 }
             }
         },
@@ -86,7 +89,7 @@ DATA.forEach(({ name, levels, handler }) => {
     levels.forEach(i => {
         m[i] = {
             instance: new MagicGear(name, i),
-            handler: handler(i),
+            handler: (skill) => handler(i, skill),
         };
     });
     CONVERT_DATA[name] = m;
@@ -101,7 +104,7 @@ export default {
         const lv = level || 0;
         return m[lv].instance.clone();
     },
-    getHandler({name, level}) {
-        return CONVERT_DATA[name][level].handler;
+    getHandler({name, level}, skill) {
+        return CONVERT_DATA[name][level].handler(skill);
     }
 }
