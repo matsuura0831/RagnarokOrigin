@@ -43,7 +43,7 @@
                   <td class="p-2 border"></td>
                 </tr>
 
-                <tr class="text-right" v-if="skill.time > 0">
+                <tr class="text-right">
                   <td class="p-2 border text-left">DPS</td>
                   <td class="p-2 border">{{ total_dps.toLocaleString() }}</td>
                   <td class="p-2 border">{{ total_dps_adj.toLocaleString() }}</td>
@@ -51,7 +51,7 @@
                     {{ Math.floor((total_dps_adj - total_dps) / total_dps * 100 * 10) / 10 }}
                   </td>
                 </tr>
-                <tr class="text-right" v-if="skill.time > 0">
+                <tr class="text-right">
                   <td class="p-2 border">CT</td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_time * 100) / 100 }}
@@ -61,7 +61,7 @@
                   </td>
                   <td class="p-2 border"></td>
                 </tr>
-                <tr class="text-right" v-if="skill.time > 0">
+                <tr class="text-right">
                   <td class="p-2 border">CD</td>
                   <td class="p-2 border">
                     {{ Math.round(total_cast_delay * 100) / 100 }}
@@ -536,15 +536,23 @@ export default {
     total_dps() {
       const { skill, total_cast_time: ct, total_cast_delay: cd } = this;
 
+      /*
       const n = skill.time / (ct + cd);
-      const hit = skill.hit / skill.time * n;
+      const a = skill.hit / skill.time;
+      const hit = a * n;
+      */
+      const hit = skill.hit / (ct + cd);
 
       return Math.floor(hit * this.total_damage)
     },
     total_dps_adj() {
       const { skill, total_cast_time_adj: ct, total_cast_delay_adj: cd } = this;
+
+      /*
       const n = skill.time / (ct + cd);
       const hit = skill.hit / skill.time * n;
+      */
+      const hit = skill.hit / (ct + cd);
 
       return Math.floor(hit * this.total_damage_adj)
     },
