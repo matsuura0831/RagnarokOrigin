@@ -1,9 +1,9 @@
 class MagicSkill {
-    static VERSION = [2, 0];    // major, minor
+    static VERSION = [3, 0];    // major, minor
 
     constructor(
         name, element, level, ignore_mdef,
-        mul, add, vcast, fcast, delay, ct, hit, time
+        mul, add, vcast, fcast, delay, ct, hit, time, motion,
     ) {
         this.name = name;
         this.element = element;
@@ -17,6 +17,7 @@ class MagicSkill {
         this.ct = ct;
         this.hit = hit;
         this.time = time;
+        this.motion = motion;
     }
 
     serialize() {
@@ -24,6 +25,7 @@ class MagicSkill {
             ...MagicSkill.VERSION,
             this.name, this.element, this.level, this.ignore_mdef,
             this.mul, this.add, this.vcast, this.fcast, this.delay, this.ct, this.hit, this.time,
+            this.motion
         ];
     }
 
@@ -422,8 +424,8 @@ const DATA = [
 const CONVERT_DATA = {};
 DATA.forEach(({ name, element, ignore_mdef, records }) => {
     let m = {};
-    records.forEach(({ level, mul, add, vcast, fcast, delay, ct, hit, time }) => {
-        m[level] = new MagicSkill(name, element, level, ignore_mdef || 0, mul, add, vcast, fcast, delay, ct, hit, time);
+    records.forEach(({ level, mul, add, vcast, fcast, delay, ct, hit, time, motion }) => {
+        m[level] = new MagicSkill(name, element, level, ignore_mdef || 0, mul, add, vcast, fcast, delay, ct, hit, time, motion || 0.7);
     });
     CONVERT_DATA[name] = m;
 })

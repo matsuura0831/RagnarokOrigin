@@ -137,7 +137,7 @@ class MagicDamageCalculator {
        const { delay_div: div, delay_sub: sub } = status;
 
        const t = (skill.delay - sub) * (1 - div / 100);
-       return t;
+       return Math.max(skill.motion, t);
    }
    cast_delay() {
        const d = this.delay();
