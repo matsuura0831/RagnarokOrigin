@@ -147,7 +147,7 @@ export default {
     data: CONVERT_DATA,
     clazz: Accessory,
 
-    getWeapon(name) {
+    getAccessory(name) {
         return CONVERT_DATA[name].instance.clone();
     },
     getHandler(w) {
