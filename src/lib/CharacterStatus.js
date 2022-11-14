@@ -15,6 +15,7 @@ export default class CharacterStatus {
         skill_up,
         element_relation_add,
         ignore_mdef_sub, pve_damage_up,
+        magic_add,
     ) {
         this.base_atk = base_atk || 0;
         this.equip_atk = equip_atk || 0;
@@ -70,6 +71,9 @@ export default class CharacterStatus {
         // ギルドスキル実装
         this.ignore_mdef_sub = ignore_mdef_sub || 0;
         this.pve_damage_up = pve_damage_up || 0;
+
+        // 武具効果：知識の王の降臨
+        this.magic_add = magic_add || 0;
     }
 
     serialize() {
@@ -88,6 +92,7 @@ export default class CharacterStatus {
             this.skill_up,
             this.element_relation_add,
             this.ignore_mdef_sub, this.pve_damage_up,
+            this.magic_add,
         ];
     }
 
@@ -146,6 +151,7 @@ export default class CharacterStatus {
             this.element_relation_add + adj.element_relation_add,
             this.ignore_mdef_sub + adj.ignore_mdef_sub,
             this.pve_damage_up + adj.pve_damage_up,
+            this.magic_add + adj.magic_add,
         );
     }
 }

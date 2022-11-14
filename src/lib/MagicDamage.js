@@ -15,7 +15,12 @@ class MagicDamageCalculator {
    }
 
    total_atk() {
-       const v = this.status.base_atk + this.status.equip_atk + this.status.refine_atk;
+       let v = this.status.base_atk + this.status.equip_atk + this.status.refine_atk;
+
+       if(this.status.magic_add > 0) {
+           const {magic_up: now, magic_add: add} = this.status;
+           v = Math.round(v / (1.0 + now / 100) * (1.0 + (now + add) / 100));
+       }
        return v;
    }
    
@@ -25,7 +30,6 @@ class MagicDamageCalculator {
            + this.status.magic_damage_up
            + this.status.element_enemy_up
            + this.status.boss_up;
-
        return v;
    }
 
