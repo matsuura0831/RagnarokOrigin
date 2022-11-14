@@ -163,11 +163,10 @@ const DATA = [
         ]
     },
     {
-        // TODO: timeを測定する
         name: "メテオストーム",
         element: "火",
         records: [
-            { level: 10, mul: 550, add: 154, vcast: 2.4, fcast: 3.25, delay: 4.0, ct: 0, hit: 9, time: 0 },
+            { level: 10, mul: 550, add: 154, vcast: 2.4, fcast: 3.25, delay: 4.0, ct: 0, hit: 9, time: 5.4 },   // 0.6秒間隔で1個落ちている
             { level: 9, mul: 550, add: 118, vcast: 2.4, fcast: 3.42, delay: 4.0, ct: 0, hit: 8, time: 0 },
             { level: 8, mul: 440, add: 104, vcast: 2.4, fcast: 3.59, delay: 4.0, ct: 0, hit: 8, time: 0 },
             { level: 7, mul: 440, add: 75, vcast: 2.4, fcast: 3.76, delay: 4.0, ct: 0, hit: 7, time: 0 },
