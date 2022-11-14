@@ -14,6 +14,7 @@ export default class CharacterStatus {
         last_up, last_up_prob, last_atk_limit,
         skill_up,
         element_relation_add,
+        ignore_mdef_sub, pve_damage_up,
     ) {
         this.base_atk = base_atk || 0;
         this.equip_atk = equip_atk || 0;
@@ -65,6 +66,10 @@ export default class CharacterStatus {
 
         // スキル効果：属性感知
         this.element_relation_add = element_relation_add || 0;
+
+        // ギルドスキル実装
+        this.ignore_mdef_sub = ignore_mdef_sub || 0;
+        this.pve_damage_up = pve_damage_up || 0;
     }
 
     serialize() {
@@ -82,6 +87,7 @@ export default class CharacterStatus {
             this.last_up, this.last_up_prob, this.last_atk_limit,
             this.skill_up,
             this.element_relation_add,
+            this.ignore_mdef_sub, this.pve_damage_up,
         ];
     }
 
@@ -138,6 +144,8 @@ export default class CharacterStatus {
             this.last_atk_limit + adj.last_atk_limit,
             this.skill_up + adj.skill_up,
             this.element_relation_add + adj.element_relation_add,
+            this.ignore_mdef_sub + adj.ignore_mdef_sub,
+            this.pve_damage_up + adj.pve_damage_up,
         );
     }
 }

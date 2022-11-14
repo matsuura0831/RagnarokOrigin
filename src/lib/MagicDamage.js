@@ -59,7 +59,7 @@ class MagicDamageCalculator {
 
    total_enemy_mdef_div() {
        const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef_div);
-       const mdef = this.enemy.mdef * (100 - ignore) / 100;
+       const mdef = (this.enemy.mdef - this.status.ignore_mdef_sub) * (100 - ignore) / 100; // TODO: 仮で最初に減算するとする
        const v = (1000 + mdef) / (1000 + mdef * 10);
 
        return v;
@@ -70,19 +70,29 @@ class MagicDamageCalculator {
        return v;
    }
 
+   total_pve_damage_up() {
+       const v = 100 + this.status.pve_damage_up / 100;   // TODO: 仮でPVEダメージアップは 100 = 1%とする
+       return v;
+   }
+
    get(...args) {
        const atk = this.total_atk();
 
        let d = Math.floor(
-           atk
-           * this.total_damage_up() / 100
-           * this.total_element_relation_up() / 100
-           * this.total_element_damage_up() / 100
-           * this.total_race_up() / 100
-           * this.total_size_up() / 100
-           * this.total_skill_up() / 100
-           * this.total_enemy_mdef_div()
-       ) + this.total_extra_damage();
+           (
+               Math.floor(
+                    atk
+                        * this.total_damage_up() / 100
+                        * this.total_element_relation_up() / 100
+                        * this.total_element_damage_up() / 100
+                        * this.total_race_up() / 100
+                        * this.total_size_up() / 100
+                        * this.total_skill_up() / 100
+                        * this.total_enemy_mdef_div()
+                    ) + this.total_extra_damage()
+           ) * this.total_pve_damage_up() / 100
+       );
+       
 
        if(this.status.last_up > 0 && this.ismin == false) {
            const limit = (this.status.last_atk_limit > 0) ? atk * this.status.last_atk_limit / 100 : Infinity;
