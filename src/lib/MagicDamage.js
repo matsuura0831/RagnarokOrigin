@@ -62,7 +62,7 @@ class MagicDamageCalculator {
 
    total_enemy_mdef_div() {
        const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef_div);
-       const mdef = (this.enemy.mdef - this.status.ignore_mdef_sub) * (100 - ignore) / 100; // TODO: 仮で最初に減算するとする
+       const mdef = Math.max(0, this.enemy.mdef - this.status.ignore_mdef_sub) * (100 - ignore) / 100; // TODO: 仮で最初に減算するとする
        const v = (1000 + mdef) / (1000 + mdef * 10);
 
        return v;
