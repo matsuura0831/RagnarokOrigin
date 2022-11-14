@@ -212,6 +212,18 @@
           </div>
           <WeaponInput v-model="weapon" />
 
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">防具効果</h1>
+
+          <div class="flex items-center mb-2">
+            <select
+                name="armor"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_armor" @change="changeArmor">
+              <option v-for="j in Object.keys(armor_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
+          <ArmorInput v-model="armor" />
+
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">アクセサリーセット効果</h1>
 
           <div class="flex items-center mb-2">
@@ -248,6 +260,7 @@ import EnemyInput from "@/components/EnemyInput.vue";
 import SkillInput from "@/components/SkillInput.vue";
 import WeaponInput from "@/components/WeaponInput.vue";
 import AccessoryInput from "@/components/AccessoryInput.vue";
+import ArmorInput from "@/components/ArmorInput.vue";
 import Accordion from "@/components/Accordion.vue";
 
 import CharacterStatus from "@/lib/CharacterStatus";
@@ -256,6 +269,7 @@ import MagicSkillData from "@/lib/MagicSkillData";
 import SubSkillData from "@/lib/SubSkillData";
 import DanceSkillData from "@/lib/DanceSkillData";
 import WeaponData from "@/lib/WeaponData";
+import ArmorData from "@/lib/ArmorData";
 import AccessoryData from "@/lib/AccessoryData";
 import MagicGearData from "@/lib/MagicGearData";
 
@@ -273,6 +287,7 @@ const persistent_list = [
   { key: 'enemy', clazz: EnemyData.clazz },
   { key: 'skill', clazz: MagicSkillData.clazz },
   { key: 'weapon', clazz: WeaponData.clazz },
+  { key: 'armor', clazz: ArmorData.clazz },
   { key: 'accessory', clazz: AccessoryData.clazz },
   { key: 'gear', clazz: [...Object.keys(MagicGearData.data).map(_ => MagicGearData.clazz)] },
   { key: 'sub_skill', clazz: [...Object.keys(SubSkillData.data).map(_ => SubSkillData.clazz)] },
@@ -287,6 +302,7 @@ export default {
     SkillInput,
     WeaponInput,
     AccessoryInput,
+    ArmorInput,
     Accordion,
   },
   data() {
@@ -296,7 +312,8 @@ export default {
       enemy: EnemyData.getEnemy('カカシ(中)'),
       skill: MagicSkillData.getSkill('グラビテーションフィールド'),
       weapon: WeaponData.getWeapon('その他'),
-      accessory: AccessoryData.getWeapon('その他'),
+      armor: ArmorData.getArmor('その他'),
+      accessory: AccessoryData.getAccessory('その他'),
 
       gear: [...Object.keys(MagicGearData.data).map(k => MagicGearData.getGear(k))],
       sub_skill: [...Object.keys(SubSkillData.data).map(k => SubSkillData.getSkill(k))],
@@ -320,6 +337,7 @@ export default {
       sub_skill_data: SubSkillData.data,
       dance_skill_data: DanceSkillData.data,
       weapon_data: WeaponData.data,
+      armor_data: ArmorData.data,
       accessory_data: AccessoryData.data,
       
       target_enemy: data.enemy.name,
@@ -329,6 +347,7 @@ export default {
       target_sub_skill_level: target_sub_skill_level,
       target_dance_skill_level: target_dance_skill_level,
       target_weapon: data.weapon.name,
+      target_armor: data.armor.name,
       target_accessory: data.accessory.name,
     });
   },
@@ -377,8 +396,17 @@ export default {
         this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
       }
     },
+    changeArmor() {
+      const armor = ArmorData.getArmor(this.target_armor);
+      Object.assign(this.armor, armor);
+      
+      const tips = ArmorData.getTips(this.target_armor);
+      if(tips) {
+        this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
+      }
+    },
     changeAccessory() {
-      const accessory = AccessoryData.getWeapon(this.target_accessory);
+      const accessory = AccessoryData.getAccessory(this.target_accessory);
       Object.assign(this.accessory, accessory);
       
       const tips = AccessoryData.getTips(this.target_accessory);
@@ -434,15 +462,16 @@ export default {
       return data;
     },
 
-    getCalculator(status, weapon, skill, enemy, ismin, ismax) {
-      const b = new MagicDamageBuilder(status, weapon, skill, enemy);
+    getCalculator(status, ismin, ismax) {
+      const b = new MagicDamageBuilder(status, this.skill, this.enemy);
 
       // ギアやスキル追加等もここで行う
-      b.handler(WeaponData.getHandler(weapon, skill));
+      b.handler(WeaponData.getHandler(this.weapon, this.skill));
+      b.handler(ArmorData.getHandler(this.armor));
       b.handler(AccessoryData.getHandler(this.accessory));
 
-      this.sub_skill.map(s => b.handler(SubSkillData.getHandler(s, skill, enemy)));
-      this.gear.map(g => b.handler(MagicGearData.getHandler(g, skill)));
+      this.sub_skill.map(s => b.handler(SubSkillData.getHandler(s, this.skill, this.enemy)));
+      this.gear.map(g => b.handler(MagicGearData.getHandler(g, this.skill)));
       
       this.dance_skill.map(s => b.handler(DanceSkillData.getHandler(s)));
 
@@ -453,23 +482,23 @@ export default {
 
   computed: {
     calc() {
-      return this.getCalculator(this.status, this.weapon, this.skill, this.enemy, 0, 0);
+      return this.getCalculator(this.status, 0, 0);
     },
     calc_min() {
-      return this.getCalculator(this.status, this.weapon, this.skill, this.enemy, 1, 0);
+      return this.getCalculator(this.status, 1, 0);
     },
     calc_max() {
-      return this.getCalculator(this.status, this.weapon, this.skill, this.enemy, 0, 1);
+      return this.getCalculator(this.status, 0, 1);
     },
 
     calc_adj() {
-      return this.getCalculator(this.status.adjust(this.status_adj), this.weapon, this.skill, this.enemy, 0, 0);
+      return this.getCalculator(this.status.adjust(this.status_adj), 0, 0);
     },
     calc_adj_min() {
-      return this.getCalculator(this.status.adjust(this.status_adj), this.weapon, this.skill, this.enemy, 1, 0);
+      return this.getCalculator(this.status.adjust(this.status_adj), 1, 0);
     },
     calc_adj_max() {
-      return this.getCalculator(this.status.adjust(this.status_adj), this.weapon, this.skill, this.enemy, 0, 1);
+      return this.getCalculator(this.status.adjust(this.status_adj), 0, 1);
     },
 
     total_damage() {
@@ -549,6 +578,9 @@ export default {
         }
         if(k === "weapon") {
           this.target_weapon = v.name;
+        }
+        if(k === "armor") {
+          this.target_armor = v.name;
         }
         if(k === "accessory") {
           this.target_accessory = v.name;

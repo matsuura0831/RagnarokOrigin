@@ -61,6 +61,195 @@ const DATA = [
         },
     },
     {
+        name: "インファイト",
+        levels: [7, 6, 4, 3, 2, 1, 0],
+        
+        handler(level, skill) {
+            const _adj = {
+                7: 7, 6: 6,
+                4: 4, 3: 3,
+                2: 2, 1: 1,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.magic_damage_up += _adj;
+                }
+            }
+        },
+    },
+    {
+        name: "アウトレンジ",
+        levels: [7, 6, 4, 3, 2, 1, 0],
+        
+        handler(level, skill) {
+            const _adj = {
+                7: 7, 6: 6,
+                4: 4, 3: 3,
+                2: 2, 1: 1,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.magic_damage_up += _adj;
+                }
+            }
+        },
+    },
+    {
+        name: "臨戦",
+        levels: [7, 6, 5, 3, 2, 1, 0],
+        
+        handler(level, skill) {
+            const _adj = {
+                7: 8, 6: 7, 5: 6,
+                3: 4, 2: 3, 1: 2,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.magic_damage_up += _adj;
+                }
+            }
+        },
+    },
+    {
+        name: "残忍",
+        levels: [7, 6, 5, 3, 2, 1, 0],
+        
+        handler(level, skill) {
+            const _adj = {
+                7: 10, 6: 9, 5: 8,
+                3: 5, 2: 4, 1: 3,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.magic_damage_up += _adj;
+                }
+            }
+        },
+    },
+    {
+        name: "ウォールエッジ",
+        levels: [3, 2, 1, 0],
+        
+        handler(level, skill) {
+            const _adj = {
+                3: 10, 2: 9, 1: 8,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.magic_damage_up += _adj;
+                }
+            }
+        },
+    },
+    {
+        name: "ニューマエッジ",
+        levels: [3, 2, 1, 0],
+        
+        handler(level, skill) {
+            const _adj = {
+                3: 10, 2: 9, 1: 8,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.magic_damage_up += _adj;
+                }
+            }
+        },
+    },
+    {
+        name: "MS再詠唱時間減少",
+        levels: [7, 6, 5, 3, 2, 1, 0],
+
+        handler(level, skill) {
+            const _adj = {
+                7: 1.4, 6: 1.2, 5: 1.0,
+                3: 0.6, 2: 0.4, 1: 0.2,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    if(skill.name == "メテオストーム") {
+                        status.delay_sub += _adj;
+                    }
+                }
+            }
+        },
+    },
+    {
+        name: "LoV再詠唱時間減少",
+        levels: [7, 6, 5, 3, 2, 1, 0],
+
+        handler(level, skill) {
+            const _adj = {
+                7: 1.4, 6: 1.2, 5: 1.0,
+                3: 0.6, 2: 0.4, 1: 0.2,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    if(skill.name == "ロードオブヴァーミリオン") {
+                        status.delay_sub += _adj;
+                    }
+                }
+            }
+        },
+    },
+    {
+        name: "SG再詠唱時間減少",
+        levels: [7, 6, 5, 3, 2, 1, 0],
+
+        handler(level, skill) {
+            const _adj = {
+                7: 1.4, 6: 1.2, 5: 1.0,
+                3: 0.6, 2: 0.4, 1: 0.2,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    if(skill.name == "ストームガスト") {
+                        status.delay_sub += _adj;
+                    }
+                }
+            }
+        },
+    },
+    {
+        name: "HB再詠唱時間減少",
+        levels: [7, 6, 4, 3, 0],
+
+        handler(level, skill) {
+            const _adj = {
+                7: 1.4, 6: 1.2,
+                4: 0.8, 3: 0.6,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    if(skill.name == "ヘキサブレイク") {
+                        status.delay_sub += _adj;
+                    }
+                }
+            }
+        },
+    },
+
+    {
         name: "ME高速詠唱",
         levels: [7, 6, 4, 3, 2, 1, 0],
 

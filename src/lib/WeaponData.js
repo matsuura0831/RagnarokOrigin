@@ -53,7 +53,6 @@ const DATA = [
                     if(name == 'ファイアーボール') status.specific_skill_up += w.refine_effects.skill_up_fbl;
                     if(name == 'メテオストーム')   status.specific_skill_up += w.refine_effects.skill_up_ms;
 
-                    if(skill.element == "火") status.element_damage_up += w.refine_effects.element_damage_up;
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
             };
@@ -62,9 +61,8 @@ const DATA = [
             skill_up_fb: 19,
             skill_up_fbl: 19,
             skill_up_ms: 16,
-            element_damage_up: 19+9+16,
         },
-        tips: "「火属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに反映済みの場合は武器効果欄の該当箇所を0にしてください",
+        tips: "「火属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
     {
         name: "疾風の杖",
@@ -76,7 +74,6 @@ const DATA = [
                     if(name == 'ユピテルサンダー') status.specific_skill_up += w.refine_effects.skill_up_jt;
                     if(name == 'ロードオブヴァーミリオン')   status.specific_skill_up += w.refine_effects.skill_up_lov;
 
-                    if(skill.element == "風") status.element_damage_up += w.refine_effects.element_damage_up;
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
             };
@@ -85,9 +82,8 @@ const DATA = [
             skill_up_lb: 19,
             skill_up_jt: 19,
             skill_up_lov: 16,
-            element_damage_up: 19+9+16,
         },
-        tips: "「風属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに反映済みの場合は武器効果欄の該当箇所を0にしてください",
+        tips: "「風属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
     {
         name: "古代海流の杖", 
@@ -100,7 +96,6 @@ const DATA = [
                         status.fix_cast_div += w.refine_effects.fcast_water;
                     }
 
-                    if(skill.element == "水") status.element_damage_up += w.refine_effects.element_damage_up;
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
             };
@@ -108,9 +103,8 @@ const DATA = [
         refine_effects: {
             skill_mul_up_water: 200,
             fcast_water: 20,
-            element_damage_up: 15,
         },
-        tips: "「水属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに反映済みの場合は武器効果欄の該当箇所を0にしてください．<br/>泡の計算は現在無効です",
+        tips: "「水属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください．<br/>泡の計算は現在無効です",
     },
     {
         name: "ホーリーステッキ",

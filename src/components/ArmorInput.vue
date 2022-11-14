@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: "AccessoryInput",
+  name: "ArmorInput",
   props: {
     modelValue: Object,
   },
@@ -26,17 +26,6 @@ export default {
     return {
       inputs: [
         { key: 'skill_up',   label: 'スキルダメージ[%]',  number: 1},
-        { key: 'skill_up_repeated',   label: '重複回数',  number: 1},
-
-        { key: 'last_up', label: '最終倍率[%]',  number: 1},
-        { key: 'last_up_prob', label: '最終確率[%]',  number: 1},
-        { key: 'last_atk_limit', label: '魔法攻撃上限[%]',  number: 1},
-        
-        { key: 'magic_add',   label: '魔法攻撃[%]',  number: 1},
-        { key: 'fix_cast_div', label: '固定詠唱削減[%]',  number: 1},
-        { key: 'delay_div', label: 'ディレイ削減[%]',  number: 1},
-
-        { key: 'magic_damage_up', label: '魔法ダメージ増加[%]',  number: 1},
       ],
     }
   },

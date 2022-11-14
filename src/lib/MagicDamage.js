@@ -5,9 +5,8 @@ class MagicDamageHandler {
 }
 
 class MagicDamageCalculator {
-   constructor(status, weapon, skill, enemy, ismin, ismax) {
+   constructor(status, skill, enemy, ismin, ismax) {
        this.status = status;
-       this.weapon = weapon;
        this.skill = skill;
        this.enemy = enemy;
        this.ismin = ismin || false;
@@ -15,7 +14,12 @@ class MagicDamageCalculator {
    }
 
    total_atk() {
-       const v = this.status.base_atk + this.status.equip_atk + this.status.refine_atk;
+       let v = this.status.base_atk + this.status.equip_atk + this.status.refine_atk;
+
+       if(this.status.magic_add > 0) {
+           const {magic_up: now, magic_add: add} = this.status;
+           v = Math.round(v / (1.0 + now / 100) * (1.0 + (now + add) / 100));
+       }
        return v;
    }
    
@@ -25,7 +29,6 @@ class MagicDamageCalculator {
            + this.status.magic_damage_up
            + this.status.element_enemy_up
            + this.status.boss_up;
-
        return v;
    }
 
@@ -112,14 +115,14 @@ class MagicDamageCalculator {
    }
    
    v_cast() {
-       const { skill, weapon, status } = this;
+       const { skill, status } = this;
        const { status_int: int, status_dex: dex, variable_cast_div: div, variable_cast_sub: sub } = status;
        const t = (skill.vcast - sub) * (1 - Math.sqrt((int/2 + dex) / 265)) * (1.0 - div / 100);
        
        return Math.max(0, t);
    }
    f_cast() {
-       const { skill, weapon, status } = this;
+       const { skill, status } = this;
        const { fix_cast_div: div, fix_cast_sub: sub } = status;
        const t = (skill.fcast - sub) * (1.0 - div / 100);
 
@@ -144,9 +147,8 @@ class MagicDamageCalculator {
 
 
 class MagicDamageBuilder {
-    constructor(status, weapon, skill, enemy) {
+    constructor(status, skill, enemy) {
         this.status = status;
-        this.weapon = weapon;
         this.skill = skill;
         this.enemy = enemy;
         this.handlers = [];
@@ -166,7 +168,7 @@ class MagicDamageBuilder {
         const s = this.status.clone();
         this.handlers.map((h) => h.run(s, ismin, ismax));
 
-        return new MagicDamageCalculator(s, this.weapon, this.skill, this.enemy, ismin, ismax);
+        return new MagicDamageCalculator(s, this.skill, this.enemy, ismin, ismax);
     }
 }
 
