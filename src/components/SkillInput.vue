@@ -32,6 +32,7 @@ export default {
         { key: 'ct',      label: 'クールタイム',  editable: 1, number: 1},
         { key: 'hit',     label: 'ヒット数',  editable: 1, number: 1},
         { key: 'time',    label: '持続時間',  editable: 1, number: 1},
+        { key: 'motion',  label: 'モーション時間',  editable: 1, number: 1},
       ]
     }
   },
