@@ -47,7 +47,9 @@ export default {
         ]},
         { label: "上級ステータス", records: [
           { label: "魔法ダメージ増加[%]", key: "magic_damage_up", disabled: 0 },
+          { label: "魔法防御無視", key: "ignore_mdef_sub", disabled: 0 },
           { label: "魔法防御無視[%]", key: "ignore_mdef_div", disabled: 0 },
+          { label: "PVEダメージ増加", key: "pve_damage_up", disabled: 0 },
           { label: "追加魔法ダメージ", key: "extra_damage", disabled: 0 },
         ]},
         { label: "特殊ステータス", records: [

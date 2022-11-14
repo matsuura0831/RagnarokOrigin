@@ -88,7 +88,7 @@
             <div class="flex flex-col lg:grid lg:grid-cols-2 lg:gap-x-2 w-full justify-center">
               <div class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
                 <p>
-魔法攻撃[{{ calc.total_atk() }}] 
+(魔法攻撃[{{ calc.total_atk() }}] 
    * 魔法ダメージ%[{{ calc.total_damage_up()}}]
    * 属性相性%[{{ calc.total_element_relation_up() }}]
    * 属性ダメージUP%[{{ calc.total_element_damage_up() }}]
@@ -96,7 +96,8 @@
    * サイズモンスターダメUP%[{{ calc.total_size_up() }}]
    * スキル倍率%[{{ calc.total_skill_up() }}]
    * 敵除算MDEF%[{{ calc.total_enemy_mdef_div() }}]
-+ 追加ダメージ[{{ calc.total_extra_damage() }}]
++ 追加ダメージ[{{ calc.total_extra_damage() }}])
+* PVEダメージ%[{{ calc.total_pve_damage_up() }}]
                 </p>
 
                 <p>
@@ -106,7 +107,7 @@
 
               <div class="text-sm bg-gray-100 p-2 whitespace-pre-wrap">
                 <p>
-魔法攻撃[{{ calc_adj.total_atk() }}] 
+(魔法攻撃[{{ calc_adj.total_atk() }}] 
    * 魔法ダメージ%[{{ calc_adj.total_damage_up()}}]
    * 属性相性%[{{ calc_adj.total_element_relation_up() }}]
    * 属性ダメージUP%[{{ calc_adj.total_element_damage_up() }}]
@@ -114,7 +115,9 @@
    * サイズモンスターダメUP%[{{ calc_adj.total_size_up() }}]
    * スキル倍率%[{{ calc_adj.total_skill_up() }}]
    * 敵除算MDEF%[{{ calc_adj.total_enemy_mdef_div() }}]
-+ 追加ダメージ[{{ calc_adj.total_extra_damage() }}]
++ 追加ダメージ[{{ calc_adj.total_extra_damage() }}])
+* PVEダメージ%[{{ calc_adj.total_pve_damage_up() }}]
+
                 </p>
                 <p>
                   固定詠唱[{{ calc_adj.f_cast() }}]，変動詠唱[{{ calc_adj.v_cast() }}]，ディレイ[{{ calc_adj.delay() }}]
