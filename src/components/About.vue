@@ -2,22 +2,36 @@
   <div class="about bg-gray-100">
     <div class="flex flex-col px-10 text-lg">
       <div class="flex flex-col">
-        <Accordion>
+        <Accordion :expand="true">
           <template #title>〇〇ステータスには何を入れればいいの？</template>
           <template #content>
-          ゲームを起動してキャラクターのステータスの詳細情報を開いてください．
-          そこで確認できる各種値を各行の左側の入力欄に記載してください．
+          <p>
+            ゲームを起動してキャラクターのステータスの詳細情報を開いてください．
+            そこで確認できる各種値を各行の左側の入力欄に記載してください．
+          </p>
+          <p>
+            <img src="@/assets/help/status_input1.png">
+          </p>
+          <p>
+            基礎ステータス，上級ステータス，特殊ステータスについても同じように入力をしてください．
+            なお"基本魔法攻撃"と"装備魔法攻撃"の出し方は次の項目を参照してください．
+          </p>
           </template>
         </Accordion>
 
-        <Accordion>
+        <Accordion :expand="true">
           <template #title>基本魔法攻撃や装備魔法攻撃はどうやって見ればいいの？</template>
           <template #content>
-          ステータスの詳細情報画面で"基本ステータス &gt; 魔法攻撃"をクリックして表示される値を入力してください．
+          <p>
+            ステータスの詳細情報画面で"基本ステータス &gt; 魔法攻撃"をクリックして表示される値を入力してください．
+          </p>
+          <p>
+            <img src="@/assets/help/status_input2.png">
+          </p>
           </template>
         </Accordion>
 
-        <Accordion>
+        <Accordion :expand="true">
           <template #title>〇〇ステータスの左右は何が違うの？</template>
           <template #content>
           <p>
@@ -32,6 +46,9 @@
             上記により，画面上部の期待値の"補正"欄がドラキュラカードに換装した場合の値となります．
           </p>
           <p>
+            <img src="@/assets/help/status_input3.png">
+          </p>
+          <p>
             ドラキュラカードからスネークカードに変えた場合は負の値を右側にいれてください．
           </p>
           </template>
@@ -44,9 +61,37 @@
             DPS出力の算出に利用します．
           </p>
           <p>
-            装備固定詠唱減少と変動詠唱減少についてはステータス詳細に表示された値をそのまま入力しないでください．
+            変動詠唱減少についてはステータス詳細に表示された値をそのまま入力しないでください．
             INTとDEXによる効果が混じったモノが表示されているため正しく計算できなくなります．
           </p>
+          <p>
+            うるせぇ俺は変動詠唱の数値を数えたくないんだ！という場合はステータス画面を見ながら下記入力をしてみてください(誤差はあります)
+          </p>
+          
+          <div class="mb-1 ml-4">
+            <label class="w-32 mr-2 text-right font-bold text-gray-600">INT</label>
+            <input type="number"
+              class="py-2 w-12 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none border-b-2"
+              v-model="int"
+              onclick="this.select();"
+              />
+
+            <label class="w-32 mr-2 text-right font-bold text-gray-600">DEX</label>
+            <input type="number"
+              class="py-2 w-12 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none border-b-2"
+              v-model="dex"
+              onclick="this.select();"
+              />
+
+            <label class="w-32 mr-2 text-right font-bold text-gray-600">変動詠唱[%]</label>
+            <input type="number"
+              class="py-2 w-12 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none border-b-2"
+              v-model="variable_cast"
+              onclick="this.select();"
+              />
+
+            ...装備による変動詠唱は {{ Math.round(equip_variable_cast * 100) }}% です
+          </div>
           </template>
         </Accordion>
 
@@ -110,5 +155,20 @@ export default {
   components: {
     Accordion,
   },
+  data() {
+    return {
+      int: 0,
+      dex: 0,
+      variable_cast: 0,
+    };
+  },
+  computed: {
+    equip_variable_cast() {
+      /*
+      ステータス上の変動詠唱 = (1 - sqrt((int/2 + dex) / 265)) * (1 - 装備詠唱変動)
+      */
+      return 1.0 - (1.0 - this.variable_cast / 100) / (1 - Math.sqrt((this.int/2 + this.dex) / 265));
+    }
+  }
 };
 </script>
