@@ -141,7 +141,12 @@
                 name="enemy"
                 class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
                 v-model="target_enemy" @change="changeEnemy">
-              <option v-for="record in enemy_data" :value="record.name" :key="record.name">{{ record.name }}</option>
+              <option v-for="record in enemy_data" :value="record.name" :key="record.name">
+                {{ record.type == "MVP" ? "MVP: " : "" }}
+                {{ record.type == "MINI" ? "MINI: " : "" }}
+
+                {{ record.name }}
+              </option>
             </select>
           </div>
 

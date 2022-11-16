@@ -141,7 +141,22 @@ const DATA = [
     { name: "レグルロ", race: "動物", element: "風", size: "小", base: 117, hp: 197931, def: 42, mdef: 54, vit: 38, agi: 42, type: "NORMAL" },
     { name: "グリーンイグアナ", race: "動物", element: "地", size: "中", base: 118, hp: 199804, def: 42, mdef: 45, vit: 22, agi: 42, type: "NORMAL" },
     { name: "アリゲータ", race: "動物", element: "水", size: "中", base: 119, hp: 683544, def: 48, mdef: 36, vit: 24, agi: 48, type: "NORMAL" },
-    
+  
+    { name: "アトロス", race: "動物", element: "闇", size: "大", base: 130, hp: 0, def: 165, mdef: 152, vit: 135, agi: 165, type: "MVP" },
+    { name: "イフリート", race: "無形", element: "火", size: "大", base: 135, hp: 0, def: 201, mdef: 199, vit: 156, agi: 201, type: "MVP" },
+    { name: "グランハーピー", race: "悪魔", element: "風", size: "中", base: 128, hp: 0, def: 39, mdef: 96, vit: 50, agi: 39, type: "MINI" },
+    { name: "カホ", race: "悪魔", element: "火", size: "中", base: 130, hp: 0, def: 61, mdef: 66, vit: 55, agi: 61, type: "MINI" },
+    { name: "ピットマン", race: "不死", element: "地", size: "大", base: 120, hp: 198083, def: 56, mdef: 50, vit: 45, agi: 56, type: "NORMAL" },
+    { name: "メタリン", race: "無形", element: "無", size: "小", base: 121, hp: 720555, def: 30, mdef: 50, vit: 49, agi: 30, type: "NORMAL" },
+    { name: "ゴート", race: "動物", element: "火", size: "中", base: 124, hp: 725068, def: 40, mdef: 65, vit: 48, agi: 40, type: "NORMAL" },
+    { name: "グランペコ", race: "動物", element: "火", size: "大", base: 125, hp: 724554, def: 45, mdef: 51, vit: 50, agi: 45, type: "NORMAL" },
+    { name: "ギグ", race: "動物", element: "火", size: "小", base: 125, hp: 203120, def: 66, mdef: 60, vit: 60, agi: 66, type: "NORMAL" },
+    { name: "スカイデリーター", race: "竜", element: "火", size: "中", base: 126, hp: 209045, def: 55, mdef: 67, vit: 53, agi: 55, type: "NORMAL" },
+    { name: "ハーピー", race: "悪魔", element: "風", size: "中", base: 127, hp: 217240, def: 39, mdef: 96, vit: 50, agi: 39, type: "NORMAL" },
+    { name: "エクスプロージョン", race: "動物", element: "火", size: "小", base: 128, hp: 214228, def: 51, mdef: 65, vit: 63, agi: 51, type: "NORMAL" },
+    { name: "スリーパー", race: "無形", element: "地", size: "中", base: 129, hp: 220274, def: 41, mdef: 54, vit: 57, agi: 41, type: "NORMAL" },
+    { name: "ブレイザー", race: "悪魔", element: "火", size: "中", base: 129, hp: 206698, def: 75, mdef: 60, vit: 55, agi: 75, type: "NORMAL" },
+
 ];
 
 export default {
