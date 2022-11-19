@@ -1,5 +1,5 @@
 class MagicSkill {
-    static VERSION = [3, 0];    // major, minor
+    static VERSION = [4, 0];    // major, minor
 
     constructor(
         name, element, level, ignore_mdef,

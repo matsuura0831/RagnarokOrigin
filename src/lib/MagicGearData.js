@@ -1,7 +1,7 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 
 class MagicGear {
-    static VERSION = [2, 0];    // major, minor
+    static VERSION = [2, 1];    // major, minor
 
     constructor(
         name, level,
@@ -248,7 +248,6 @@ const DATA = [
             }
         },
     },
-
     {
         name: "ME高速詠唱",
         levels: [7, 6, 4, 3, 2, 1, 0],
@@ -266,6 +265,25 @@ const DATA = [
                     if(skill.name == "マグヌスエクソシズム") {
                         status.fix_cast_sub += _adj;
                     }
+                }
+            }
+        },
+    },
+    {
+        name: "アドバンスDC",
+        levels: [7, 6, 4, 3, 2, 1, 0],
+
+        handler(level, skill) {
+            const _adj = {
+                7: 40, 6: 35,
+                4: 25, 3: 20,
+                2: 15, 1: 10,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.triple_cast_mul += _adj;
                 }
             }
         },

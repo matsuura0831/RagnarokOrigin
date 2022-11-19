@@ -1,7 +1,7 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 
 export class Weapon {
-    static VERSION = [4, 0];    // major, minor
+    static VERSION = [5, 0];    // major, minor
 
     constructor(
         name,
