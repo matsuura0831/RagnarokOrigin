@@ -120,17 +120,16 @@ class MagicDamageCalculator {
            const clone_status = this.status.clone();
            clone_status.double_cast_mul = 0;
            clone_status.triple_cast_mul = 0;
+           clone_status.extra_damage = 0;
 
            const clone_d_skill = this.skill.clone();
            clone_d_skill.mul *= this.status.double_cast_mul / 100;
-           clone_d_skill.add = 0;
 
            d += (new MagicDamageCalculator(clone_status, clone_d_skill, this.enemy, this.ismin, this.ismax)).get();
 
            if(this.status.triple_cast_mul > 0) {
                const clone_t_skill = this.skill.clone();
                clone_t_skill.mul *= this.status.triple_cast_mul / 100;
-               clone_t_skill.add = 0;
 
                d += (new MagicDamageCalculator(clone_status, clone_t_skill, this.enemy, this.ismin, this.ismax)).get();
            }
