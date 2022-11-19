@@ -124,7 +124,7 @@ const DATA = [
         },
         refine_effects: {
             skill_up_me: 14,
-            ignore_mdef: 100,
+            ignore_mdef_div: 100,
             vcast_div: 50,
             fcast_sub: 1,
         },
