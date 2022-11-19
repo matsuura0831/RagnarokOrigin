@@ -51,10 +51,16 @@ export default {
         { key: 'element_damage_up',  label: '属性ダメージアップ[%]',  number: 1},
 
         { key: 'skill_up_me',      label: 'MEスキルダメージUP[%]',  number: 1},
-        { key: 'ignore_mdef_me',   label: 'MEスキル防御無視[%]',  number: 1},
-        { key: 'vcast_me',       label: 'MEスキル変動時間減少[%]',  number: 1},
-        { key: 'fcast_me',       label: 'MEスキル固定時間減少[s]',  number: 1},
-        
+        { key: 'ignore_mdef_div',   label: '防御無視[%]',  number: 1},
+        { key: 'vcast_div',       label: '変動時間減少[%]',  number: 1},
+        { key: 'fcast_sub',       label: '固定時間減少[s]',  number: 1},
+
+        { key: 'skill_up_bolt', label: 'ボルトスキルダメージUP[%]', number: 1 },
+        { key: 'delay_sub', label: 'ディレイ減少[s]', number: 1 },
+
+        { key: 'magic_add', label: '魔法攻撃追加[%]', number: 1 },
+        { key: 'skill_up_pw', label: 'サイキックウェーブダメージUP[%]', number: 1 },
+
       ],
       inputs_custom: [
         { key: 'skill_up',    label: '改造:スキルダメージUP[%]',  number: 1},

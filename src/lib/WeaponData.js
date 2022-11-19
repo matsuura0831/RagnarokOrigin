@@ -114,21 +114,67 @@ const DATA = [
                     const name = skill.name;
                     if(name == 'マグヌスエクソシズム') {
                         status.specific_skill_up += w.refine_effects.skill_up_me;
-                        status.ignore_mdef_div += w.refine_effects.ignore_mdef_me;
-                        status.variable_cast_div += w.refine_effects.vcast_me;
-                        status.fix_cast_sub += w.refine_effects.fcast_me;
+                        status.ignore_mdef_div += w.refine_effects.ignore_mdef_div;
+                        status.variable_cast_div += w.refine_effects.vcast_div;
+                        status.fix_cast_sub += w.refine_effects.fcast_sub;
                     }
-                    
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
             };
         },
         refine_effects: {
             skill_up_me: 14,
-            ignore_mdef_me: 100,
-            vcast_me: 50,
-            fcast_me: 1,
+            ignore_mdef: 100,
+            vcast_div: 50,
+            fcast_sub: 1,
         },
+    },
+    {
+        name: "元素の法則",
+        handler(w, skill) {
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+                    if(name == 'ファイアーボルト' || name == "ライトニングボルト" || name == "コールドボルト" || name == "アーススパイク") {
+                        status.specific_skill_up += w.refine_effects.skill_up_bolt;
+                        status.delay_sub += w.refine_effects.delay_sub;
+                    }
+                    status.custom_skill_up += w.custom_effects.skill_up;
+                }
+            };
+        },
+        refine_effects: {
+            skill_up_bolt: 14,
+            delay_sub: 0.4,
+        },
+        tips: "「属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
+    },
+    {
+        name: "タブレット",
+        handler(w, skill) {
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+                    if(name == 'サイキックウェーブ') {
+                        status.magic_add += w.refine_effects.magic_add;
+                        status.fix_cast_sub += w.refine_effects.fcast_sub;
+                        status.specific_skill_up += w.refine_effects.skill_up_pw;
+                        status.ignore_mdef_div += w.refine_effects.ignore_mdef_div;
+                        status.delay_sub += w.refine_effects.delay_sub;
+                    }
+                    status.custom_skill_up += w.custom_effects.skill_up;
+                }
+            };
+        },
+        refine_effects: {
+            magic_add: 16,
+            fcast_sub: 1,
+            skill_up_pw: 14,
+            ignore_mdef_div: 50,
+            delay_sub: 1,
+            
+        },
+        tips: "「無属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
     {
         name: "その他",
