@@ -1,5 +1,5 @@
 export default class CharacterStatus {
-    static VERSION = [1, 1];    // major, minor
+    static VERSION = [1, 2];    // major, minor
 
     constructor(
         base_atk, equip_atk, refine_atk,
@@ -16,6 +16,7 @@ export default class CharacterStatus {
         element_relation_add,
         ignore_mdef_sub, pve_damage_up,
         magic_add,
+        double_cast_mul, triple_cast_mul,
     ) {
         this.base_atk = base_atk || 0;
         this.equip_atk = equip_atk || 0;
@@ -74,6 +75,12 @@ export default class CharacterStatus {
 
         // 武具効果：知識の王の降臨
         this.magic_add = magic_add || 0;
+
+        // スキル効果：ダブルキャスト
+        this.double_cast_mul = double_cast_mul || 0;
+
+        // ギア効果：トリプルキャストギア
+        this.triple_cast_mul = triple_cast_mul || 0;
     }
 
     serialize() {
@@ -93,6 +100,7 @@ export default class CharacterStatus {
             this.element_relation_add,
             this.ignore_mdef_sub, this.pve_damage_up,
             this.magic_add,
+            this.double_cast_mul, this.triple_cast_mul,
         ];
     }
 
@@ -152,6 +160,8 @@ export default class CharacterStatus {
             this.ignore_mdef_sub + adj.ignore_mdef_sub,
             this.pve_damage_up + adj.pve_damage_up,
             this.magic_add + adj.magic_add,
+            this.double_cast_mul + adj.double_cast_mul,
+            this.triple_cast_mul + adj.triple_cast_mul,
         );
     }
 }

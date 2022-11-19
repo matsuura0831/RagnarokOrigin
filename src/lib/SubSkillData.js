@@ -2,7 +2,7 @@ import { MagicDamageHandler } from "@/lib/MagicDamage";
 import ElementalRelation from "@/lib/ElementalRelation";
 
 class SubSkillData {
-    static VERSION = [1, 0];    // major, minor
+    static VERSION = [1, 1];    // major, minor
 
     constructor(
         name, level,
@@ -53,6 +53,28 @@ const DATA = [
 
                     if(rel > 0 && ['風', '地', '火', '水', '念'].includes(skill.element)) {
                         status.element_relation_add += _adj;
+                    }
+                }
+            }
+        },
+    },
+    {
+        name: "ダブルキャスト",
+        levels: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+
+        handler(level, skill, enemy) {
+            const _adj = {
+                10: 50, 9: 47, 8: 44, 7: 41, 6: 38,
+                 5: 35, 4: 32, 3: 29, 2: 26, 1: 23,
+                 0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    const name = skill.name;
+
+                    if(name == 'ファイアーボルト' || name == "ライトニングボルト" || name == "コールドボルト" || name == "アーススパイク") {
+                        status.double_cast_mul += _adj;
                     }
                 }
             }

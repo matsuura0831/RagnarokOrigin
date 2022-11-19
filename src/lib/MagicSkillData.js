@@ -1,5 +1,5 @@
 class MagicSkill {
-    static VERSION = [3, 0];    // major, minor
+    static VERSION = [4, 0];    // major, minor
 
     constructor(
         name, element, level, ignore_mdef,
@@ -115,7 +115,7 @@ const DATA = [
         ]
     },
     {
-        name: "アイスボルト",
+        name: "コールドボルト",
         element: "水",
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
@@ -281,6 +281,38 @@ const DATA = [
             { level:  3, mul: 420, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
             { level:  2, mul: 380, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
             { level:  1, mul: 340, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+        ]
+    },
+    {
+        name: "フォースアロー",
+        element: "無",
+        records: [
+            { level: 10, mul: 2000, add: 800, fcast: 0.05, vcast: 3.11, delay: 1.6, ct: 0, hit: 1, time: 0 },
+            { level:  9, mul: 1880, add: 648, fcast: 0.06, vcast: 2.87, delay: 1.5, ct: 0, hit: 1, time: 0 },
+            { level:  8, mul: 1760, add: 512, fcast: 0.07, vcast: 2.62, delay: 1.4, ct: 0, hit: 1, time: 0 },
+            { level:  7, mul: 1640, add: 392, fcast: 0.08, vcast: 2.36, delay: 1.3, ct: 0, hit: 1, time: 0 },
+            { level:  6, mul: 1520, add: 288, fcast: 0.09, vcast: 2.12, delay: 1.2, ct: 0, hit: 1, time: 0 },
+            { level:  5, mul: 1400, add: 200, fcast: 0.10, vcast: 1.87, delay: 1.1, ct: 0, hit: 1, time: 0 },
+            { level:  4, mul: 1280, add: 128, fcast: 0.11, vcast: 1.63, delay: 1, ct: 0, hit: 1, time: 0 },
+            { level:  3, mul: 1160, add:  72, fcast: 0.12, vcast: 1.37, delay: 0.9, ct: 0, hit: 1, time: 0 },
+            { level:  2, mul: 1040, add:  32, fcast: 0.13, vcast: 1.12, delay: 0.8, ct: 0, hit: 1, time: 0 },
+            { level:  1, mul:  920, add:   8, fcast: 0.14, vcast: 0.88, delay: 0.7, ct: 0, hit: 1, time: 0 },
+        ]
+    },
+    {
+        name: "サイキックウェーブ",
+        element: "無",
+        records: [
+            { level: 10, mul: 1000, add: 0, fcast: 1.68, vcast: 6.72, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  9, mul:  950, add: 0, fcast: 1.76, vcast: 7.04, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  8, mul:  900, add: 0, fcast: 1.84, vcast: 7.36, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  7, mul:  850, add: 0, fcast: 1.92, vcast: 7.69, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  6, mul:  800, add: 0, fcast: 2.00, vcast: 8.00, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  5, mul:  750, add: 0, fcast: 2.08, vcast: 8.33, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  4, mul:  700, add: 0, fcast: 2.16, vcast: 8.64, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  3, mul:  650, add: 0, fcast: 2.24, vcast: 8.97, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  2, mul:  600, add: 0, fcast: 2.32, vcast: 9.28, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level:  1, mul:  550, add: 0, fcast: 2.40, vcast: 9.61, delay: 5, ct: 0, hit: 5, time: 0 },               
         ]
     },
 ];

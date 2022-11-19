@@ -95,7 +95,6 @@ class MagicDamageCalculator {
                     ) + this.total_extra_damage()
            ) * this.total_pve_damage_up() / 100
        );
-       
 
        if(this.status.last_up > 0 && this.ismin == false) {
            const limit = (this.status.last_atk_limit > 0) ? atk * this.status.last_atk_limit / 100 : Infinity;
@@ -109,9 +108,34 @@ class MagicDamageCalculator {
            }
        }
               
-       if(this.ismin) return Math.floor(d * 0.97);
-       if(this.ismax) return Math.floor(d * 1.03);
-       return Math.floor(d);
+       if(this.ismin) {
+           d = Math.floor(d * 0.97);
+       } else if(this.ismax) {
+           d = Math.floor(d * 1.03);
+       } else {
+           d = Math.floor(d);
+       }
+
+       if(this.status.double_cast_mul > 0) {
+           const clone_status = this.status.clone();
+           clone_status.double_cast_mul = 0;
+           clone_status.triple_cast_mul = 0;
+           clone_status.extra_damage = 0;
+
+           const clone_d_skill = this.skill.clone();
+           clone_d_skill.mul *= this.status.double_cast_mul / 100;
+
+           d += (new MagicDamageCalculator(clone_status, clone_d_skill, this.enemy, this.ismin, this.ismax)).get();
+
+           if(this.status.triple_cast_mul > 0) {
+               const clone_t_skill = this.skill.clone();
+               clone_t_skill.mul *= this.status.triple_cast_mul / 100;
+
+               d += (new MagicDamageCalculator(clone_status, clone_t_skill, this.enemy, this.ismin, this.ismax)).get();
+           }
+        }
+
+        return d;
    }
    
    v_cast() {
