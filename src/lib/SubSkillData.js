@@ -49,9 +49,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    const rel = ElementalRelation[skill.element][enemy.element];
-
-                    if(rel > 0 && ['風', '地', '火', '水', '念'].includes(skill.element)) {
+                    if(['風', '地', '火', '水', '念'].includes(skill.element)) {
                         status.element_relation_add += _adj;
                     }
                 }

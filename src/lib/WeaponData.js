@@ -91,10 +91,20 @@ const DATA = [
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
                     const name = skill.name;
+
+                    let v = {};
                     if(skill.element == '水') {
                         status.skill_add += w.refine_effects.skill_mul_up_water;
                         status.fix_cast_div += w.refine_effects.fcast_water;
+
+                        v = {
+                            mul: w.refine_effects.bubble_mul,
+                            element: '無',
+                            prob: 100,
+                            ct: 1,
+                        };
                     }
+                    status.pursuits['古代海流の杖'] = v;
 
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
@@ -103,8 +113,9 @@ const DATA = [
         refine_effects: {
             skill_mul_up_water: 200,
             fcast_water: 20,
+            bubble_mul: 300,
         },
-        tips: "「水属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください．<br/>泡の計算は現在無効です",
+        tips: "「水属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
     {
         name: "ホーリーステッキ",
