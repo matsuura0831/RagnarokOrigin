@@ -539,27 +539,10 @@ export default {
     },
 
     total_dps() {
-      const { skill, total_cast_time: ct, total_cast_delay: cd } = this;
-
-      /*
-      const n = skill.time / (ct + cd);
-      const a = skill.hit / skill.time;
-      const hit = a * n;
-      */
-      const hit = skill.hit / (ct + cd);
-
-      return Math.floor(hit * this.total_damage)
+      return this.calc.dps();
     },
     total_dps_adj() {
-      const { skill, total_cast_time_adj: ct, total_cast_delay_adj: cd } = this;
-
-      /*
-      const n = skill.time / (ct + cd);
-      const hit = skill.hit / skill.time * n;
-      */
-      const hit = skill.hit / (ct + cd);
-
-      return Math.floor(hit * this.total_damage_adj)
+      return this.calc_adj.dps();
     },
   },
 

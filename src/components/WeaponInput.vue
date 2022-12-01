@@ -47,6 +47,7 @@ export default {
 
         { key: 'skill_mul_up_water',  label: '水属性ダメージ倍率UP[%]',  number: 1},
         { key: 'fcast_water',         label: '水属性スキル固定時間減少[%]',  number: 1},
+        { key: 'bubble_mul',          label: '海流の泡[%]', number: 1},
         
         { key: 'element_damage_up',  label: '属性ダメージアップ[%]',  number: 1},
 

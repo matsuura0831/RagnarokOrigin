@@ -1,4 +1,5 @@
 import ElementalRelation from "@/lib/ElementalRelation";
+import MagicSkillData from "@/lib/MagicSkillData";
 
 class MagicDamageHandler {
     run(s, ismin, ismax) {}
@@ -33,8 +34,18 @@ class MagicDamageCalculator {
    }
 
    total_element_relation_up() {
-       const v = 100 + ElementalRelation[this.skill.element][this.enemy.element] + this.status.element_relation_add
-       return v;
+       let v1 = 100 + ElementalRelation[this.skill.element][this.enemy.element];
+       if(v1 > 100) {
+           v1 += this.status.element_relation_add;
+       }
+
+       const v2 = 100 + ElementalRelation[this.skill.element]['MAX'] + this.status.element_relation_add;
+       const p = this.status.element_override;
+       
+       if(p <= 0) return v1;
+       if(this.ismin) return v1;
+       if(this.ismax) return v2;
+       return (v1 * (100 - p) / 100) + (v2 * p / 100);
    }
 
    total_element_damage_up() {
@@ -118,11 +129,15 @@ class MagicDamageCalculator {
 
        if(this.status.double_cast_mul > 0) {
            const clone_status = this.status.clone();
+
+           // 無限にダブルキャスト計算しないように確率をゼロにする
            clone_status.double_cast_mul = 0;
            clone_status.triple_cast_mul = 0;
 
            const clone_d_skill = this.skill.clone();
            clone_d_skill.mul *= this.status.double_cast_mul / 100;
+
+           // TODO: 計算値が実測値より高かったため暫定対応
            clone_d_skill.add = 0;
 
            d += (new MagicDamageCalculator(clone_status, clone_d_skill, this.enemy, this.ismin, this.ismax)).get();
@@ -130,6 +145,8 @@ class MagicDamageCalculator {
            if(this.status.triple_cast_mul > 0) {
                const clone_t_skill = this.skill.clone();
                clone_t_skill.mul *= this.status.triple_cast_mul / 100;
+
+               // TODO: 計算値が実測値より高かったため暫定対応
                clone_t_skill.add = 0;
 
                d += (new MagicDamageCalculator(clone_status, clone_t_skill, this.enemy, this.ismin, this.ismax)).get();
@@ -167,6 +184,52 @@ class MagicDamageCalculator {
    cast_delay() {
        const d = this.delay();
        return Math.max(this.skill.ct, d);
+   }
+
+   dps() {
+       const cast_per_sec = 1.0 / (this.cast_time() + this.cast_delay());
+       const hit_per_sec = this.skill.hit * cast_per_sec;
+       const damage_per_hit = this.get();
+
+       let ret = Math.floor(hit_per_sec * damage_per_hit);
+
+       const eval_per_cast = (this.status.double_cast_mul > 0 ? (this.status.triple_cast_mul > 0 ? 3 : 2) : 1);
+       
+       const pursuit_keys = Object.keys(this.status.pursuits);
+       if(pursuit_keys.length) {
+           // 追撃系がある場合は追加する
+           const clone_status = this.status.clone();
+           
+           // ダブルキャスト計算しないように確率をゼロにする
+           clone_status.double_cast_mul = 0;
+           clone_status.triple_cast_mul = 0;
+
+           pursuit_keys.forEach(k => {
+               const { mul = 0, element = '無', prob = 0, ct = 0} = this.status.pursuits[k];
+
+               if(mul > 0 && prob > 0) {
+                   const skill = new MagicSkillData.clazz("", element, 0, 0, mul, 0, 0, 0, 0, 0, 1, 0, 0);
+                   const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
+
+                   if(ct <= 0) {
+                       // 1回のキャストで発生する確率を求める(発生しない回数を算出して100%から引く)
+                       const p = 1.0 - ((1.0 - prob / 100) ** (eval_per_cast));
+
+                       // 回数 * 1回あたりの期待値を加算
+                       ret += Math.floor(cast_per_sec * d * p);
+                   } else {
+                       // CTの間に発動する確率を求める(発生しない回数を算出して100%から引く)
+                       const p = 1.0 - ((1.0 - prob / 100) ** (cast_per_sec * ct * eval_per_cast));
+
+                       // CT1回あたりの期待値を秒で割って１秒当たりの期待値にして加算
+                       ret += Math.floor(d * p / ct);
+                   }
+                   
+               }
+           })
+       }
+
+       return ret;
    }
 }
 

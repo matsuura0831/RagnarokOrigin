@@ -1,5 +1,5 @@
 export default class CharacterStatus {
-    static VERSION = [1, 2];    // major, minor
+    static VERSION = [1, 3];    // major, minor
 
     constructor(
         base_atk, equip_atk, refine_atk,
@@ -17,6 +17,8 @@ export default class CharacterStatus {
         ignore_mdef_sub, pve_damage_up,
         magic_add,
         double_cast_mul, triple_cast_mul,
+        pursuits,
+        element_override,
     ) {
         this.base_atk = base_atk || 0;
         this.equip_atk = equip_atk || 0;
@@ -81,6 +83,12 @@ export default class CharacterStatus {
 
         // ギア効果：トリプルキャストギア
         this.triple_cast_mul = triple_cast_mul || 0;
+
+        // ギア効果：電気嵐バルス装置，アドバンスMS，自動凍結装置
+        this.pursuits = pursuits || {};
+
+        // ギア効果；神罰，エレメンタルコントロール
+        this.element_override = element_override || 0;
     }
 
     serialize() {
@@ -101,6 +109,8 @@ export default class CharacterStatus {
             this.ignore_mdef_sub, this.pve_damage_up,
             this.magic_add,
             this.double_cast_mul, this.triple_cast_mul,
+            this.pursuits,
+            this.element_override,
         ];
     }
 
@@ -162,6 +172,8 @@ export default class CharacterStatus {
             this.magic_add + adj.magic_add,
             this.double_cast_mul + adj.double_cast_mul,
             this.triple_cast_mul + adj.triple_cast_mul,
+            adj.pursuits,
+            this.element_override + adj.element_override,
         );
     }
 }

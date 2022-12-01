@@ -1,4 +1,4 @@
-export default {
+const DATA = {
     "風": {
         "風": -75,
         "地": -20,
@@ -120,3 +120,13 @@ export default {
         "死": -75, // TODO 確認
     },
 };
+
+// 各属性の最大倍率，最小倍率を引けるようにする
+Object.keys(DATA).forEach(k1 => {
+    const v = DATA[k1];
+
+    v['MAX'] = Object.keys(v).reduce((val, k2) => Math.max(val, v[k2]), 0);
+    v['MIN'] = Object.keys(v).reduce((val, k2) => Math.min(val, v[k2]), 0);
+})
+
+export default DATA;
