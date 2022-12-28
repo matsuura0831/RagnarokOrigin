@@ -85,7 +85,9 @@ class MagicDamageCalculator {
    }
 
    total_pve_damage_up() {
-       const v = 100 + this.status.pve_damage_up / 100;   // TODO: 仮でPVEダメージアップは 100 = 1%とする
+       // https://twitter.com/feeO_ro/status/1594358453354770433
+       // PVE1 = 0.012%
+       const v = 100 + (this.status.pve_damage_up * 0.012);
        return v;
    }
 
