@@ -508,6 +508,25 @@ const DATA = [
             }
         },
     },
+    {
+        name: "セイグリッド",
+        levels: [10, 0],
+
+        handler(level, skill) {
+            const _adj = {
+                10: 10,
+                0: 0,
+            }[level];
+
+            return new class extends MagicDamageHandler {
+                run(status, ismin, ismax) {
+                    status.sacred_gear += _adj;
+                }
+            }
+        },
+    },
+
+    
 ];
 
 const CONVERT_DATA = {};

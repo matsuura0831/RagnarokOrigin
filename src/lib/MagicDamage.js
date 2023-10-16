@@ -91,6 +91,10 @@ class MagicDamageCalculator {
        return v;
    }
 
+   total_sacred_gear_up() {
+       return 100 + this.status.sacred_gear;
+   }
+
    get(...args) {
        const atk = this.total_atk();
 
@@ -105,6 +109,7 @@ class MagicDamageCalculator {
                         * this.total_size_up() / 100
                         * this.total_skill_up() / 100
                         * this.total_enemy_mdef_div()
+                        * this.total_sacred_gear_up() / 100
                     ) + this.total_extra_damage()
            ) * this.total_pve_damage_up() / 100
        );
