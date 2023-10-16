@@ -1,5 +1,5 @@
 export default class CharacterStatus {
-    static VERSION = [1, 3];    // major, minor
+    static VERSION = [1, 5];    // major, minor
 
     constructor(
         base_atk, equip_atk, refine_atk,
@@ -19,6 +19,8 @@ export default class CharacterStatus {
         double_cast_mul, triple_cast_mul,
         pursuits,
         element_override,
+        sacred_gear,
+        enhance_power,
     ) {
         this.base_atk = base_atk || 0;
         this.equip_atk = equip_atk || 0;
@@ -89,6 +91,12 @@ export default class CharacterStatus {
 
         // ギア効果；神罰，エレメンタルコントロール
         this.element_override = element_override || 0;
+
+        // ギア効果：セイグリッドギア
+        this.sacred_gear = sacred_gear || 0;
+
+        // 魂：魔法ダメージ強化
+        this.enhance_power = enhance_power || 0;
     }
 
     serialize() {
@@ -111,6 +119,8 @@ export default class CharacterStatus {
             this.double_cast_mul, this.triple_cast_mul,
             this.pursuits,
             this.element_override,
+            this.sacred_gear,
+            this.enhance_power,
         ];
     }
 
@@ -174,6 +184,8 @@ export default class CharacterStatus {
             this.triple_cast_mul + adj.triple_cast_mul,
             adj.pursuits,
             this.element_override + adj.element_override,
+            this.sacred_gear + adj.sacred_gear,
+            this.enhance_power + adj.enhance_power,
         );
     }
 }

@@ -96,8 +96,10 @@
    * サイズモンスターダメUP%[{{ calc.total_size_up() }}]
    * スキル倍率%[{{ calc.total_skill_up() }}]
    * 敵除算MDEF%[{{ calc.total_enemy_mdef_div() }}]
+   * セイグリッド%[{{ calc.total_sacred_gear_up() }}]
 + 追加ダメージ[{{ calc.total_extra_damage() }}])
 * PVEダメージ%[{{ calc.total_pve_damage_up() }}]
+* 魔法ダメージ強化%[{{ calc.total_enhance_power() }}]
                 </p>
 
                 <p>
@@ -115,8 +117,10 @@
    * サイズモンスターダメUP%[{{ calc_adj.total_size_up() }}]
    * スキル倍率%[{{ calc_adj.total_skill_up() }}]
    * 敵除算MDEF%[{{ calc_adj.total_enemy_mdef_div() }}]
+   * セイグリッド%[{{ calc_adj.total_sacred_gear_up() }}]
 + 追加ダメージ[{{ calc_adj.total_extra_damage() }}])
 * PVEダメージ%[{{ calc_adj.total_pve_damage_up() }}]
+* 魔法ダメージ強化%[{{ calc_adj.total_enhance_power() }}]
 
                 </p>
                 <p>
