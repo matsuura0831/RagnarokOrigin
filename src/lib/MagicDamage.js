@@ -87,7 +87,9 @@ class MagicDamageCalculator {
    total_pve_damage_up() {
        // https://twitter.com/feeO_ro/status/1594358453354770433
        // PVE1 = 0.012%
-       const v = 100 + (this.status.pve_damage_up * 0.012);
+
+       // 2023.10.17: ここが原因で誤差を生んでいるように見える。暫定的に 0.012 から 0.01に変更 
+       const v = 100 + (this.status.pve_damage_up * 0.01);
        return v;
    }
 
