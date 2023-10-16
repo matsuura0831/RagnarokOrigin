@@ -95,6 +95,11 @@ class MagicDamageCalculator {
        return 100 + this.status.sacred_gear;
    }
 
+   total_enhance_power() {
+       const v = 100 + (this.status.enhance_power * 0.09);
+       return v;
+   }
+
    get(...args) {
        const atk = this.total_atk();
 
@@ -111,7 +116,9 @@ class MagicDamageCalculator {
                         * this.total_enemy_mdef_div()
                         * this.total_sacred_gear_up() / 100
                     ) + this.total_extra_damage()
-           ) * this.total_pve_damage_up() / 100
+           )
+           * this.total_pve_damage_up() / 100
+           * this.total_enhance_power() / 100
        );
 
        if(this.status.last_up > 0 && this.ismin == false) {

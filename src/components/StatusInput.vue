@@ -59,6 +59,7 @@ export default {
           { label: "属性モンスターダメージアップ[%]", key: "element_enemy_up", disabled: 0 },
           { label: "BOSSダメージアップ[%]", key: "boss_up", disabled: 0 },
           { label: "属性ダメージアップ[%]", key: "element_damage_up", disabled: 0 },
+          { label: "魔法ダメージ強化[%]", key: "enhance_power", disalbed: 0 },
         ]},
         { label: "詠唱に関わるステータス", records: [
           { label: "INT", key: "status_int", disabled: 0 },

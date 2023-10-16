@@ -99,6 +99,7 @@
    * セイグリッド%[{{ calc.total_sacred_gear_up() }}]
 + 追加ダメージ[{{ calc.total_extra_damage() }}])
 * PVEダメージ%[{{ calc.total_pve_damage_up() }}]
+* 魔法ダメージ強化%[{{ calc.total_enhance_power() }}]
                 </p>
 
                 <p>
@@ -119,6 +120,7 @@
    * セイグリッド%[{{ calc_adj.total_sacred_gear_up() }}]
 + 追加ダメージ[{{ calc_adj.total_extra_damage() }}])
 * PVEダメージ%[{{ calc_adj.total_pve_damage_up() }}]
+* 魔法ダメージ強化%[{{ calc_adj.total_enhance_power() }}]
 
                 </p>
                 <p>
