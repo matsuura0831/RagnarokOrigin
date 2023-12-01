@@ -1,5 +1,4 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
-import ElementalRelation from "@/lib/ElementalRelation";
 
 class SubSkillData {
     static VERSION = [1, 1];    // major, minor
@@ -49,7 +48,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(['風', '地', '火', '水', '念'].includes(skill.element)) {
+                    if (['風', '地', '火', '水', '念'].includes(skill.element)) {
                         status.element_relation_add += _adj;
                     }
                 }
@@ -63,17 +62,13 @@ const DATA = [
         handler(level, skill, enemy) {
             const _adj = {
                 10: 50, 9: 47, 8: 44, 7: 41, 6: 38,
-                 5: 35, 4: 32, 3: 29, 2: 26, 1: 23,
-                 0: 0,
+                5: 35, 4: 32, 3: 29, 2: 26, 1: 23,
+                0: 0,
             }[level];
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    const name = skill.name;
-
-                    if(name == 'ファイアーボルト' || name == "ライトニングボルト" || name == "コールドボルト" || name == "アーススパイク") {
-                        status.double_cast_mul += _adj;
-                    }
+                    if (skill.can_dc_cast) status.double_cast_mul += _adj;
                 }
             }
         },
@@ -102,7 +97,7 @@ export default {
         const lv = level || 0;
         return m[lv].instance.clone();
     },
-    getHandler({name, level}, skill, enemy) {
+    getHandler({ name, level }, skill, enemy) {
         return CONVERT_DATA[name][level].handler(skill, enemy);
     }
 }

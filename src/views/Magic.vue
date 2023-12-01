@@ -472,7 +472,7 @@ export default {
     },
 
     getCalculator(status, ismin, ismax) {
-      const b = new MagicDamageBuilder(status, this.skill, this.enemy);
+      const b = new MagicDamageBuilder(status.clone(), this.skill, this.enemy);
 
       // ギアやスキル追加等もここで行う
       b.handler(WeaponData.getHandler(this.weapon, this.skill));

@@ -1,4 +1,5 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
+import AutoSpellData from "@/lib/AutoSpellData";
 
 export class Weapon {
     static VERSION = [5, 0];    // major, minor
@@ -49,9 +50,9 @@ const DATA = [
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
                     const name = skill.name;
-                    if(name == 'ファイアーボルト') status.specific_skill_up += w.refine_effects.skill_up_fb;
-                    if(name == 'ファイアーボール') status.specific_skill_up += w.refine_effects.skill_up_fbl;
-                    if(name == 'メテオストーム')   status.specific_skill_up += w.refine_effects.skill_up_ms;
+                    if (name == 'ファイアーボルト') status.specific_skill_up += w.refine_effects.skill_up_fb;
+                    if (name == 'ファイアーボール') status.specific_skill_up += w.refine_effects.skill_up_fbl;
+                    if (name == 'メテオストーム') status.specific_skill_up += w.refine_effects.skill_up_ms;
 
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
@@ -70,9 +71,9 @@ const DATA = [
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
                     const name = skill.name;
-                    if(name == 'ライトニングボルト') status.specific_skill_up += w.refine_effects.skill_up_lb;
-                    if(name == 'ユピテルサンダー') status.specific_skill_up += w.refine_effects.skill_up_jt;
-                    if(name == 'ロードオブヴァーミリオン')   status.specific_skill_up += w.refine_effects.skill_up_lov;
+                    if (name == 'ライトニングボルト') status.specific_skill_up += w.refine_effects.skill_up_lb;
+                    if (name == 'ユピテルサンダー') status.specific_skill_up += w.refine_effects.skill_up_jt;
+                    if (name == 'ロードオブヴァーミリオン') status.specific_skill_up += w.refine_effects.skill_up_lov;
 
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
@@ -86,25 +87,20 @@ const DATA = [
         tips: "「風属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
     {
-        name: "古代海流の杖", 
+        name: "古代海龍の杖",
         handler(w, skill) {
+            const target = "古代海龍の杖";
+
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    const name = skill.name;
-
-                    let v = {};
-                    if(skill.element == '水') {
+                    if (skill.element == '水') {
                         status.skill_add += w.refine_effects.skill_mul_up_water;
                         status.fix_cast_div += w.refine_effects.fcast_water;
-
-                        v = {
-                            mul: w.refine_effects.bubble_mul,
-                            element: '無',
-                            prob: 100,
-                            ct: 1,
-                        };
                     }
-                    status.pursuits['古代海流の杖'] = v;
+
+                    let as = AutoSpellData.getAutoSpell(target, 1);
+                    as.mul = w.refine_effects.bubble_mul;
+                    status.pursuits[target] = as;
 
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
@@ -123,7 +119,7 @@ const DATA = [
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
                     const name = skill.name;
-                    if(name == 'マグヌスエクソシズム') {
+                    if (name == 'マグヌスエクソシズム') {
                         status.specific_skill_up += w.refine_effects.skill_up_me;
                         status.ignore_mdef_div += w.refine_effects.ignore_mdef_div;
                         status.variable_cast_div += w.refine_effects.vcast_div;
@@ -146,7 +142,7 @@ const DATA = [
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
                     const name = skill.name;
-                    if(name == 'ファイアーボルト' || name == "ライトニングボルト" || name == "コールドボルト" || name == "アーススパイク") {
+                    if (name == 'ファイアーボルト' || name == "ライトニングボルト" || name == "コールドボルト" || name == "アーススパイク") {
                         status.specific_skill_up += w.refine_effects.skill_up_bolt;
                         status.delay_sub += w.refine_effects.delay_sub;
                     }
@@ -166,7 +162,7 @@ const DATA = [
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
                     const name = skill.name;
-                    if(name == 'サイキックウェーブ') {
+                    if (name == 'サイキックウェーブ') {
                         status.magic_add += w.refine_effects.magic_add;
                         status.fix_cast_sub += w.refine_effects.fcast_sub;
                         status.specific_skill_up += w.refine_effects.skill_up_pw;
@@ -183,7 +179,7 @@ const DATA = [
             skill_up_pw: 14,
             ignore_mdef_div: 50,
             delay_sub: 1,
-            
+
         },
         tips: "「無属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
