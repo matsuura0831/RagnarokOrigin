@@ -237,13 +237,6 @@ class MagicDamageCalculator {
         clone_status.double_cast_mul = 0;
         clone_status.triple_cast_mul = 0;
 
-        //    //dummy
-        //    clone_status.pursuits['アクアオーブ'] = { prob: 10, mul:  350, add:   0, hit: 1, ct: 0, element: "水", alias: "超水流", check:() => true };
-        //    clone_status.pursuits['ピットマン'] =   { prob: 10, mul: 1000, add: 225, hit: 1, ct: 0, element: "地", alias: "ヘブンズドライブ", check:() => true };
-
-        //    clone_status.pursuits['eruma']   = { prob: 5, mul: 800, add: 250, hit: 15, ct: 1, element: "水", check:() => true };
-        //    clone_status.pursuits['stacker'] = { prob: 3, mul:1500, add:1005, hit: 15, ct: 1, element: "水", check:() => true };
-
         let pursuit_with_ct = {};
         let pursuit_without_ct = {};
 
@@ -321,16 +314,10 @@ class MagicDamageCalculator {
                 hits_ct.element[element] = h;
 
                 hits_ct.prob[k] = pp;
-
-                console.log("CT", prev_total, k, prob, hit, ct, n, pp, h)
             })
-            console.log(hits_ct);
         } while ((hits_ct.total - prev_total) > TH_HIT);
 
         let hits_noct2 = _calc_total_hit('', '', hits_ct.total, pursuit_without_ct, { ...hits_noct.skill }, { ...hits_noct.element });
-
-        const damage_per_hit = this.get();
-        //    let ret = Math.floor(hit_per_sec * damage_per_hit);
 
         let ret = [];
 
@@ -361,13 +348,8 @@ class MagicDamageCalculator {
             console.log(k, p, d, p * d)
         })
 
-
         console.log(ret);
-
         ret = ret.reduce((r, i) => r + Math.floor(i), 0);
-
-
-
         return ret;
     }
 }

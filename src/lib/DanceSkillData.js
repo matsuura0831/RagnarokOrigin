@@ -72,7 +72,7 @@ const DATA = [
 ];
 
 const CONVERT_DATA = {};
-DATA.forEach(({ name, levels, handler, tips }) => {
+DATA.forEach(({ name, levels, handler, tips = '' }) => {
     let m = {};
     levels.forEach(i => {
         m[i] = {
@@ -98,6 +98,6 @@ export default {
         return CONVERT_DATA[name][level].handler;
     },
     getTips({name, level}) {
-        return CONVERT_DATA[name][level].tips || "";
+        return CONVERT_DATA[name][level].tips;
     }
 }
