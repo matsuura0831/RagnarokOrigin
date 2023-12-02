@@ -1,7 +1,7 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 
 class AutoSpellSkill {
-    static VERSION = [2, 0];    // major, minor
+    static VERSION = [1, 0];    // major, minor
 
     constructor(
         name, alias, element, level, mul, add, prob, hit, ct,
