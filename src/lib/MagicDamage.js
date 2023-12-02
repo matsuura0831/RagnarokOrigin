@@ -73,7 +73,6 @@ class MagicDamageCalculator {
             "死": this.status.element_undead_damage_up,
             "毒": this.status.element_poison_damage_up,
         };
-        console.log(element_damage_map, this.skill.element, element_damage_map[this.skill.element]);
 
         const v = 100 + element_damage_map[this.skill.element];
         return v;
@@ -361,26 +360,26 @@ class MagicDamageCalculator {
 
         // noct
         Object.keys(pursuit_without_ct).forEach(k => {
-            const { element, level, mul, add = 0 } = pursuit_without_ct[k];
+            const { element, level, mul, prob, add = 0 } = pursuit_without_ct[k];
 
             const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
             const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
             const n = hits_noct2.skill[k];
 
             ret.push(n * d);
-            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, ct:0 }, #hit=${n}, #dmg=${d}, dps=${n*d}`);
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, ct:0 }, #hit=${n}, #dmg=${d}, dps=${n*d}`);
         })
 
         // ct
         Object.keys(pursuit_with_ct).forEach(k => {
-            const { element, level, mul, ct, add = 0 } = pursuit_with_ct[k];
+            const { element, level, mul, prob, ct, add = 0 } = pursuit_with_ct[k];
 
             const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
             const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
             const p = hits_ct.prob[k];
 
             ret.push(p * d);
-            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, ct:${ct} }, #prob=${p}, #dmg=${d}, dps=${p*d}`);
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, ct:${ct} }, #prob=${p}, #dmg=${d}, dps=${p*d}`);
         })
 
         console.log(ret);
