@@ -260,16 +260,45 @@
           </Accordion>
 
           <Accordion :expand="true">
+            <template #title>アクセサリー</template>
+            <template #content>
+
+          <div class="flex items-center mb-2" v-for="(v, i) in accessory" :key="i">
+            <select :name="`accessory_${i}`"
+              class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+              v-model="target_accessory[i]" @change="changeAccessory(i)">
+              <option v-for="j in Object.keys(accessory_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
+          </template>
+          </Accordion>
+
+          <Accordion :expand="true">
+            <template #title>アクセサリーカード</template>
+            <template #content>
+
+          <div class="flex items-center mb-2" v-for="(v, i) in accessory_card" :key="i">
+            <select :name="`accessory_${i}`"
+              class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+              v-model="target_accessory_card[i]" @change="changeAccessoryCard(i)">
+              <option v-for="j in Object.keys(accessory_card_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
+          </template>
+          </Accordion>
+
+
+          <Accordion :expand="true">
             <template #title>アクセサリーセット効果</template>
             <template #content>
 
           <div class="flex items-center mb-2">
-            <select name="accessory" class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
-              v-model="target_accessory" @change="changeAccessory">
-              <option v-for="j in Object.keys(accessory_data)" :value="j" :key="j">{{ j }}</option>
+            <select name="accessory_set" class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+              v-model="target_accessory_set" @change="changeAccessorySet">
+              <option v-for="j in Object.keys(accessory_set_data)" :value="j" :key="j">{{ j }}</option>
             </select>
           </div>
-          <AccessoryInput v-model="accessory" />
+          <AccessorySetInput v-model="accessory_set" />
           </template>
           </Accordion>
 
@@ -346,7 +375,7 @@ import StatusInput from "@/components/StatusInput.vue";
 import EnemyInput from "@/components/EnemyInput.vue";
 import SkillInput from "@/components/SkillInput.vue";
 import WeaponInput from "@/components/WeaponInput.vue";
-import AccessoryInput from "@/components/AccessoryInput.vue";
+import AccessorySetInput from "@/components/AccessorySetInput.vue";
 import ArmorInput from "@/components/ArmorInput.vue";
 import Accordion from "@/components/Accordion.vue";
 
@@ -359,6 +388,8 @@ import WeaponData from "@/lib/WeaponData";
 import WeaponCardData from "@/lib/WeaponCardData";
 import ArmorData from "@/lib/ArmorData";
 import AccessoryData from "@/lib/AccessoryData";
+import AccessoryCardData from "@/lib/AccessoryCardData";
+import AccessorySetData from "@/lib/AccessorySetData";
 import MagicGearData from "@/lib/MagicGearData";
 import AutoSpellData from "@/lib/AutoSpellData";
 
@@ -378,7 +409,9 @@ const persistent_list = [
   { key: 'weapon', clazz: WeaponData.clazz },
   { key: 'weapon_card', clazz: [WeaponCardData.clazz, WeaponCardData.clazz, WeaponCardData.clazz] },
   { key: 'armor', clazz: ArmorData.clazz },
-  { key: 'accessory', clazz: AccessoryData.clazz },
+  { key: 'accessory', clazz: [AccessoryData.clazz, AccessoryData.clazz] },
+  { key: 'accessory_card', clazz: [AccessoryCardData.clazz, AccessoryData.clazz, AccessoryData.clazz, AccessoryData.clazz] },
+  { key: 'accessory_set', clazz: AccessorySetData.clazz },
   { key: 'gear', clazz: [...Object.keys(MagicGearData.data).map(_ => MagicGearData.clazz)] },
   { key: 'sub_skill', clazz: [...Object.keys(SubSkillData.data).map(_ => SubSkillData.clazz)] },
   { key: 'dance_skill', clazz: [...Object.keys(DanceSkillData.data).map(_ => DanceSkillData.clazz)] },
@@ -392,7 +425,7 @@ export default {
     EnemyInput,
     SkillInput,
     WeaponInput,
-    AccessoryInput,
+    AccessorySetInput,
     ArmorInput,
     Accordion,
   },
@@ -405,7 +438,9 @@ export default {
       weapon: WeaponData.getWeapon('その他'),
       weapon_card: [WeaponCardData.getWeaponCard('その他'), WeaponCardData.getWeaponCard('その他'), WeaponCardData.getWeaponCard('その他')],
       armor: ArmorData.getArmor('その他'),
-      accessory: AccessoryData.getAccessory('その他'),
+      accessory: [AccessoryData.getAccessory('その他'),AccessoryData.getAccessory('その他')],
+      accessory_card: [AccessoryCardData.getAccessoryCard('その他'),AccessoryCardData.getAccessoryCard('その他'),AccessoryCardData.getAccessoryCard('その他'),AccessoryCardData.getAccessoryCard('その他')],
+      accessory_set: AccessorySetData.getAccessorySet('その他'),
 
       gear: [...Object.keys(MagicGearData.data).map(k => MagicGearData.getGear(k))],
       sub_skill: [...Object.keys(SubSkillData.data).map(k => SubSkillData.getSkill(k))],
@@ -436,6 +471,8 @@ export default {
       weapon_card_data: WeaponCardData.data,
       armor_data: ArmorData.data,
       accessory_data: AccessoryData.data,
+      accessory_card_data: AccessoryCardData.data,
+      accessory_set_data: AccessorySetData.data,
 
       target_enemy: data.enemy.name,
       target_skill: data.skill.name,
@@ -447,7 +484,9 @@ export default {
       target_weapon: data.weapon.name,
       target_weapon_card: [...data.weapon_card.map(o => o.name)],
       target_armor: data.armor.name,
-      target_accessory: data.accessory.name,
+      target_accessory: [...data.accessory.map(o => o.name) ],
+      target_accessory_card: [...data.accessory_card.map(o => o.name) ],
+      target_accessory_set: data.accessory_set.name,
     });
   },
   methods: {
@@ -515,11 +554,19 @@ export default {
         this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000 })
       }
     },
-    changeAccessory() {
-      const accessory = AccessoryData.getAccessory(this.target_accessory);
-      Object.assign(this.accessory, accessory);
+    changeAccessory(k) {
+      const accessory = AccessoryData.getAccessory(this.target_accessory[k]);
+      Object.assign(this.accessory[k], accessory);
+    },
+    changeAccessoryCard(k) {
+      const card = AccessoryCardData.getAccessoryCard(this.target_accessory_card[k]);
+      Object.assign(this.accessory_card[k], card);
+    },
+    changeAccessorySet() {
+      const accessory = AccessorySetData.getAccessorySet(this.target_accessory_set);
+      Object.assign(this.accessory_set, accessory);
 
-      const tips = AccessoryData.getTips(this.target_accessory);
+      const tips = AccessorySetData.getTips(this.target_accessory_set);
       if (tips) {
         this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000 })
       }
@@ -578,9 +625,11 @@ export default {
       // ギアやスキル追加等もここで行う
       b.handler(WeaponData.getHandler(this.weapon, this.skill));
       b.handler(ArmorData.getHandler(this.armor));
-      b.handler(AccessoryData.getHandler(this.accessory));
+      b.handler(AccessorySetData.getHandler(this.accessory_set));
 
       this.weapon_card.map(w => b.handler(WeaponCardData.getHandler(w.name)));
+      this.accessory.map(a => b.handler(AccessoryData.getHandler(a.name)));
+      this.accessory_card.map(c => b.handler(AccessoryCardData.getHandler(c.name)));
 
       this.sub_skill.map(s => b.handler(SubSkillData.getHandler(s, this.skill, this.enemy)));
       this.gear.map(g => b.handler(MagicGearData.getHandler(g, this.skill)));
@@ -694,7 +743,13 @@ export default {
           this.target_armor = v.name;
         }
         if (k === "accessory") {
-          this.target_accessory = v.name;
+          v.forEach((s, i) => this.target_accessory[i] = s.name);
+        }
+        if (k === "accessory_card") {
+          v.forEach((s, i) => this.target_accessory_card[i] = s.name);
+        }
+        if (k === "accessory_set") {
+          this.target_accessory_set = v.name;
         }
       });
     }

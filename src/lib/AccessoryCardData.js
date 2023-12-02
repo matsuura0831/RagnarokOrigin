@@ -1,65 +1,54 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 import AutoSpellData from "@/lib/AutoSpellData";
 
-export class Accessory {
+export class AccessoryCard {
     static VERSION = [1, 0];    // major, minor
 
     constructor(
         name,
+        custom_effects
     ) {
         this.name = name;
+        this.custom_effects = custom_effects || { };
     }
 
     serialize() {
         return [
-            ...Accessory.VERSION,
+            ...AccessoryCard.VERSION,
             this.name,
+            this.custom_effects
         ];
     }
 
     clone() {
-        return Accessory.deserialize(this.serialize());
+        return AccessoryCard.deserialize(this.serialize());
     }
 
     static deserialize(v) {
-        const [crnt_major, crnt_minor] = Accessory.VERSION;
+        const [crnt_major, crnt_minor] = AccessoryCard.VERSION;
         const [major, minor, ...rest] = v;
 
         if (major != crnt_major) {
-            throw `Mismatch major version of Accessory: expected ${crnt_major}.*, actual ${major}.${minor}`;
+            throw `Mismatch major version of AccessoryCard: expected ${crnt_major}.*, actual ${major}.${minor}`;
         }
         if (minor != crnt_minor) {
-            console.warn(`Mismatch minor version of Accessory: expected ${crnt_major}.${crnt_minor}, actual ${major}.${minor}`)
+            console.warn(`Mismatch minor version of AccessoryCard: expected ${crnt_major}.${crnt_minor}, actual ${major}.${minor}`)
         }
-        return new Accessory(...rest);
+        return new AccessoryCard(...rest);
     }
 }
 
 const DATA = [
     {
         name: "その他",
-        handler() {
+        handler(w) {
             return new MagicDamageHandler();
         },
-    },
-    {
-        name: "ペンダントオブハーモニー",
-        handler() {
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    // 2個装着した場合は最終倍率(150)は変わらない
-                    status.last_up = 150;
-
-                    status.last_up_prob += 10;
-                    status.skill_up += 5;
-                }
-            };
-        },
-    },
+    }
 ]
 
 const AS_DATA = [
-    ["アクアオーブ", [1], ""],
+    ["マーリン", [1], ""],
 ];
 
 AS_DATA.forEach(o => {
@@ -81,30 +70,30 @@ AS_DATA.forEach(o => {
 const CONVERT_DATA = {};
 DATA.forEach(obj => {
     const {
-        set_effects,
-        name, handler, tips
+        custom_effects,
+        name, handler, tips = ""
     } = obj;
 
-    const w = new Accessory(name, set_effects);
+    const w = new AccessoryCard(name, custom_effects);
 
     CONVERT_DATA[name] = {
         instance: w,
         tips: tips,
-        handler: (w) => handler(w)
+        handler: (w, s) => handler(w, s)
     }
 })
 
 export default {
     data: CONVERT_DATA,
-    clazz: Accessory,
+    clazz: AccessoryCard,
 
-    getAccessory(name) {
+    getAccessoryCard(name) {
         return CONVERT_DATA[name].instance.clone();
     },
     getHandler(name) {
         return CONVERT_DATA[name].handler();
     },
     getTips(name) {
-        return CONVERT_DATA[name].tips || "";
+        return CONVERT_DATA[name].tips;
     }
 }

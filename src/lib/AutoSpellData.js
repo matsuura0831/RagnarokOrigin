@@ -199,7 +199,6 @@ const DATA = [
         name: "マーリン",
         alias: "ライトニングボルト",
         element: "風",
-        show: true,
         records: [
             { level: 1, mul: 200, add: 32, prob: 5, ct: 2, hit: 1 },
             { level: 0, mul:   0, add:  0, prob: 0, ct: 2, hit: 0 },
@@ -228,7 +227,6 @@ const DATA = [
     {
         name: "アクアオーブ",
         element: "水",
-        show: true,
         records: [
             { level: 1, mul: 350, add: 0, prob: 10, ct: 0, hit: 1 },
             { level: 0, mul:   0, add: 0, prob:  0, ct: 0, hit: 0 },
