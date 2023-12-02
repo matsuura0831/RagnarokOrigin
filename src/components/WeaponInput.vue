@@ -49,7 +49,6 @@ export default {
         { key: 'fcast_water',         label: '水属性スキル固定時間減少[%]',  number: 1},
         { key: 'bubble_mul',          label: '海流の泡[%]', number: 1},
         
-        { key: 'element_damage_up',  label: '属性ダメージアップ[%]',  number: 1},
 
         { key: 'skill_up_me',      label: 'MEスキルダメージUP[%]',  number: 1},
         { key: 'ignore_mdef_div',   label: '防御無視[%]',  number: 1},

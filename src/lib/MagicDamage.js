@@ -61,7 +61,21 @@ class MagicDamageCalculator {
     }
 
     total_element_damage_up() {
-        const v = 100 + this.status.element_damage_up;
+        const element_damage_map = {
+            "風": this.status.element_wind_damage_up,
+            "地": this.status.element_earth_damage_up,
+            "火": this.status.element_fire_damage_up,
+            "水": this.status.element_water_damage_up,
+            "無": this.status.element_normal_damage_up,
+            "聖": this.status.element_holy_damage_up,
+            "闇": this.status.element_dark_damage_up,
+            "念": this.status.element_ghost_damage_up,
+            "死": this.status.element_undead_damage_up,
+            "毒": this.status.element_poison_damage_up,
+        };
+        console.log(element_damage_map, this.skill.element, element_damage_map[this.skill.element]);
+
+        const v = 100 + element_damage_map[this.skill.element];
         return v;
     }
 

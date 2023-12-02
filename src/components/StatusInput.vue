@@ -58,7 +58,19 @@ export default {
           { label: "種族モンスターダメージアップ[%]", key: "race_up", disabled: 0 },
           { label: "属性モンスターダメージアップ[%]", key: "element_enemy_up", disabled: 0 },
           { label: "BOSSダメージアップ[%]", key: "boss_up", disabled: 0 },
-          { label: "属性ダメージアップ[%]", key: "element_damage_up", disabled: 0 },
+
+          { label: "風属性ダメージアップ[%]", key: "element_wind_damage_up", disabled: 0 },
+          { label: "地属性ダメージアップ[%]", key: "element_earth_damage_up", disabled: 0 },
+          { label: "火属性ダメージアップ[%]", key: "element_fire_damage_up", disabled: 0 },
+          { label: "水属性ダメージアップ[%]", key: "element_water_damage_up", disabled: 0 },
+
+          { label: "無属性ダメージアップ[%]", key: "element_normal_damage_up", disabled: 0 },
+          { label: "聖属性ダメージアップ[%]", key: "element_holy_damage_up", disabled: 0 },
+          { label: "闇属性ダメージアップ[%]", key: "element_dark_damage_up", disabled: 0 },
+          { label: "念属性ダメージアップ[%]", key: "element_ghost_damage_up", disabled: 0 },
+          { label: "不死属性ダメージアップ[%]", key: "element_undead_damage_up", disabled: 0 },
+          { label: "毒属性ダメージアップ[%]", key: "element_poison_damage_up", disabled: 0 },
+
           { label: "魔法ダメージ強化[%]", key: "enhance_power", disalbed: 0 },
         ]},
         { label: "詠唱に関わるステータス", records: [
