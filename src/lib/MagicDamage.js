@@ -349,7 +349,7 @@ class MagicDamageCalculator {
 
         // base
         let base_dmg = this.get();
-        ret.push(hit_per_sec * base_dmg);
+        ret.push([hit_per_sec, hit_per_sec * base_dmg]);
 
         console.log(`${this.skill.name}{ level:${this.skill.level}, el:${this.skill.element}, mul:${this.skill.mul}, add:${this.skill.add} }, #hit=${hit_per_sec}, #dmg=${base_dmg}, dps=${hit_per_sec*base_dmg}`);
         
@@ -366,25 +366,26 @@ class MagicDamageCalculator {
             const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
             const n = hits_noct2.skill[k];
 
-            ret.push(n * d);
+            ret.push([n, n * d]);
             console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, ct:0 }, #hit=${n}, #dmg=${d}, dps=${n*d}`);
         })
 
         // ct
         Object.keys(pursuit_with_ct).forEach(k => {
-            const { element, level, mul, prob, ct, add = 0 } = pursuit_with_ct[k];
+            const { element, level, mul, prob, ct, hit, add = 0 } = pursuit_with_ct[k];
 
             const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
             const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
             const p = hits_ct.prob[k];
 
-            ret.push(p * d);
+            ret.push([p * hit, p * d]);
             console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, ct:${ct} }, #prob=${p}, #dmg=${d}, dps=${p*d}`);
         })
 
-        console.log(ret);
-        ret = ret.reduce((r, i) => r + Math.floor(i), 0);
-        return ret;
+
+        const hit = Math.floor(ret.reduce((r, i) => r + i[0], 0));
+        const dps = ret.reduce((r, i) => r + Math.floor(i[1]), 0);
+        return { hit: hit, dps: dps }
     }
 }
 

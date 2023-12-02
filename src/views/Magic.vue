@@ -72,6 +72,15 @@
                     <td class="p-2 border"></td>
                   </tr>
 
+                  <tr class="text-right">
+                    <td class="p-2 border text-left">攻撃回数</td>
+                    <td class="p-2 border">{{ total_hit }}</td>
+                    <td class="p-2 border">{{ total_hit_adj }}</td>
+                    <td class="p-2 border">
+                      {{ Math.floor((total_hit_adj - total_hit) / total_hit * 100 * 10) / 10 }}
+                    </td>
+                  </tr>
+
                 </tbody>
               </table>
 
@@ -697,10 +706,17 @@ export default {
     },
 
     total_dps() {
-      return this.calc.dps();
+      return this.calc.dps().dps;
     },
     total_dps_adj() {
-      return this.calc_adj.dps();
+      return this.calc_adj.dps().dps;
+    },
+
+    total_hit() {
+      return this.calc.dps().hit;
+    },
+    total_hit_adj() {
+      return this.calc_adj.dps().hit;
     },
   },
 
