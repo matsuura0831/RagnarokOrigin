@@ -7,10 +7,13 @@ class MagicDamageHandler {
 }
 
 class DefaultDict {
-    constructor(defaultVal, obj = {}) {
+    constructor(d, obj={}) {
         return new Proxy(obj, {
-            get: (target, name) => name in target ? target[name] : defaultVal
-        })
+            get: (target, name) => {
+                if(!(name in target)) target[name] = (typeof d === 'function') ? d() : d;
+                return target[name];
+            }
+        });
     }
 }
 
@@ -49,7 +52,7 @@ class MagicDamageCalculator {
         }
 
         const v2 = 100 + ElementalRelation[this.skill.element]['MAX'] + this.status.element_relation_add;
-        const p = this.status.element_override;
+        const p = ['風', '地', '火', '水'].includes(this.skill.element) ? this.status.element_override : 0;
 
         if (p <= 0) return v1;
         if (this.ismin) return v1;
@@ -97,8 +100,7 @@ class MagicDamageCalculator {
         // https://twitter.com/feeO_ro/status/1594358453354770433
         // PVE1 = 0.012%
 
-        // 2023.10.17: ここが原因で誤差を生んでいるように見える。暫定的に 0.012 から 0.01に変更 
-        const v = 100 + (this.status.pve_damage_up * 0.01);
+        const v = 100 + (this.status.pve_damage_up * 0.012);
         return v;
     }
 
@@ -219,29 +221,11 @@ class MagicDamageCalculator {
             hit_per_sec *= this.status.triple_cast_mul > 0 ? 3 : 2;
         }
 
-        /*
-         ASの発動種別
-             攻撃時：マーリン(CT)、レッドエルマ(CT)、ピットマン、ボールステッカー(CT)
-             物理攻撃時：ウィンドゴースト
-             魔法攻撃時：アクアオーブ
-             特定属性攻撃時：水龍の杖(CT)
-             特定スキル発動時：アドバンスギア(CT)、ダブルキャスト、トリプルキャスト
-         CT有とCT無で計算方法を変える必要がある
-             CT無：発動率*総判定回数*ダメージ
-             CT有：発動率(=CT期間中に1回でも発動する確率)*ダメージ / CT
-        */
-
-        const clone_status = this.status.clone();
-
-        // ダブルキャスト計算しないように確率をゼロにする
-        clone_status.double_cast_mul = 0;
-        clone_status.triple_cast_mul = 0;
-
         let pursuit_with_ct = {};
         let pursuit_without_ct = {};
 
-        Object.keys(clone_status.pursuits).forEach(k => {
-            const p = clone_status.pursuits[k];
+        Object.keys(this.status.pursuits).forEach(k => {
+            const p = this.status.pursuits[k];
 
             if ('ct' in p && p.ct > 0) {
                 pursuit_with_ct[k] = p;
@@ -250,24 +234,30 @@ class MagicDamageCalculator {
             }
         });
 
+        // CT無を複数刺した場合の判定回数を計算
         const TH_HIT = 0.001; // スキル倍率1000%ぐらいを想定して倍率が1%を下回らないようなHIT数にする
-
-        function _calc_total_hit(base_name, base_element, base_hit, base_pursuits, bs = {}, be = {}) {
-            let hits = { 'total': base_hit, 'skill': new DefaultDict(0, bs), 'element': new DefaultDict(0, be) };
+        function _calc_noct(base_pursuits, base_name, base_element, base_hit = 0, cache = undefined) {
+            let hits = {
+                total: base_hit,
+                skill: cache ? cache.skill : new DefaultDict(0),
+                element: cache ? cache.element : new DefaultDict(0),
+            };
 
             if (base_name) hits.skill[base_name] = base_hit;
             if (base_element) hits.element[base_element] = base_hit;
 
             function _calc(parent_name, parent_element, parent_hit, pursuits) {
                 Object.keys(pursuits).forEach(k => {
-                    const { prob, element, hit, ct, check } = pursuits[k];
+                    const { prob, element, hit, ct, alias = '' } = pursuits[k];
 
-                    if (check(parent_name, parent_element)) {
+                    if (pursuits[k].check(parent_name, parent_element)) {
                         let h = parent_hit * prob / 100 * hit;
                         if (ct <= 0 && h >= TH_HIT) {
                             hits['total'] += h;
                             hits.skill[k] += h;
                             hits.element[element] += h;
+
+                            if(alias) hits.skill[alias] += h;
 
                             _calc(k, element, h, Object.keys(base_pursuits).reduce((p, i) => {
                                 if (k != i) p[i] = base_pursuits[i];
@@ -277,52 +267,83 @@ class MagicDamageCalculator {
                     }
                 })
             }
-
             _calc(base_name, base_element, base_hit, base_pursuits)
-
             return hits;
         }
 
-        let hits_noct = _calc_total_hit(this.skill.name, this.skill.element, hit_per_sec, pursuit_without_ct);
-        console.log(hits_noct);
+        function _calc_ct(pursuits, hits_noct, cache = undefined) {
+            let hits_ct = {
+                total: cache ? cache.total : 0,
+                skill: cache ? cache.skill : new DefaultDict(0),
+                element: cache ? cache.element : new DefaultDict(0),
+                prob: cache ? cache.prob : new DefaultDict(0),
+                alias: cache ? cache.alias : new DefaultDict(() => new DefaultDict(0))
+            }
+            let prev_total = 0;
 
-        let hits_ct = { 'total': 0, 'skill': new DefaultDict(0), 'element': new DefaultDict(0), 'prob': new DefaultDict(0) };
-        let prev_total = 0;
-        do {
-            prev_total = hits_ct.total;
-            hits_ct.total = 0;
+            do {
+                prev_total = hits_ct.total;
+                hits_ct.total = 0;
 
-            Object.keys(pursuit_with_ct).forEach(k => {
-                const { prob, element, hit, ct, target_skill, target_element } = pursuit_with_ct[k];
+                Object.keys(pursuits).forEach(k => {
+                    const { prob, element, hit, ct, target_skill, target_element, alias = '' } = pursuits[k];
 
-                let n = 0;
-                if (target_skill) {
-                    n = hits_noct.skill[target_skill] + hits_ct.skill[target_skill];
-                } else if (target_element) {
-                    n = hits_noct.element[target_element] + hits_ct.element[target_element];
-                } else {
-                    n = hits_noct.total + Object.keys(hits_ct.skill).reduce((i, l) => {
-                        return k == l ? i : i + hits_ct.skill[l];
-                    }, 0);
-                }
+                    let n = 0;
+                    if (target_skill) {
+                        n = hits_noct.skill[target_skill] + hits_ct.skill[target_skill];
 
-                const np = (1.0 - prob / 100) ** n;
-                const pp = (1.0 - np) / ct
-                const h = pp * hit;
-                hits_ct.total = h;
-                hits_ct.skill[k] = h;
-                hits_ct.element[element] = h;
+                        n += Object.keys(hits_ct.alias[target_skill]).reduce((p, k) => {
+                            return p + hits_ct.alias[target_skill][k];
+                        }, 0);
+                    } else if (target_element) {
+                        n = hits_noct.element[target_element] + hits_ct.element[target_element];
+                    } else {
+                        n = hits_noct.total + Object.keys(hits_ct.skill).reduce((i, l) => {
+                            return k == l ? i : i + hits_ct.skill[l];
+                        }, 0);
+                    }
 
-                hits_ct.prob[k] = pp;
-            })
-        } while ((hits_ct.total - prev_total) > TH_HIT);
+                    const np = (1.0 - prob / 100) ** n;
+                    const pp = (1.0 - np);
+                    const h = pp * hit / ct;                    // CTが2秒ならヒット数は0.5倍、CTが0.5秒ならヒット数は2倍
+                    hits_ct.total = h;
+                    hits_ct.skill[k] = h;
+                    hits_ct.element[element] = h;
 
-        let hits_noct2 = _calc_total_hit('', '', hits_ct.total, pursuit_without_ct, { ...hits_noct.skill }, { ...hits_noct.element });
+                    hits_ct.prob[k] = pp;
+
+                    if(alias) {
+                        hits_ct.alias[alias][k] = h;
+                    }
+                })
+            } while ((hits_ct.total - prev_total) > TH_HIT);
+
+            return hits_ct;
+        }
+
+        // function _calc_noct(base_pursuits, base_name, base_element, base_hit = 0, cache = undefined) {
+        let hits_noct = _calc_noct(pursuit_without_ct, this.skill.name, this.skill.element, hit_per_sec);
+        console.log("noct1", hits_noct, pursuit_without_ct);
+
+        let hits_ct = _calc_ct(pursuit_with_ct, hits_noct)
+        console.log("ct1", hits_ct, pursuit_with_ct);
+
+        // function _calc_noct(base_pursuits, base_name, base_element, base_hit = 0, cache = undefined) {
+        let hits_noct2 = _calc_noct(pursuit_without_ct, '', '', hits_ct.total, hits_noct);
+        console.log("noct2", hits_noct2, pursuit_without_ct);
 
         let ret = [];
 
         // base
-        ret.push(hit_per_sec * this.get());
+        let base_dmg = this.get();
+        ret.push(hit_per_sec * base_dmg);
+
+        console.log(`${this.skill.name}{ level:${this.skill.level}, el:${this.skill.element}, mul:${this.skill.mul}, add:${this.skill.add} }, #hit=${hit_per_sec}, #dmg=${base_dmg}, dps=${hit_per_sec*base_dmg}`);
+        
+        // ダブルキャスト計算しないように確率をゼロにする
+        const clone_status = this.status.clone();
+        clone_status.double_cast_mul = 0;
+        clone_status.triple_cast_mul = 0;
 
         // noct
         Object.keys(pursuit_without_ct).forEach(k => {
@@ -333,19 +354,19 @@ class MagicDamageCalculator {
             const n = hits_noct2.skill[k];
 
             ret.push(n * d);
-            console.log(k, n, d, n * d)
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, ct:0 }, #hit=${n}, #dmg=${d}, dps=${n*d}`);
         })
 
         // ct
         Object.keys(pursuit_with_ct).forEach(k => {
-            const { element, level, mul, add = 0 } = pursuit_with_ct[k];
+            const { element, level, mul, ct, add = 0 } = pursuit_with_ct[k];
 
             const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
             const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
             const p = hits_ct.prob[k];
 
             ret.push(p * d);
-            console.log(k, p, d, p * d)
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, ct:${ct} }, #prob=${p}, #dmg=${d}, dps=${p*d}`);
         })
 
         console.log(ret);

@@ -263,13 +263,8 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const gearname = "アドバンスFB"
-
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    if (level > 0) status.pursuits[gearname] = AutoSpellData.getAutoSpell(gearname, level);
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスFB", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -277,13 +272,8 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const gearname = "アドバンスLB"
-
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    if (level > 0) status.pursuits[gearname] = AutoSpellData.getAutoSpell(gearname, level);
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスLB", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -291,13 +281,8 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const gearname = "アドバンスCB"
-
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    if (level > 0) status.pursuits[gearname] = AutoSpellData.getAutoSpell(gearname, level);
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスCB", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -305,13 +290,8 @@ const DATA = [
         levels: [10, 7, 0],
 
         handler(level, skill) {
-            const gearname = "アドバンスMS";
-
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    if (level > 0) status.pursuits[gearname] = AutoSpellData.getAutoSpell(gearname, level);
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスMS", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -319,13 +299,8 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const gearname = "磁気嵐パルス装置";
-
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    if (level > 0) status.pursuits[gearname] = AutoSpellData.getAutoSpell(gearname, level);
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("磁気嵐パルス装置", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -333,13 +308,8 @@ const DATA = [
         levels: [10, 0],
 
         handler(level, skill) {
-            const gearname = "アドバンスSG";
-
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    if (level > 0) status.pursuits[gearname] = AutoSpellData.getAutoSpell(gearname, level);
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスSG", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -396,9 +366,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if (['風', '地', '火', '水'].includes(skill.element)) {
-                        status.element_override += _adj;
-                    }
+                    status.element_override += _adj;
                 }
             }
         },
