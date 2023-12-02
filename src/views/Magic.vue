@@ -155,9 +155,7 @@
           </div>
 
           <EnemyInput v-model="enemy" />
-        </div>
 
-        <div class="bg-white shadow text-sm p-4">
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用スキル</h1>
               
           <div class="flex items-center mb-1">
@@ -192,20 +190,6 @@
 
           </div>
 
-          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">踊りスキル</h1>
-
-          <div class="flex items-center mb-1" v-for="(v, k, i) in dance_skill_data" :key="k">
-            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
-
-            <select
-                :name="`dance_skill${i}_level`"
-                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
-                v-model="target_dance_skill_level[k]" @change="changeDanceSkill(k)">
-              <option v-for="j in Object.keys(dance_skill_data[k]).sort((a, b) => b - a)" :value="j" :key="j">{{ j }}</option>
-            </select>
-
-          </div>
-
         </div>
 
         <div class="bg-white shadow text-sm p-4">
@@ -220,6 +204,17 @@
             </select>
           </div>
           <WeaponInput v-model="weapon" />
+
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">武器カード</h1>
+
+          <div class="flex items-center mb-2" v-for="(v, i) in weapon_card" :key="i">
+            <select
+                :name="`weapon_card_${i}`"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_weapon_card[i]" @change="changeWeaponCard(i)">
+                <option v-for="j in Object.keys(weapon_card_data)" :value="j" :key="j">{{ j }}</option>
+            </select>
+          </div>
 
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">防具効果</h1>
 
@@ -245,6 +240,37 @@
           </div>
           <AccessoryInput v-model="accessory" />
 
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">踊りスキル</h1>
+
+          <div class="flex items-center mb-1" v-for="(v, k, i) in dance_skill_data" :key="k">
+            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
+
+            <select
+                :name="`dance_skill${i}_level`"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_dance_skill_level[k]" @change="changeDanceSkill(k)">
+              <option v-for="j in Object.keys(dance_skill_data[k]).sort((a, b) => b - a)" :value="j" :key="j">{{ j }}</option>
+            </select>
+
+          </div>
+
+          <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">オートスペル</h1>
+
+          <div class="flex items-center mb-1" v-for="(v, k, i) in auto_spell_data" :key="k">
+            <label class="inline-block flex-none w-24 mr-2 text-right font-bold text-gray-600">{{ k }}</label>
+
+            <select
+                :name="`dance_skill${i}_level`"
+                class="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600"
+                v-model="target_auto_spell_level[k]" @change="changeAutoSpell(k)">
+              <option v-for="j in Object.keys(auto_spell_data[k]).sort((a, b) => b - a)" :value="j" :key="j">{{ j }}</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="bg-white shadow text-sm p-4">
           <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">使用ギア</h1>
 
           <div class="flex items-center mb-1" v-for="(v, k, i) in gear_data" :key="k">
@@ -278,9 +304,11 @@ import MagicSkillData from "@/lib/MagicSkillData";
 import SubSkillData from "@/lib/SubSkillData";
 import DanceSkillData from "@/lib/DanceSkillData";
 import WeaponData from "@/lib/WeaponData";
+import WeaponCardData from "@/lib/WeaponCardData";
 import ArmorData from "@/lib/ArmorData";
 import AccessoryData from "@/lib/AccessoryData";
 import MagicGearData from "@/lib/MagicGearData";
+import AutoSpellData from "@/lib/AutoSpellData";
 
 import { MagicDamageBuilder, MagicDamageHandler } from "@/lib/MagicDamage";
 
@@ -296,11 +324,13 @@ const persistent_list = [
   { key: 'enemy', clazz: EnemyData.clazz },
   { key: 'skill', clazz: MagicSkillData.clazz },
   { key: 'weapon', clazz: WeaponData.clazz },
+  { key: 'weapon_card', clazz: [WeaponCardData.clazz, WeaponCardData.clazz, WeaponCardData.clazz] },
   { key: 'armor', clazz: ArmorData.clazz },
   { key: 'accessory', clazz: AccessoryData.clazz },
   { key: 'gear', clazz: [...Object.keys(MagicGearData.data).map(_ => MagicGearData.clazz)] },
   { key: 'sub_skill', clazz: [...Object.keys(SubSkillData.data).map(_ => SubSkillData.clazz)] },
   { key: 'dance_skill', clazz: [...Object.keys(DanceSkillData.data).map(_ => DanceSkillData.clazz)] },
+  { key: 'auto_spell', clazz: [...Object.keys(AutoSpellData.data).map(_ => AutoSpellData.clazz)] },
 ];
 
 
@@ -321,12 +351,14 @@ export default {
       enemy: EnemyData.getEnemy('カカシ(中)'),
       skill: MagicSkillData.getSkill('グラビテーションフィールド'),
       weapon: WeaponData.getWeapon('その他'),
+      weapon_card: [WeaponCardData.getWeaponCard('その他'), WeaponCardData.getWeaponCard('その他'), WeaponCardData.getWeaponCard('その他')],
       armor: ArmorData.getArmor('その他'),
       accessory: AccessoryData.getAccessory('その他'),
 
       gear: [...Object.keys(MagicGearData.data).map(k => MagicGearData.getGear(k))],
       sub_skill: [...Object.keys(SubSkillData.data).map(k => SubSkillData.getSkill(k))],
       dance_skill: [...Object.keys(DanceSkillData.data).map(k => DanceSkillData.getSkill(k))],
+      auto_spell: [...Object.keys(AutoSpellData.data).map(k => AutoSpellData.getAutoSpell(k))],
     };
 
     const target_gear_level = {};
@@ -338,6 +370,8 @@ export default {
     const target_dance_skill_level = {};
     data.dance_skill.forEach(o => target_dance_skill_level[o.name] = o.level );
 
+    const target_auto_spell_level = {};
+    data.auto_spell.forEach(o => target_auto_spell_level[o.name] = o.level );
 
     return Object.assign(data, {
       enemy_data: EnemyData.data,
@@ -345,7 +379,9 @@ export default {
       gear_data: MagicGearData.data,
       sub_skill_data: SubSkillData.data,
       dance_skill_data: DanceSkillData.data,
+      auto_spell_data: AutoSpellData.data,
       weapon_data: WeaponData.data,
+      weapon_card_data: WeaponCardData.data,
       armor_data: ArmorData.data,
       accessory_data: AccessoryData.data,
       
@@ -355,7 +391,9 @@ export default {
       target_gear_level: target_gear_level,
       target_sub_skill_level: target_sub_skill_level,
       target_dance_skill_level: target_dance_skill_level,
+      target_auto_spell_level: target_auto_spell_level,
       target_weapon: data.weapon.name,
+      target_weapon_card: [...data.weapon_card.map(o => o.name) ],
       target_armor: data.armor.name,
       target_accessory: data.accessory.name,
     });
@@ -396,6 +434,13 @@ export default {
       const skill = DanceSkillData.getSkill(k, this.target_dance_skill_level[k]);
       Object.assign(this.getDanceSkill(k), skill);
     },
+    getAutoSpell(k) {
+      return this.auto_spell.filter(o => o.name == k)[0];
+    },
+    changeAutoSpell(k) {
+      const skill = AutoSpellData.getAutoSpell(k, this.target_auto_spell_level[k]);
+      Object.assign(this.getAutoSpell(k), skill);
+    },
     changeWeapon() {
       const weapon = WeaponData.getWeapon(this.target_weapon);
       Object.assign(this.weapon, weapon);
@@ -404,6 +449,10 @@ export default {
       if(tips) {
         this.$toast.show(tips, { type: 'info', position: 'top-right', duration: 4000})
       }
+    },
+    changeWeaponCard(k) {
+      const card = WeaponCardData.getWeaponCard(this.target_weapon_card[k]);
+      Object.assign(this.weapon_card[k], card);
     },
     changeArmor() {
       const armor = ArmorData.getArmor(this.target_armor);
@@ -479,10 +528,14 @@ export default {
       b.handler(ArmorData.getHandler(this.armor));
       b.handler(AccessoryData.getHandler(this.accessory));
 
+      this.weapon_card.map(w => b.handler(WeaponCardData.getHandler(w.name)));
+
       this.sub_skill.map(s => b.handler(SubSkillData.getHandler(s, this.skill, this.enemy)));
       this.gear.map(g => b.handler(MagicGearData.getHandler(g, this.skill)));
       
       this.dance_skill.map(s => b.handler(DanceSkillData.getHandler(s)));
+
+      this.auto_spell.map(s => b.handler(AutoSpellData.getHandler(s)));
 
       return b.build(ismin, ismax);
     }
@@ -576,8 +629,14 @@ export default {
         if(k === "dance_skill") {
           v.forEach(s => this.target_dance_skill_level[s.name] = s.level);
         }
+        if(k === 'auto_spell') {
+          v.forEach(s => this.target_auto_spell_level[s.name] = s.level);
+        }
         if(k === "weapon") {
           this.target_weapon = v.name;
+        }
+        if(k === "weapon_card") {
+          v.forEach((s, i) => this.target_weapon_card[i] = s.name);
         }
         if(k === "armor") {
           this.target_armor = v.name;
