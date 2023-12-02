@@ -1,4 +1,5 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
+import AutoSpellData from "@/lib/AutoSpellData";
 
 class MagicGear {
     static VERSION = [2, 1];    // major, minor
@@ -39,7 +40,7 @@ const DATA = [
     {
         name: "コアオーバクロック",
         levels: [10, 7, 6, 5, 3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 10: [-15, 50],
@@ -50,9 +51,9 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(ismin) {
+                    if (ismin) {
                         status.magic_damage_up += _adj[0];
-                    } else if(ismax) {
+                    } else if (ismax) {
                         status.magic_damage_up += _adj[1];
                     } else {
                         status.magic_damage_up += (_adj[0] + _adj[1]) / 2;
@@ -64,7 +65,7 @@ const DATA = [
     {
         name: "インファイト",
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 10: 12,
@@ -84,7 +85,7 @@ const DATA = [
     {
         name: "アウトレンジ",
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 10: 12,
@@ -104,7 +105,7 @@ const DATA = [
     {
         name: "臨戦",
         levels: [10, 7, 6, 5, 3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 10: 15,
@@ -123,7 +124,7 @@ const DATA = [
     {
         name: "残忍",
         levels: [10, 7, 6, 5, 3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 10: 15,
@@ -142,7 +143,7 @@ const DATA = [
     {
         name: "ウォールエッジ",
         levels: [3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 3: 10, 2: 9, 1: 8,
@@ -159,7 +160,7 @@ const DATA = [
     {
         name: "ニューマエッジ",
         levels: [3, 2, 1, 0],
-        
+
         handler(level, skill) {
             const _adj = {
                 3: 10, 2: 9, 1: 8,
@@ -187,7 +188,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(skill.name == "メテオストーム") {
+                    if (skill.name == "メテオストーム") {
                         status.delay_sub += _adj;
                     }
                 }
@@ -208,7 +209,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(skill.name == "ロードオブヴァーミリオン") {
+                    if (skill.name == "ロードオブヴァーミリオン") {
                         status.delay_sub += _adj;
                     }
                 }
@@ -229,7 +230,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(skill.name == "ストームガスト") {
+                    if (skill.name == "ストームガスト") {
                         status.delay_sub += _adj;
                     }
                 }
@@ -250,7 +251,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(skill.name == "ヘキサブレイク") {
+                    if (skill.name == "ヘキサブレイク") {
                         status.delay_sub += _adj;
                     }
                 }
@@ -262,29 +263,8 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const _adj = {
-                10: [50, 600],
-                7: [42, 450], 6: [40, 400],
-                4: [36, 300], 3: [34, 250],
-                2: [32, 200], 1: [30, 150],
-                0: [0, 0],
-            }[level];
-            const target = 'ファイアーボルト';
-            
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    let v = {};
-                    if(skill.name == target) {
-                        v = {
-                            mul: _adj[1],
-                            element: '火',
-                            prob: _adj[0],
-                            ct: 1,
-                        };
-                    }
-                    status.pursuits[`${target}_gear`] = v;
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスFB", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -292,29 +272,8 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const _adj = {
-                10: [50, 600],
-                7: [42, 450], 6: [40, 400],
-                4: [36, 300], 3: [34, 250],
-                2: [32, 200], 1: [30, 150],
-                0: [0, 0],
-            }[level];
-            const target = 'ライトニングボルト';
-            
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    let v = {};
-                    if(skill.name == target) {
-                        v = {
-                            mul: _adj[1],
-                            element: '火',
-                            prob: _adj[0],
-                            ct: 1,
-                        };
-                    }
-                    status.pursuits[`${target}_gear`] = v;
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスLB", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -322,55 +281,17 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const _adj = {
-                10: [50, 600],
-                7: [42, 450], 6: [40, 400],
-                4: [36, 300], 3: [34, 250],
-                2: [32, 200], 1: [30, 150],
-                0: [0, 0],
-            }[level];
-            const target = 'コールドボルト';
-            
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    let v = {};
-                    if(skill.name == target) {
-                        v = {
-                            mul: _adj[1],
-                            element: '火',
-                            prob: _adj[0],
-                            ct: 1,
-                        };
-                    }
-                    status.pursuits[`${target}_gear`] = v;
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスCB", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
         name: "アドバンスMS",
-        levels: [2, 1, 0],
+        levels: [10, 7, 0],
 
         handler(level, skill) {
-            const _adj = {
-                2: 550*5, 1: 500*5,
-                0: 0,
-            }[level];
-            const target = 'メテオストーム';
-            
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    let v = {};
-                    if(skill.name == target) {
-                        v = {
-                            mul: _adj,
-                            element: '火',
-                            prob: 100,
-                        };
-                    }
-                    status.pursuits[`${target}_gear`] = v;
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスMS", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -378,54 +299,17 @@ const DATA = [
         levels: [10, 7, 6, 4, 3, 2, 1, 0],
 
         handler(level, skill) {
-            const _adj = {
-                10: 600,
-                7: 400, 6: 350,
-                4: 250, 3: 100,
-                2: 150, 1: 100,
-                0: 0,
-            }[level];
-            const target = 'ロードオブヴァーミリオン';
-            
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    let v = {};
-                    if(skill.name == target) {
-                        v = {
-                            mul: _adj,
-                            element: '風',
-                            prob: 100,
-                        };
-                    }
-                    status.pursuits[`${target}_gear`] = v;
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("磁気嵐パルス装置", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
-        name: "自動凍結装置",
-        levels: [2, 1, 0],
+        name: "アドバンスSG",
+        levels: [10, 0],
 
         handler(level, skill) {
-            const _adj = {
-                1: 100*(4.5/0.5),
-                0: 0,
-            }[level];
-            const target = 'ストームガスト';
-            
-            return new class extends MagicDamageHandler {
-                run(status, ismin, ismax) {
-                    let v = {};
-                    if(skill.name == "ストームガスト") {
-                        v = {
-                            mul: _adj,
-                            element: '水',
-                            prob: 100,
-                        };
-                    }
-                    status.pursuits[`${target}_gear`] = v;
-                }
-            }
+            const as = AutoSpellData.getAutoSpell("アドバンスSG", level);
+            return AutoSpellData.getHandler(as);
         },
     },
     {
@@ -443,7 +327,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(skill.name == "マグヌスエクソシズム") {
+                    if (skill.name == "マグヌスエクソシズム") {
                         status.fix_cast_sub += _adj;
                     }
                 }
@@ -465,7 +349,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    status.triple_cast_mul += _adj;
+                    if (skill.can_dc_cast) status.triple_cast_mul += _adj;
                 }
             }
         },
@@ -482,9 +366,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(['風', '地', '火', '水'].includes(skill.element)) {
-                        status.element_override += _adj;
-                    }
+                    status.element_override += _adj;
                 }
             }
         },
@@ -501,7 +383,7 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(['聖'].includes(skill.element)) {
+                    if (['聖'].includes(skill.element)) {
                         status.element_override += _adj;
                     }
                 }
@@ -526,7 +408,7 @@ const DATA = [
         },
     },
 
-    
+
 ];
 
 const CONVERT_DATA = {};
@@ -550,7 +432,7 @@ export default {
         const lv = level || 0;
         return m[lv].instance.clone();
     },
-    getHandler({name, level}, skill) {
+    getHandler({ name, level }, skill) {
         return CONVERT_DATA[name][level].handler(skill);
     }
 }

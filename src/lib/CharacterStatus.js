@@ -1,11 +1,13 @@
 export default class CharacterStatus {
-    static VERSION = [1, 5];    // major, minor
+    static VERSION = [2, 0];    // major, minor
 
     constructor(
         base_atk, equip_atk, refine_atk,
         magic_damage_up, ignore_mdef_div, extra_damage,
-        magic_up, size_up, race_up, element_enemy_up, boss_up, element_damage_up,
-        status_int, status_dex, 
+        magic_up, size_up, race_up, element_enemy_up, boss_up,
+        element_wind_damage_up, element_earth_damage_up, element_fire_damage_up, element_water_damage_up,
+        element_normal_damage_up, element_holy_damage_up, element_dark_damage_up, element_ghost_damage_up, element_undead_damage_up, element_poison_damage_up,
+        status_int, status_dex,
         fix_cast_div, variable_cast_div, delay_div,
         fix_cast_sub, variable_cast_sub, delay_sub,
         skill_add,
@@ -35,7 +37,17 @@ export default class CharacterStatus {
         this.race_up = race_up || 0;
         this.element_enemy_up = element_enemy_up || 0;
         this.boss_up = boss_up || 0;
-        this.element_damage_up = element_damage_up || 0;
+
+        this.element_wind_damage_up = element_wind_damage_up || 0;
+        this.element_earth_damage_up = element_earth_damage_up || 0;
+        this.element_fire_damage_up = element_fire_damage_up || 0;
+        this.element_water_damage_up = element_water_damage_up || 0;
+        this.element_normal_damage_up = element_normal_damage_up || 0;
+        this.element_holy_damage_up = element_holy_damage_up || 0;
+        this.element_dark_damage_up = element_dark_damage_up || 0;
+        this.element_ghost_damage_up = element_ghost_damage_up || 0;
+        this.element_undead_damage_up = element_undead_damage_up || 0;
+        this.element_poison_damage_up = element_poison_damage_up || 0;
 
         this.status_int = status_int || 0;
         this.status_dex = status_dex || 0;
@@ -104,8 +116,10 @@ export default class CharacterStatus {
             ...CharacterStatus.VERSION,
             this.base_atk, this.equip_atk, this.refine_atk,
             this.magic_damage_up, this.ignore_mdef_div, this.extra_damage,
-            this.magic_up, this.size_up, this.race_up, this.element_enemy_up, this.boss_up, this.element_damage_up,
-            this.status_int, this.status_dex, 
+            this.magic_up, this.size_up, this.race_up, this.element_enemy_up, this.boss_up,
+            this.element_wind_damage_up, this.element_earth_damage_up, this.element_fire_damage_up, this.element_water_damage_up,
+            this.element_normal_damage_up, this.element_holy_damage_up, this.element_dark_damage_up, this.element_ghost_damage_up, this.element_undead_damage_up, this.element_poison_damage_up,
+            this.status_int, this.status_dex,
             this.fix_cast_div, this.variable_cast_div, this.delay_div,
             this.fix_cast_sub, this.variable_cast_sub, this.delay_sub,
             this.skill_add,
@@ -117,7 +131,7 @@ export default class CharacterStatus {
             this.ignore_mdef_sub, this.pve_damage_up,
             this.magic_add,
             this.double_cast_mul, this.triple_cast_mul,
-            this.pursuits,
+            { ...this.pursuits },
             this.element_override,
             this.sacred_gear,
             this.enhance_power,
@@ -160,7 +174,18 @@ export default class CharacterStatus {
             this.race_up + adj.race_up,
             this.element_enemy_up + adj.element_enemy_up,
             this.boss_up + adj.boss_up,
-            this.element_damage_up + adj.element_damage_up,
+
+            this.element_wind_damage_up + adj.element_wind_damage_up,
+            this.element_earth_damage_up + adj.element_earth_damage_up,
+            this.element_fire_damage_up + adj.element_fire_damage_up,
+            this.element_water_damage_up + adj.element_water_damage_up,
+            this.element_normal_damage_up + adj.element_normal_damage_up,
+            this.element_holy_damage_up + adj.element_holy_damage_up,
+            this.element_dark_damage_up + adj.element_dark_damage_up,
+            this.element_ghost_damage_up + adj.element_ghost_damage_up,
+            this.element_undead_damage_up + adj.element_undead_damage_up,
+            this.element_poison_damage_up + adj.element_poison_damage_up,
+
             this.status_int + adj.status_int,
             this.status_dex + adj.status_dex,
             this.fix_cast_div + adj.fix_cast_div,

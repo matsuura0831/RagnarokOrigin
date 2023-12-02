@@ -1,4 +1,5 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
+import AutoSpellData from "@/lib/AutoSpellData";
 
 export class Weapon {
     static VERSION = [5, 0];    // major, minor
@@ -86,25 +87,20 @@ const DATA = [
         tips: "「風属性ダメージ+〇%」を特殊ステータス > 属性ダメージアップに手動で反映してください",
     },
     {
-        name: "古代海流の杖", 
+        name: "古代海龍の杖", 
         handler(w, skill) {
+            const target = "古代海龍の杖";
+
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    const name = skill.name;
-
-                    let v = {};
                     if(skill.element == '水') {
                         status.skill_add += w.refine_effects.skill_mul_up_water;
                         status.fix_cast_div += w.refine_effects.fcast_water;
-
-                        v = {
-                            mul: w.refine_effects.bubble_mul,
-                            element: '無',
-                            prob: 100,
-                            ct: 1,
-                        };
                     }
-                    status.pursuits['古代海流の杖'] = v;
+
+                    let as = AutoSpellData.getAutoSpell(target, 1);
+                    as.mul = w.refine_effects.bubble_mul;
+                    status.pursuits[target] = as;
 
                     status.custom_skill_up += w.custom_effects.skill_up;
                 }
@@ -203,7 +199,7 @@ DATA.forEach(obj => {
         // 改造
         custom_effects,
 
-        name, handler, tips
+        name, handler, tips = ""
     } = obj;
 
     const w = new Weapon(name, refine_effects, custom_effects);
@@ -228,6 +224,6 @@ export default {
         return CONVERT_DATA[w.name].handler(w, skill);
     },
     getTips(name) {
-        return CONVERT_DATA[name].tips || "";
+        return CONVERT_DATA[name].tips;
     }
 }

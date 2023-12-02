@@ -1,252 +1,392 @@
 import ElementalRelation from "@/lib/ElementalRelation";
-import MagicSkillData from "@/lib/MagicSkillData";
+import MagicSkillData from "./MagicSkillData";
 
 class MagicDamageHandler {
-    run(s, ismin, ismax) {}
+    init(s) { }
+    run(s, ismin, ismax) { }
+}
+
+class DefaultDict {
+    constructor(d, obj={}) {
+        return new Proxy(obj, {
+            get: (target, name) => {
+                if(!(name in target)) target[name] = (typeof d === 'function') ? d() : d;
+                return target[name];
+            }
+        });
+    }
 }
 
 class MagicDamageCalculator {
-   constructor(status, skill, enemy, ismin, ismax) {
-       this.status = status;
-       this.skill = skill;
-       this.enemy = enemy;
-       this.ismin = ismin || false;
-       this.ismax = ismax || false;
-   }
+    constructor(status, skill, enemy, ismin, ismax) {
+        this.status = status;
+        this.skill = skill;
+        this.enemy = enemy;
+        this.ismin = ismin || false;
+        this.ismax = ismax || false;
+    }
 
-   total_atk() {
-       let v = this.status.base_atk + this.status.equip_atk + this.status.refine_atk;
+    total_atk() {
+        let v = this.status.base_atk + this.status.equip_atk + this.status.refine_atk;
 
-       if(this.status.magic_add > 0) {
-           const {magic_up: now, magic_add: add} = this.status;
-           v = Math.round(v / (1.0 + now / 100) * (1.0 + (now + add) / 100));
-       }
-       return v;
-   }
-   
-   total_damage_up() {
-       // 魔法ダメージ追加 + 属性モンスターダメUP + BOSSダメUP + ギア効果
-       const v = 100
-           + this.status.magic_damage_up
-           + this.status.element_enemy_up
-           + this.status.boss_up;
-       return v;
-   }
+        if (this.status.magic_add > 0) {
+            const { magic_up: now, magic_add: add } = this.status;
+            v = Math.round(v / (1.0 + now / 100) * (1.0 + (now + add) / 100));
+        }
+        return v;
+    }
 
-   total_element_relation_up() {
-       let v1 = 100 + ElementalRelation[this.skill.element][this.enemy.element];
-       if(v1 > 100) {
-           v1 += this.status.element_relation_add;
-       }
+    total_damage_up() {
+        // 魔法ダメージ追加 + 属性モンスターダメUP + BOSSダメUP + ギア効果
+        const v = 100
+            + this.status.magic_damage_up
+            + this.status.element_enemy_up
+            + this.status.boss_up;
+        return v;
+    }
 
-       const v2 = 100 + ElementalRelation[this.skill.element]['MAX'] + this.status.element_relation_add;
-       const p = this.status.element_override;
-       
-       if(p <= 0) return v1;
-       if(this.ismin) return v1;
-       if(this.ismax) return v2;
-       return (v1 * (100 - p) / 100) + (v2 * p / 100);
-   }
+    total_element_relation_up() {
+        let v1 = 100 + ElementalRelation[this.skill.element][this.enemy.element];
+        if (v1 > 100) {
+            v1 += this.status.element_relation_add;
+        }
 
-   total_element_damage_up() {
-       const v = 100 + this.status.element_damage_up;
-       return v;
-   }
+        const v2 = 100 + ElementalRelation[this.skill.element]['MAX'] + this.status.element_relation_add;
+        const p = ['風', '地', '火', '水'].includes(this.skill.element) ? this.status.element_override : 0;
 
-   total_race_up() {
-       const v = 100 + this.status.race_up;
-       return v;
-   }
+        if (p <= 0) return v1;
+        if (this.ismin) return v1;
+        if (this.ismax) return v2;
+        return (v1 * (100 - p) / 100) + (v2 * p / 100);
+    }
 
-   total_size_up() {
-       const v = 100 + this.status.size_up;
-       return v;
-   }
+    total_element_damage_up() {
+        const element_damage_map = {
+            "風": this.status.element_wind_damage_up,
+            "地": this.status.element_earth_damage_up,
+            "火": this.status.element_fire_damage_up,
+            "水": this.status.element_water_damage_up,
+            "無": this.status.element_normal_damage_up,
+            "聖": this.status.element_holy_damage_up,
+            "闇": this.status.element_dark_damage_up,
+            "念": this.status.element_ghost_damage_up,
+            "死": this.status.element_undead_damage_up,
+            "毒": this.status.element_poison_damage_up,
+        };
 
-   total_skill_up() {
-       const v = (this.skill.mul + this.status.skill_add)
-                    * (100 + this.status.skill_up) / 100
-                    * (100 + this.status.specific_skill_up) / 100
-                    * (100 + this.status.custom_skill_up) / 100;
-       return v;
-   }
+        const v = 100 + element_damage_map[this.skill.element];
+        return v;
+    }
 
-   total_enemy_mdef_div() {
-       const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef_div);
-       const mdef = Math.max(0, this.enemy.mdef - this.status.ignore_mdef_sub) * (100 - ignore) / 100; // TODO: 仮で最初に減算するとする
-       const v = (1000 + mdef) / (1000 + mdef * 10);
+    total_race_up() {
+        const v = 100 + this.status.race_up;
+        return v;
+    }
 
-       return v;
-   }
+    total_size_up() {
+        const v = 100 + this.status.size_up;
+        return v;
+    }
 
-   total_extra_damage() {
-       const v = this.status.extra_damage + this.skill.add;
-       return v;
-   }
+    total_skill_up() {
+        const v = (this.skill.mul + this.status.skill_add)
+            * (100 + this.status.skill_up) / 100
+            * (100 + this.status.specific_skill_up) / 100
+            * (100 + this.status.custom_skill_up) / 100;
+        return v;
+    }
 
-   total_pve_damage_up() {
-       // https://twitter.com/feeO_ro/status/1594358453354770433
-       // PVE1 = 0.012%
+    total_enemy_mdef_div() {
+        const ignore = Math.min(100, this.skill.ignore_mdef + this.status.ignore_mdef_div);
+        const mdef = Math.max(0, this.enemy.mdef - this.status.ignore_mdef_sub) * (100 - ignore) / 100; // TODO: 仮で最初に減算するとする
+        const v = (1000 + mdef) / (1000 + mdef * 10);
 
-       // 2023.10.17: ここが原因で誤差を生んでいるように見える。暫定的に 0.012 から 0.01に変更 
-       const v = 100 + (this.status.pve_damage_up * 0.01);
-       return v;
-   }
+        return v;
+    }
 
-   total_sacred_gear_up() {
-       return 100 + this.status.sacred_gear;
-   }
+    total_extra_damage() {
+        const v = this.status.extra_damage + this.skill.add;
+        return v;
+    }
 
-   total_enhance_power() {
-       const v = 100 + (this.status.enhance_power * 0.09);
-       return v;
-   }
+    total_pve_damage_up() {
+        // https://twitter.com/feeO_ro/status/1594358453354770433
+        // PVE1 = 0.012%
 
-   get(...args) {
-       const atk = this.total_atk();
+        const v = 100 + (this.status.pve_damage_up * 0.012);
+        return v;
+    }
 
-       let d = Math.floor(
-           (
-               Math.floor(
+    total_sacred_gear_up() {
+        return 100 + this.status.sacred_gear;
+    }
+
+    total_enhance_power() {
+        const v = 100 + (this.status.enhance_power * 0.09);
+        return v;
+    }
+
+    get(...args) {
+        const atk = this.total_atk();
+
+        let d = Math.floor(
+            (
+                Math.floor(
                     atk
-                        * this.total_damage_up() / 100
-                        * this.total_element_relation_up() / 100
-                        * this.total_element_damage_up() / 100
-                        * this.total_race_up() / 100
-                        * this.total_size_up() / 100
-                        * this.total_skill_up() / 100
-                        * this.total_enemy_mdef_div()
-                        * this.total_sacred_gear_up() / 100
-                    ) + this.total_extra_damage()
-           )
-           * this.total_pve_damage_up() / 100
-           * this.total_enhance_power() / 100
-       );
+                    * this.total_damage_up() / 100
+                    * this.total_element_relation_up() / 100
+                    * this.total_element_damage_up() / 100
+                    * this.total_race_up() / 100
+                    * this.total_size_up() / 100
+                    * this.total_skill_up() / 100
+                    * this.total_enemy_mdef_div()
+                    * this.total_sacred_gear_up() / 100
+                ) + this.total_extra_damage()
+            )
+            * this.total_pve_damage_up() / 100
+            * this.total_enhance_power() / 100
+        );
 
-       if(this.status.last_up > 0 && this.ismin == false) {
-           const limit = (this.status.last_atk_limit > 0) ? atk * this.status.last_atk_limit / 100 : Infinity;
-           const limited_d = Math.min(limit, d * this.status.last_up / 100)
+        if (this.status.last_up > 0 && this.ismin == false) {
+            const limit = (this.status.last_atk_limit > 0) ? atk * this.status.last_atk_limit / 100 : Infinity;
+            const limited_d = Math.min(limit, d * this.status.last_up / 100)
 
-           if(this.ismax) {
-               d = limited_d;
-           } else {
-               const p = this.status.last_up_prob / 100;
-               d = d * (1.0 - p) + limited_d * p;
-           }
-       }
-              
-       if(this.ismin) {
-           d = Math.floor(d * 0.97);
-       } else if(this.ismax) {
-           d = Math.floor(d * 1.03);
-       } else {
-           d = Math.floor(d);
-       }
+            if (this.ismax) {
+                d = limited_d;
+            } else {
+                const p = this.status.last_up_prob / 100;
+                d = d * (1.0 - p) + limited_d * p;
+            }
+        }
 
-       if(this.status.double_cast_mul > 0) {
-           const clone_status = this.status.clone();
+        if (this.ismin) {
+            d = Math.floor(d * 0.97);
+        } else if (this.ismax) {
+            d = Math.floor(d * 1.03);
+        } else {
+            d = Math.floor(d);
+        }
 
-           // 無限にダブルキャスト計算しないように確率をゼロにする
-           clone_status.double_cast_mul = 0;
-           clone_status.triple_cast_mul = 0;
+        if (this.status.double_cast_mul > 0) {
+            const clone_status = this.status.clone();
 
-           const clone_d_skill = this.skill.clone();
-           clone_d_skill.mul *= this.status.double_cast_mul / 100;
+            // 無限にダブルキャスト計算しないように確率をゼロにする
+            clone_status.double_cast_mul = 0;
+            clone_status.triple_cast_mul = 0;
 
-           // TODO: 計算値が実測値より高かったため暫定対応
-           clone_d_skill.add = 0;
+            const clone_d_skill = this.skill.clone();
+            clone_d_skill.mul *= this.status.double_cast_mul / 100;
 
-           d += (new MagicDamageCalculator(clone_status, clone_d_skill, this.enemy, this.ismin, this.ismax)).get();
+            // TODO: 計算値が実測値より高かったため暫定対応
+            clone_d_skill.add = 0;
 
-           if(this.status.triple_cast_mul > 0) {
-               const clone_t_skill = this.skill.clone();
-               clone_t_skill.mul *= this.status.triple_cast_mul / 100;
+            d += (new MagicDamageCalculator(clone_status, clone_d_skill, this.enemy, this.ismin, this.ismax)).get();
 
-               // TODO: 計算値が実測値より高かったため暫定対応
-               clone_t_skill.add = 0;
+            if (this.status.triple_cast_mul > 0) {
+                const clone_t_skill = this.skill.clone();
+                clone_t_skill.mul *= this.status.triple_cast_mul / 100;
 
-               d += (new MagicDamageCalculator(clone_status, clone_t_skill, this.enemy, this.ismin, this.ismax)).get();
-           }
+                // TODO: 計算値が実測値より高かったため暫定対応
+                clone_t_skill.add = 0;
+
+                d += (new MagicDamageCalculator(clone_status, clone_t_skill, this.enemy, this.ismin, this.ismax)).get();
+            }
         }
 
         return d;
-   }
-   
-   v_cast() {
-       const { skill, status } = this;
-       const { status_int: int, status_dex: dex, variable_cast_div: div, variable_cast_sub: sub } = status;
-       const t = (skill.vcast - sub) * (1 - Math.sqrt((int/2 + dex) / 265)) * (1.0 - div / 100);
-       
-       return Math.max(0, t);
-   }
-   f_cast() {
-       const { skill, status } = this;
-       const { fix_cast_div: div, fix_cast_sub: sub } = status;
-       const t = (skill.fcast - sub) * (1.0 - div / 100);
+    }
 
-       return Math.max(0, t)
-   }
-   cast_time() {
-       return this.v_cast() + this.f_cast();
-   }
+    v_cast() {
+        const { skill, status } = this;
+        const { status_int: int, status_dex: dex, variable_cast_div: div, variable_cast_sub: sub } = status;
+        const t = (skill.vcast - sub) * (1 - Math.sqrt((int / 2 + dex) / 265)) * (1.0 - div / 100);
 
-   delay() {
-       const { skill, status } = this;
-       const { delay_div: div, delay_sub: sub } = status;
+        return Math.max(0, t);
+    }
+    f_cast() {
+        const { skill, status } = this;
+        const { fix_cast_div: div, fix_cast_sub: sub } = status;
+        const t = (skill.fcast - sub) * (1.0 - div / 100);
 
-       const t = (skill.delay - sub) * (1 - div / 100);
-       return Math.max(skill.motion, t);
-   }
-   cast_delay() {
-       const d = this.delay();
-       return Math.max(this.skill.ct, d);
-   }
+        return Math.max(0, t)
+    }
+    cast_time() {
+        return this.v_cast() + this.f_cast();
+    }
 
-   dps() {
-       const cast_per_sec = 1.0 / (this.cast_time() + this.cast_delay());
-       const hit_per_sec = this.skill.hit * cast_per_sec;
-       const damage_per_hit = this.get();
+    delay() {
+        const { skill, status } = this;
+        const { delay_div: div, delay_sub: sub } = status;
 
-       let ret = Math.floor(hit_per_sec * damage_per_hit);
+        const t = (skill.delay - sub) * (1 - div / 100);
+        return Math.max(skill.motion, t);
+    }
+    cast_delay() {
+        const d = this.delay();
+        return Math.max(this.skill.ct, d);
+    }
 
-       const eval_per_cast = (this.status.double_cast_mul > 0 ? (this.status.triple_cast_mul > 0 ? 3 : 2) : 1);
-       
-       const pursuit_keys = Object.keys(this.status.pursuits);
-       if(pursuit_keys.length) {
-           // 追撃系がある場合は追加する
-           const clone_status = this.status.clone();
-           
-           // ダブルキャスト計算しないように確率をゼロにする
-           clone_status.double_cast_mul = 0;
-           clone_status.triple_cast_mul = 0;
+    dps() {
+        const cast_per_sec = 1.0 / (this.cast_time() + this.cast_delay());
+        let hit_per_sec = this.skill.hit * cast_per_sec;
 
-           pursuit_keys.forEach(k => {
-               const { mul = 0, element = '無', prob = 0, ct = 0} = this.status.pursuits[k];
+        if (this.skill.can_dc_cast && this.status.double_cast_mul > 0) {
+            hit_per_sec *= this.status.triple_cast_mul > 0 ? 3 : 2;
+        }
 
-               if(mul > 0 && prob > 0) {
-                   const skill = new MagicSkillData.clazz("", element, 0, 0, mul, 0, 0, 0, 0, 0, 1, 0, 0);
-                   const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
+        let pursuit_with_ct = {};
+        let pursuit_without_ct = {};
 
-                   if(ct <= 0) {
-                       // 1回のキャストで発生する確率を求める(発生しない回数を算出して100%から引く)
-                       const p = 1.0 - ((1.0 - prob / 100) ** (eval_per_cast));
+        Object.keys(this.status.pursuits).forEach(k => {
+            const p = this.status.pursuits[k];
 
-                       // 回数 * 1回あたりの期待値を加算
-                       ret += Math.floor(cast_per_sec * d * p);
-                   } else {
-                       // CTの間に発動する確率を求める(発生しない回数を算出して100%から引く)
-                       const p = 1.0 - ((1.0 - prob / 100) ** (cast_per_sec * ct * eval_per_cast));
+            if ('ct' in p && p.ct > 0) {
+                pursuit_with_ct[k] = p;
+            } else {
+                pursuit_without_ct[k] = p;
+            }
+        });
 
-                       // CT1回あたりの期待値を秒で割って１秒当たりの期待値にして加算
-                       ret += Math.floor(d * p / ct);
-                   }
-                   
-               }
-           })
-       }
+        // CT無を複数刺した場合の判定回数を計算
+        const TH_HIT = 0.001; // スキル倍率1000%ぐらいを想定して倍率が1%を下回らないようなHIT数にする
+        function _calc_noct(base_pursuits, base_name, base_element, base_hit = 0, cache = undefined) {
+            let hits = {
+                total: base_hit,
+                skill: cache ? cache.skill : new DefaultDict(0),
+                element: cache ? cache.element : new DefaultDict(0),
+            };
 
-       return ret;
-   }
+            if (base_name) hits.skill[base_name] = base_hit;
+            if (base_element) hits.element[base_element] = base_hit;
+
+            function _calc(parent_name, parent_element, parent_hit, pursuits) {
+                Object.keys(pursuits).forEach(k => {
+                    const { prob, element, hit, ct, alias = '' } = pursuits[k];
+
+                    if (pursuits[k].check(parent_name, parent_element)) {
+                        let h = parent_hit * prob / 100 * hit;
+                        if (ct <= 0 && h >= TH_HIT) {
+                            hits['total'] += h;
+                            hits.skill[k] += h;
+                            hits.element[element] += h;
+
+                            if(alias) hits.skill[alias] += h;
+
+                            _calc(k, element, h, Object.keys(base_pursuits).reduce((p, i) => {
+                                if (k != i) p[i] = base_pursuits[i];
+                                return p;
+                            }, {}));
+                        }
+                    }
+                })
+            }
+            _calc(base_name, base_element, base_hit, base_pursuits)
+            return hits;
+        }
+
+        function _calc_ct(pursuits, hits_noct, cache = undefined) {
+            let hits_ct = {
+                total: cache ? cache.total : 0,
+                skill: cache ? cache.skill : new DefaultDict(0),
+                element: cache ? cache.element : new DefaultDict(0),
+                prob: cache ? cache.prob : new DefaultDict(0),
+                alias: cache ? cache.alias : new DefaultDict(() => new DefaultDict(0))
+            }
+            let prev_total = 0;
+
+            do {
+                prev_total = hits_ct.total;
+                hits_ct.total = 0;
+
+                Object.keys(pursuits).forEach(k => {
+                    const { prob, element, hit, ct, target_skill, target_element, alias = '' } = pursuits[k];
+
+                    let n = 0;
+                    if (target_skill) {
+                        n = hits_noct.skill[target_skill] + hits_ct.skill[target_skill];
+
+                        n += Object.keys(hits_ct.alias[target_skill]).reduce((p, k) => {
+                            return p + hits_ct.alias[target_skill][k];
+                        }, 0);
+                    } else if (target_element) {
+                        n = hits_noct.element[target_element] + hits_ct.element[target_element];
+                    } else {
+                        n = hits_noct.total + Object.keys(hits_ct.skill).reduce((i, l) => {
+                            return k == l ? i : i + hits_ct.skill[l];
+                        }, 0);
+                    }
+
+                    const np = (1.0 - prob / 100) ** n;
+                    const pp = (1.0 - np);
+                    const h = pp * hit / ct;                    // CTが2秒ならヒット数は0.5倍、CTが0.5秒ならヒット数は2倍
+                    hits_ct.total = h;
+                    hits_ct.skill[k] = h;
+                    hits_ct.element[element] = h;
+
+                    hits_ct.prob[k] = pp;
+
+                    if(alias) {
+                        hits_ct.alias[alias][k] = h;
+                    }
+                })
+            } while ((hits_ct.total - prev_total) > TH_HIT);
+
+            return hits_ct;
+        }
+
+        // function _calc_noct(base_pursuits, base_name, base_element, base_hit = 0, cache = undefined) {
+        let hits_noct = _calc_noct(pursuit_without_ct, this.skill.name, this.skill.element, hit_per_sec);
+        console.log("noct1", hits_noct, pursuit_without_ct);
+
+        let hits_ct = _calc_ct(pursuit_with_ct, hits_noct)
+        console.log("ct1", hits_ct, pursuit_with_ct);
+
+        // function _calc_noct(base_pursuits, base_name, base_element, base_hit = 0, cache = undefined) {
+        let hits_noct2 = _calc_noct(pursuit_without_ct, '', '', hits_ct.total, hits_noct);
+        console.log("noct2", hits_noct2, pursuit_without_ct);
+
+        let ret = [];
+
+        // base
+        let base_dmg = this.get();
+        ret.push([hit_per_sec, hit_per_sec * base_dmg]);
+
+        console.log(`${this.skill.name}{ level:${this.skill.level}, el:${this.skill.element}, mul:${this.skill.mul}, add:${this.skill.add} }, #hit=${hit_per_sec}, #dmg=${base_dmg}, dps=${hit_per_sec*base_dmg}`);
+        
+        // ダブルキャスト計算しないように確率をゼロにする
+        const clone_status = this.status.clone();
+        clone_status.double_cast_mul = 0;
+        clone_status.triple_cast_mul = 0;
+
+        // noct
+        Object.keys(pursuit_without_ct).forEach(k => {
+            const { element, level, mul, prob, add = 0 } = pursuit_without_ct[k];
+
+            const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
+            const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
+            const n = hits_noct2.skill[k];
+
+            ret.push([n, n * d]);
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, ct:0 }, #hit=${n}, #dmg=${d}, dps=${n*d}`);
+        })
+
+        // ct
+        Object.keys(pursuit_with_ct).forEach(k => {
+            const { element, level, mul, prob, ct, hit, add = 0 } = pursuit_with_ct[k];
+
+            const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
+            const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
+            const p = hits_ct.prob[k];
+
+            ret.push([p * hit, p * d]);
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, ct:${ct} }, #prob=${p}, #dmg=${d}, dps=${p*d}`);
+        })
+
+
+        const hit = Math.floor(ret.reduce((r, i) => r + i[0], 0));
+        const dps = ret.reduce((r, i) => r + Math.floor(i[1]), 0);
+        return { hit: hit, dps: dps }
+    }
 }
 
 
@@ -257,19 +397,20 @@ class MagicDamageBuilder {
         this.enemy = enemy;
         this.handlers = [];
     }
- 
+
     handler(h) {
-        if(Array.isArray(h)) {
+        if (Array.isArray(h)) {
             this.handlers = [...this.handlers, ...h]
         } else {
             this.handlers.push(h);
         }
-        
+
         return this;
     }
 
     build(ismin, ismax) {
         const s = this.status.clone();
+        this.handlers.map((h) => h.init(s));
         this.handlers.map((h) => h.run(s, ismin, ismax));
 
         return new MagicDamageCalculator(s, this.skill, this.enemy, ismin, ismax);

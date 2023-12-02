@@ -1,41 +1,49 @@
 <template>
   <div v-for="i in inputs" :key="i.label">
-    <h1 class="mb-4 font-bold text-lg border-b-2 border-green-600">{{ i.label }}</h1>
+    <Accordion :expand="!i.closed">
+      <template #title>{{ i.label }}</template>
+      <template #content>
+        <div class="flex items-center mb-1" v-for="j in i.records" :key="j.label">
+          <label class="inline-block flex-none w-40 mr-2 text-right font-bold text-gray-600">{{ j.label }}</label>
 
-    <div class="flex items-center mb-1" v-for="j in i.records" :key="j.label">
-      <label class="inline-block flex-none w-40 mr-2 text-right font-bold text-gray-600">{{ j.label }}</label>
-
-      <div class="flex-1 flex items-center">
-        <input
-          type="number"
-          class="flex-1 py-2 w-12 mr-1 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-          :class="{ 'bg-gray-200': j.main_disabled || j.disabled, 'border-b-0': !j.main_disabled && !j.disabled, 'border-b-2': !j.main_disabled && !j.disabled, }"
-          :value="this.status[j.key]"
-          @input="updateMainValue(j.key, parseFloat($event.target.value))"
-          onclick="this.select();"
-          :disabled="j.main_disabled || j.disabled"
-        />
-        +
-        <input
-          type="number"
-          class="flex-1 py-2 w-12 ml-1 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-          :class="{ 'bg-gray-200': j.sub_disabled || j.disabled, 'border-b-0': !j.sub_disabled && !j.disabled, 'border-b-2': !j.sub_disabled && !j.disabled, }"
-          :value="this.status_adj[j.key]"
-          @input="updateSubValue(j.key, parseFloat($event.target.value))"
-          onclick="this.select();"
-          :disabled="j.sub_disabled || j.disabled"
-        />
-      </div>
-    </div>
+          <div class="flex-1 flex items-center">
+            <input
+              type="number"
+              class="flex-1 py-2 w-12 mr-1 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
+              :class="{ 'bg-gray-200': j.main_disabled || j.disabled, 'border-b-0': !j.main_disabled && !j.disabled, 'border-b-2': !j.main_disabled && !j.disabled, }"
+              :value="this.status[j.key]"
+              @input="updateMainValue(j.key, parseFloat($event.target.value))"
+              onclick="this.select();"
+              :disabled="j.main_disabled || j.disabled"
+            />
+            +
+            <input
+              type="number"
+              class="flex-1 py-2 w-12 ml-1 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
+              :class="{ 'bg-gray-200': j.sub_disabled || j.disabled, 'border-b-0': !j.sub_disabled && !j.disabled, 'border-b-2': !j.sub_disabled && !j.disabled, }"
+              :value="this.status_adj[j.key]"
+              @input="updateSubValue(j.key, parseFloat($event.target.value))"
+              onclick="this.select();"
+              :disabled="j.sub_disabled || j.disabled"
+            />
+          </div>
+        </div>
+      </template>
+    </Accordion>
   </div>
 </template>
 
 <script>
+import Accordion from "@/components/Accordion.vue";
+
 export default {
   name: "EnemyInput",
   props: {
     status: Object,
     status_adj: Object,
+  },
+  components: {
+    Accordion,
   },
   data() {
     return {
@@ -58,7 +66,19 @@ export default {
           { label: "種族モンスターダメージアップ[%]", key: "race_up", disabled: 0 },
           { label: "属性モンスターダメージアップ[%]", key: "element_enemy_up", disabled: 0 },
           { label: "BOSSダメージアップ[%]", key: "boss_up", disabled: 0 },
-          { label: "属性ダメージアップ[%]", key: "element_damage_up", disabled: 0 },
+
+          { label: "風属性ダメージアップ[%]", key: "element_wind_damage_up", disabled: 0 },
+          { label: "地属性ダメージアップ[%]", key: "element_earth_damage_up", disabled: 0 },
+          { label: "火属性ダメージアップ[%]", key: "element_fire_damage_up", disabled: 0 },
+          { label: "水属性ダメージアップ[%]", key: "element_water_damage_up", disabled: 0 },
+
+          { label: "無属性ダメージアップ[%]", key: "element_normal_damage_up", disabled: 0 },
+          { label: "聖属性ダメージアップ[%]", key: "element_holy_damage_up", disabled: 0 },
+          { label: "闇属性ダメージアップ[%]", key: "element_dark_damage_up", disabled: 0 },
+          { label: "念属性ダメージアップ[%]", key: "element_ghost_damage_up", disabled: 0 },
+          { label: "不死属性ダメージアップ[%]", key: "element_undead_damage_up", disabled: 0 },
+          { label: "毒属性ダメージアップ[%]", key: "element_poison_damage_up", disabled: 0 },
+
           { label: "魔法ダメージ強化[%]", key: "enhance_power", disalbed: 0 },
         ]},
         { label: "詠唱に関わるステータス", records: [
@@ -68,7 +88,7 @@ export default {
           { label: "変動詠唱減少[%]", key: "variable_cast_div", disabled: 0 },
           { label: "装備ディレイ減少[%]", key: "delay_div", disabled: 0 },
         ]},
-        { label: "内部ステータス(基本は装備変更で対応すること)", records: [
+        { label: "内部ステータス(基本は装備変更で対応すること)", closed: true, records: [
           { label: "固定詠唱減少[s]", key: "fix_cast_sub", disabled: 0 },
           { label: "変動詠唱減少[s]", key: "variable_cast_sub", disabled: 0 },
 

@@ -1,6 +1,7 @@
 <template>
     <div class="flex flex-col w-full mb-2">
-        <button @click="toggle" class="flex items-center justify-between shadow bg-white p-2 text-xl font-medium leading-none text-gray-800">
+        <button @click="toggle"
+            :class="`flex items-center justify-between mb-4 font-bold text-lg border-b-${border} border-green-600 bg-white`">
             <slot name="title" />
 
             <svg
@@ -21,7 +22,7 @@
         </button>
 
         <transition @before-enter="beforeEnter" @enter="enter" @before-leave="beforeLeave" @leave="leave">
-            <div v-if="isOpen" class="p-4">
+            <div v-if="isOpen" class="px-2">
                 <slot name="content" />
             </div>
         </transition>
@@ -34,6 +35,10 @@ export default {
         expand: {
             type: Boolean,
             default: false,
+        },
+        border: {
+            type: Number,
+            default: 2,
         }
     },
     data() {

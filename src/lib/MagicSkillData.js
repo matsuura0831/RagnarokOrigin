@@ -1,9 +1,9 @@
 class MagicSkill {
-    static VERSION = [4, 0];    // major, minor
+    static VERSION = [5, 0];    // major, minor
 
     constructor(
         name, element, level, ignore_mdef,
-        mul, add, vcast, fcast, delay, ct, hit, time, motion,
+        mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast
     ) {
         this.name = name;
         this.element = element;
@@ -18,6 +18,7 @@ class MagicSkill {
         this.hit = hit;
         this.time = time;
         this.motion = motion;
+        this.can_dc_cast = can_dc_cast;
     }
 
     serialize() {
@@ -25,7 +26,7 @@ class MagicSkill {
             ...MagicSkill.VERSION,
             this.name, this.element, this.level, this.ignore_mdef,
             this.mul, this.add, this.vcast, this.fcast, this.delay, this.ct, this.hit, this.time,
-            this.motion
+            this.motion, this.can_dc_cast
         ];
     }
 
@@ -52,11 +53,11 @@ const DATA = [
         name: "ソウルストライク",
         element: "念",
         records: [
-            { level: 5, mul: 110,   add: 40, vcast: 0.41, fcast: 0.10, delay: 2.0, ct: 0, hit: 5, time: 0 },
+            { level: 5, mul: 110, add: 40, vcast: 0.41, fcast: 0.10, delay: 2.0, ct: 0, hit: 5, time: 0 },
             { level: 4, mul: 112.5, add: 40, vcast: 0.41, fcast: 0.10, delay: 1.8, ct: 0, hit: 4, time: 0 },
-            { level: 3, mul: 87.5,  add: 40, vcast: 0.41, fcast: 0.10, delay: 1.6, ct: 0, hit: 4, time: 0 },
+            { level: 3, mul: 87.5, add: 40, vcast: 0.41, fcast: 0.10, delay: 1.6, ct: 0, hit: 4, time: 0 },
             { level: 2, mul: 83.33, add: 40, vcast: 0.41, fcast: 0.10, delay: 1.4, ct: 0, hit: 3, time: 0 },
-            { level: 1, mul: 50,    add: 40, vcast: 0.41, fcast: 0.10, delay: 1.2, ct: 0, hit: 3, time: 0 },
+            { level: 1, mul: 50, add: 40, vcast: 0.41, fcast: 0.10, delay: 1.2, ct: 0, hit: 3, time: 0 },
         ]
     },
     {
@@ -85,17 +86,18 @@ const DATA = [
     {
         name: "ファイアーボルト",
         element: "火",
+        can_dc_cast: true,
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
-            { level:  9, mul:  900, add: 648, vcast: 2.75, fcast: 0.06, delay: 1.5, ct: 0, hit: 1, time: 0 },
-            { level:  8, mul:  800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
-            { level:  7, mul:  700, add: 392, vcast: 2.28, fcast: 0.08, delay: 1.3, ct: 0, hit: 1, time: 0 },
-            { level:  6, mul:  600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
-            { level:  5, mul:  500, add: 200, vcast: 1.80, fcast: 0.10, delay: 1.1, ct: 0, hit: 1, time: 0 },
-            { level:  4, mul:  400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
-            { level:  3, mul:  300, add:  72, vcast: 1.33, fcast: 0.12, delay: 0.9, ct: 0, hit: 1, time: 0 },
-            { level:  2, mul:  200, add:  32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
-            { level:  1, mul:  100, add:   8, vcast: 0.84, fcast: 0.14, delay: 0.7, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 900, add: 648, vcast: 2.75, fcast: 0.06, delay: 1.5, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 700, add: 392, vcast: 2.28, fcast: 0.08, delay: 1.3, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 500, add: 200, vcast: 1.80, fcast: 0.10, delay: 1.1, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 300, add: 72, vcast: 1.33, fcast: 0.12, delay: 0.9, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 200, add: 32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 100, add: 8, vcast: 0.84, fcast: 0.14, delay: 0.7, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -103,31 +105,32 @@ const DATA = [
         element: "火",
         records: [
             { level: 10, mul: 550, add: 154, vcast: 6.54, fcast: 1.2, delay: 4.0, ct: 0, hit: 9, time: 5.4 },   // 0.6秒間隔で1個落ちている
-            { level:  9, mul: 550, add: 118, vcast: 6.89, fcast: 1.2, delay: 4.0, ct: 0, hit: 8, time: 0 },
-            { level:  8, mul: 440, add: 104, vcast: 7.22, fcast: 1.2, delay: 4.0, ct: 0, hit: 8, time: 0 },
-            { level:  7, mul: 440, add:  75, vcast: 7.55, fcast: 1.2, delay: 4.0, ct: 0, hit: 7, time: 0 },
-            { level:  6, mul: 330, add:  63, vcast: 7.90, fcast: 1.2, delay: 4.0, ct: 0, hit: 7, time: 0 },
-            { level:  5, mul: 330, add:  42, vcast: 8.24, fcast: 1.2, delay: 3.0, ct: 0, hit: 6, time: 0 },
-            { level:  4, mul: 220, add:  33, vcast: 8.59, fcast: 1.2, delay: 3.0, ct: 0, hit: 6, time: 0 },
-            { level:  3, mul: 220, add:  18, vcast: 8.92, fcast: 1.2, delay: 2.0, ct: 0, hit: 5, time: 0 },
-            { level:  2, mul: 110, add:  10, vcast: 9.27, fcast: 1.2, delay: 2.0, ct: 0, hit: 5, time: 0 },
-            { level:  1, mul: 110, add:   5, vcast: 9.60, fcast: 1.2, delay: 1.0, ct: 0, hit: 4, time: 0 },
+            { level: 9, mul: 550, add: 118, vcast: 6.89, fcast: 1.2, delay: 4.0, ct: 0, hit: 8, time: 0 },
+            { level: 8, mul: 440, add: 104, vcast: 7.22, fcast: 1.2, delay: 4.0, ct: 0, hit: 8, time: 0 },
+            { level: 7, mul: 440, add: 75, vcast: 7.55, fcast: 1.2, delay: 4.0, ct: 0, hit: 7, time: 0 },
+            { level: 6, mul: 330, add: 63, vcast: 7.90, fcast: 1.2, delay: 4.0, ct: 0, hit: 7, time: 0 },
+            { level: 5, mul: 330, add: 42, vcast: 8.24, fcast: 1.2, delay: 3.0, ct: 0, hit: 6, time: 0 },
+            { level: 4, mul: 220, add: 33, vcast: 8.59, fcast: 1.2, delay: 3.0, ct: 0, hit: 6, time: 0 },
+            { level: 3, mul: 220, add: 18, vcast: 8.92, fcast: 1.2, delay: 2.0, ct: 0, hit: 5, time: 0 },
+            { level: 2, mul: 110, add: 10, vcast: 9.27, fcast: 1.2, delay: 2.0, ct: 0, hit: 5, time: 0 },
+            { level: 1, mul: 110, add: 5, vcast: 9.60, fcast: 1.2, delay: 1.0, ct: 0, hit: 4, time: 0 },
         ]
     },
     {
         name: "コールドボルト",
         element: "水",
+        can_dc_cast: true,
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
-            { level:  9, mul:  900, add: 648, vcast: 2.75, fcast: 0.06, delay: 1.5, ct: 0, hit: 1, time: 0 },
-            { level:  8, mul:  800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
-            { level:  7, mul:  700, add: 392, vcast: 2.28, fcast: 0.08, delay: 1.3, ct: 0, hit: 1, time: 0 },
-            { level:  6, mul:  600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
-            { level:  5, mul:  500, add: 200, vcast: 1.80, fcast: 0.10, delay: 1.1, ct: 0, hit: 1, time: 0 },
-            { level:  4, mul:  400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
-            { level:  3, mul:  300, add:  72, vcast: 1.33, fcast: 0.12, delay: 0.9, ct: 0, hit: 1, time: 0 },
-            { level:  2, mul:  200, add:  32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
-            { level:  1, mul:  100, add:   8, vcast: 0.84, fcast: 0.14, delay: 0.7, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 900, add: 648, vcast: 2.75, fcast: 0.06, delay: 1.5, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 700, add: 392, vcast: 2.28, fcast: 0.08, delay: 1.3, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 500, add: 200, vcast: 1.80, fcast: 0.10, delay: 1.1, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 300, add: 72, vcast: 1.33, fcast: 0.12, delay: 0.9, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 200, add: 32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 100, add: 8, vcast: 0.84, fcast: 0.14, delay: 0.7, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -135,15 +138,15 @@ const DATA = [
         element: "水",
         records: [
             { level: 10, mul: 1500, add: 1005, vcast: 3.51, fcast: 0.88, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  9, mul: 1400, add:  885, vcast: 3.20, fcast: 0.80, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  8, mul: 1200, add:  780, vcast: 2.48, fcast: 0.72, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  7, mul: 1100, add:  675, vcast: 2.56, fcast: 0.64, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  6, mul:  900, add:  570, vcast: 2.24, fcast: 0.56, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  5, mul:  800, add:  465, vcast: 1.91, fcast: 0.48, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  4, mul:  600, add:  216, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  3, mul:  500, add:  162, vcast: 1.29, fcast: 0.32, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  2, mul:  300, add:   90, vcast: 0.96, fcast: 0.24, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  1, mul:  100, add:   15, vcast: 0.64, fcast: 0.16, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 1400, add: 885, vcast: 3.20, fcast: 0.80, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 1200, add: 780, vcast: 2.48, fcast: 0.72, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 1100, add: 675, vcast: 2.56, fcast: 0.64, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 900, add: 570, vcast: 2.24, fcast: 0.56, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 800, add: 465, vcast: 1.91, fcast: 0.48, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 600, add: 216, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 500, add: 162, vcast: 1.29, fcast: 0.32, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 300, add: 90, vcast: 0.96, fcast: 0.24, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 100, add: 15, vcast: 0.64, fcast: 0.16, delay: 0.0, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -151,32 +154,33 @@ const DATA = [
         name: "ストームガスト",
         element: "水",
         records: [
-            { level: 10, mul: 3740/10, add: 750/10, vcast: 9.60, fcast: 2.40, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  9, mul: 3410/10, add: 650/10, vcast: 8.96, fcast: 2.24, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  8, mul: 3080/10, add: 530/10, vcast: 8.31, fcast: 2.08, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  7, mul: 2750/10, add: 450/10, vcast: 7.69, fcast: 1.92, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  6, mul: 2420/10, add: 350/10, vcast: 7.05, fcast: 1.76, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  5, mul: 2090/10, add: 270/10, vcast: 6.40, fcast: 1.60, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  4, mul: 1760/10, add: 200/10, vcast: 5.76, fcast: 1.44, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  3, mul: 1430/10, add: 150/10, vcast: 5.11, fcast: 1.28, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  2, mul: 1100/10, add: 100/10, vcast: 4.49, fcast: 1.12, delay: 5.0, ct: 0, hit: 10, time: 0 },
-            { level:  1, mul:  770/10, add:  50/10, vcast: 3.84, fcast: 0.96, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 10, mul: 3740 / 10, add: 750 / 10, vcast: 9.60, fcast: 2.40, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 9, mul: 3410 / 10, add: 650 / 10, vcast: 8.96, fcast: 2.24, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 8, mul: 3080 / 10, add: 530 / 10, vcast: 8.31, fcast: 2.08, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 7, mul: 2750 / 10, add: 450 / 10, vcast: 7.69, fcast: 1.92, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 6, mul: 2420 / 10, add: 350 / 10, vcast: 7.05, fcast: 1.76, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 5, mul: 2090 / 10, add: 270 / 10, vcast: 6.40, fcast: 1.60, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 4, mul: 1760 / 10, add: 200 / 10, vcast: 5.76, fcast: 1.44, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 3, mul: 1430 / 10, add: 150 / 10, vcast: 5.11, fcast: 1.28, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 2, mul: 1100 / 10, add: 100 / 10, vcast: 4.49, fcast: 1.12, delay: 5.0, ct: 0, hit: 10, time: 0 },
+            { level: 1, mul: 770 / 10, add: 50 / 10, vcast: 3.84, fcast: 0.96, delay: 5.0, ct: 0, hit: 10, time: 0 },
         ]
     },
     {
         name: "ライトニングボルト",
         element: "風",
+        can_dc_cast: true,
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
-            { level:  9, mul:  900, add: 648, vcast: 2.75, fcast: 0.06, delay: 1.5, ct: 0, hit: 1, time: 0 },
-            { level:  8, mul:  800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
-            { level:  7, mul:  700, add: 392, vcast: 2.28, fcast: 0.08, delay: 1.3, ct: 0, hit: 1, time: 0 },
-            { level:  6, mul:  600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
-            { level:  5, mul:  500, add: 200, vcast: 1.80, fcast: 0.10, delay: 1.1, ct: 0, hit: 1, time: 0 },
-            { level:  4, mul:  400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
-            { level:  3, mul:  300, add:  72, vcast: 1.33, fcast: 0.12, delay: 0.9, ct: 0, hit: 1, time: 0 },
-            { level:  2, mul:  200, add:  32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
-            { level:  1, mul:  100, add:   8, vcast: 0.84, fcast: 0.14, delay: 0.7, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 900, add: 648, vcast: 2.75, fcast: 0.06, delay: 1.5, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 700, add: 392, vcast: 2.28, fcast: 0.08, delay: 1.3, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 500, add: 200, vcast: 1.80, fcast: 0.10, delay: 1.1, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 300, add: 72, vcast: 1.33, fcast: 0.12, delay: 0.9, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 200, add: 32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 100, add: 8, vcast: 0.84, fcast: 0.14, delay: 0.7, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -184,15 +188,15 @@ const DATA = [
         element: "風",
         records: [
             { level: 10, mul: 1200, add: 800, vcast: 5.02, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  9, mul: 1080, add: 648, vcast: 4.64, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  8, mul:  960, add: 512, vcast: 4.25, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  7, mul:  840, add: 392, vcast: 3.88, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  6, mul:  720, add: 288, vcast: 3.49, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  5, mul:  600, add: 200, vcast: 3.12, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  4, mul:  480, add: 128, vcast: 2.73, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  3, mul:  360, add:  72, vcast: 2.36, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  2, mul:  240, add:  32, vcast: 1.97, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level:  1, mul:  120, add:   8, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 1080, add: 648, vcast: 4.64, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 960, add: 512, vcast: 4.25, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 840, add: 392, vcast: 3.88, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 720, add: 288, vcast: 3.49, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 600, add: 200, vcast: 3.12, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 480, add: 128, vcast: 2.73, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 360, add: 72, vcast: 2.36, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 240, add: 32, vcast: 1.97, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 120, add: 8, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -200,16 +204,16 @@ const DATA = [
         name: "ロードオブヴァーミリオン",
         element: "風",
         records: [
-            { level: 10, mul: 3080/4, add: 580/4, vcast: 3.36, fcast: 3.34, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  9, mul: 2904/4, add: 460/4, vcast: 3.52, fcast: 3.50, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  8, mul: 2728/4, add: 360/4, vcast: 3.68, fcast: 3.66, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  7, mul: 2552/4, add: 260/4, vcast: 3.84, fcast: 3.82, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  6, mul: 2376/4, add: 180/4, vcast: 4.00, fcast: 3.98, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  5, mul: 2200/4, add: 140/4, vcast: 4.16, fcast: 4.14, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  4, mul: 2024/4, add: 80/4, vcast: 4.32, fcast: 4.30, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  3, mul: 1848/4, add: 40/4, vcast: 4.48, fcast: 4.45, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  2, mul: 1672/4, add: 28/4, vcast: 4.64, fcast: 4.61, delay: 4.0, ct: 0, hit: 4, time: 0 },
-            { level:  1, mul: 1496/4, add: 20/4, vcast: 4.80, fcast: 4.77, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 10, mul: 3080 / 4, add: 580 / 4, vcast: 3.36, fcast: 3.34, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 9, mul: 2904 / 4, add: 460 / 4, vcast: 3.52, fcast: 3.50, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 8, mul: 2728 / 4, add: 360 / 4, vcast: 3.68, fcast: 3.66, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 7, mul: 2552 / 4, add: 260 / 4, vcast: 3.84, fcast: 3.82, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 6, mul: 2376 / 4, add: 180 / 4, vcast: 4.00, fcast: 3.98, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 5, mul: 2200 / 4, add: 140 / 4, vcast: 4.16, fcast: 4.14, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 4, mul: 2024 / 4, add: 80 / 4, vcast: 4.32, fcast: 4.30, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 3, mul: 1848 / 4, add: 40 / 4, vcast: 4.48, fcast: 4.45, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 2, mul: 1672 / 4, add: 28 / 4, vcast: 4.64, fcast: 4.61, delay: 4.0, ct: 0, hit: 4, time: 0 },
+            { level: 1, mul: 1496 / 4, add: 20 / 4, vcast: 4.80, fcast: 4.77, delay: 4.0, ct: 0, hit: 4, time: 0 },
         ]
     },
     {
@@ -217,10 +221,10 @@ const DATA = [
         element: "地",
         records: [
             { level: 5, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
-            { level: 4, mul:  800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
-            { level: 3, mul:  600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
-            { level: 2, mul:  400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
-            { level: 1, mul:  200, add:  32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 600, add: 288, vcast: 2.05, fcast: 0.09, delay: 1.2, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 400, add: 128, vcast: 1.56, fcast: 0.11, delay: 1.0, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 200, add: 32, vcast: 1.07, fcast: 0.13, delay: 0.8, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -228,10 +232,10 @@ const DATA = [
         element: "地",
         records: [
             { level: 5, mul: 1000, add: 225, vcast: 6.40, fcast: 1.60, delay: 0.5, ct: 0, hit: 1, time: 0 },
-            { level: 4, mul:  800, add: 145, vcast: 5.11, fcast: 1.28, delay: 0.5, ct: 0, hit: 1, time: 0 },
-            { level: 3, mul:  600, add:  80, vcast: 3.84, fcast: 0.96, delay: 0.5, ct: 0, hit: 1, time: 0 },
-            { level: 2, mul:  400, add:  40, vcast: 2.56, fcast: 0.64, delay: 0.5, ct: 0, hit: 1, time: 0 },
-            { level: 1, mul:  200, add:  10, vcast: 1.29, fcast: 0.32, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 800, add: 145, vcast: 5.11, fcast: 1.28, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 600, add: 80, vcast: 3.84, fcast: 0.96, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 400, add: 40, vcast: 2.56, fcast: 0.64, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 200, add: 10, vcast: 1.29, fcast: 0.32, delay: 0.5, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -239,16 +243,16 @@ const DATA = [
         name: "ヘキサブレイク",
         element: "地",
         records: [
-            { level: 10, mul: 2530/5, add: 0, vcast: 5.68, fcast: 1.42, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  9, mul: 2365/5, add: 0, vcast: 5.43, fcast: 1.38, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  8, mul: 2200/5, add: 0, vcast: 5.15, fcast: 1.34, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  7, mul: 2035/5, add: 0, vcast: 4.90, fcast: 1.30, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  6, mul: 1870/5, add: 0, vcast: 4.64, fcast: 1.26, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  5, mul: 1705/5, add: 0, vcast: 4.37, fcast: 1.22, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  4, mul: 1540/5, add: 0, vcast: 4.12, fcast: 1.18, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  3, mul: 1375/5, add: 0, vcast: 3.86, fcast: 1.14, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  2, mul: 1210/5, add: 0, vcast: 3.59, fcast: 1.10, delay: 5.0, ct: 0, hit: 5, time: 0 },
-            { level:  1, mul: 1045/5, add: 0, vcast: 3.34, fcast: 1.06, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 10, mul: 2530 / 5, add: 0, vcast: 5.68, fcast: 1.42, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 9, mul: 2365 / 5, add: 0, vcast: 5.43, fcast: 1.38, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 8, mul: 2200 / 5, add: 0, vcast: 5.15, fcast: 1.34, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 7, mul: 2035 / 5, add: 0, vcast: 4.90, fcast: 1.30, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 6, mul: 1870 / 5, add: 0, vcast: 4.64, fcast: 1.26, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 5, mul: 1705 / 5, add: 0, vcast: 4.37, fcast: 1.22, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 4, mul: 1540 / 5, add: 0, vcast: 4.12, fcast: 1.18, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 3, mul: 1375 / 5, add: 0, vcast: 3.86, fcast: 1.14, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 2, mul: 1210 / 5, add: 0, vcast: 3.59, fcast: 1.10, delay: 5.0, ct: 0, hit: 5, time: 0 },
+            { level: 1, mul: 1045 / 5, add: 0, vcast: 3.34, fcast: 1.06, delay: 5.0, ct: 0, hit: 5, time: 0 },
         ]
     },
     {
@@ -256,15 +260,15 @@ const DATA = [
         element: "聖",
         records: [
             { level: 10, mul: 867, add: 0, vcast: 10.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 7, time: 14 },
-            { level:  9, mul: 750, add: 0, vcast:  9.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 13 },
-            { level:  8, mul: 733, add: 0, vcast:  8.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 12 },
-            { level:  7, mul: 583, add: 0, vcast:  7.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 5, time: 11 },
-            { level:  6, mul: 450, add: 0, vcast:  6.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 5, time: 10 },
-            { level:  5, mul: 444, add: 0, vcast:  5.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 4, time:  9 },
-            { level:  4, mul: 311, add: 0, vcast:  4.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 4, time:  8 },
-            { level:  3, mul: 200, add: 0, vcast:  3.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 3, time:  7 },
-            { level:  2, mul: 167, add: 0, vcast:  2.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 3, time:  6 },
-            { level:  1, mul:  67, add: 0, vcast:  1.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 2, time:  5 },
+            { level: 9, mul: 750, add: 0, vcast: 9.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 13 },
+            { level: 8, mul: 733, add: 0, vcast: 8.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 12 },
+            { level: 7, mul: 583, add: 0, vcast: 7.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 5, time: 11 },
+            { level: 6, mul: 450, add: 0, vcast: 6.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 5, time: 10 },
+            { level: 5, mul: 444, add: 0, vcast: 5.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 4, time: 9 },
+            { level: 4, mul: 311, add: 0, vcast: 4.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 4, time: 8 },
+            { level: 3, mul: 200, add: 0, vcast: 3.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 3, time: 7 },
+            { level: 2, mul: 167, add: 0, vcast: 2.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 3, time: 6 },
+            { level: 1, mul: 67, add: 0, vcast: 1.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 2, time: 5 },
         ]
     },
     {
@@ -272,15 +276,15 @@ const DATA = [
         element: "聖",
         records: [
             { level: 10, mul: 700, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  9, mul: 660, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  8, mul: 620, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  7, mul: 580, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  6, mul: 540, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  5, mul: 500, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  4, mul: 460, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  3, mul: 420, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  2, mul: 380, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
-            { level:  1, mul: 340, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 9, mul: 660, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 8, mul: 620, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 7, mul: 580, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 6, mul: 540, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 5, mul: 500, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 4, mul: 460, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 3, mul: 420, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 2, mul: 380, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
+            { level: 1, mul: 340, add: 0, vcast: 0.0, fcast: 1.61, delay: 0.5, ct: 0.0, hit: 1, time: 0 },
         ]
     },
     {
@@ -288,15 +292,15 @@ const DATA = [
         element: "無",
         records: [
             { level: 10, mul: 2000, add: 800, fcast: 0.05, vcast: 3.11, delay: 1.6, ct: 0, hit: 1, time: 0 },
-            { level:  9, mul: 1880, add: 648, fcast: 0.06, vcast: 2.87, delay: 1.5, ct: 0, hit: 1, time: 0 },
-            { level:  8, mul: 1760, add: 512, fcast: 0.07, vcast: 2.62, delay: 1.4, ct: 0, hit: 1, time: 0 },
-            { level:  7, mul: 1640, add: 392, fcast: 0.08, vcast: 2.36, delay: 1.3, ct: 0, hit: 1, time: 0 },
-            { level:  6, mul: 1520, add: 288, fcast: 0.09, vcast: 2.12, delay: 1.2, ct: 0, hit: 1, time: 0 },
-            { level:  5, mul: 1400, add: 200, fcast: 0.10, vcast: 1.87, delay: 1.1, ct: 0, hit: 1, time: 0 },
-            { level:  4, mul: 1280, add: 128, fcast: 0.11, vcast: 1.63, delay: 1, ct: 0, hit: 1, time: 0 },
-            { level:  3, mul: 1160, add:  72, fcast: 0.12, vcast: 1.37, delay: 0.9, ct: 0, hit: 1, time: 0 },
-            { level:  2, mul: 1040, add:  32, fcast: 0.13, vcast: 1.12, delay: 0.8, ct: 0, hit: 1, time: 0 },
-            { level:  1, mul:  920, add:   8, fcast: 0.14, vcast: 0.88, delay: 0.7, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 1880, add: 648, fcast: 0.06, vcast: 2.87, delay: 1.5, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 1760, add: 512, fcast: 0.07, vcast: 2.62, delay: 1.4, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 1640, add: 392, fcast: 0.08, vcast: 2.36, delay: 1.3, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 1520, add: 288, fcast: 0.09, vcast: 2.12, delay: 1.2, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 1400, add: 200, fcast: 0.10, vcast: 1.87, delay: 1.1, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 1280, add: 128, fcast: 0.11, vcast: 1.63, delay: 1, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 1160, add: 72, fcast: 0.12, vcast: 1.37, delay: 0.9, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 1040, add: 32, fcast: 0.13, vcast: 1.12, delay: 0.8, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 920, add: 8, fcast: 0.14, vcast: 0.88, delay: 0.7, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -304,24 +308,24 @@ const DATA = [
         element: "無",
         records: [
             { level: 10, mul: 1000, add: 0, fcast: 1.68, vcast: 6.72, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  9, mul:  950, add: 0, fcast: 1.76, vcast: 7.04, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  8, mul:  900, add: 0, fcast: 1.84, vcast: 7.36, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  7, mul:  850, add: 0, fcast: 1.92, vcast: 7.69, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  6, mul:  800, add: 0, fcast: 2.00, vcast: 8.00, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  5, mul:  750, add: 0, fcast: 2.08, vcast: 8.33, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  4, mul:  700, add: 0, fcast: 2.16, vcast: 8.64, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  3, mul:  650, add: 0, fcast: 2.24, vcast: 8.97, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  2, mul:  600, add: 0, fcast: 2.32, vcast: 9.28, delay: 5, ct: 0, hit: 5, time: 0 },
-            { level:  1, mul:  550, add: 0, fcast: 2.40, vcast: 9.61, delay: 5, ct: 0, hit: 5, time: 0 },               
+            { level: 9, mul: 950, add: 0, fcast: 1.76, vcast: 7.04, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 8, mul: 900, add: 0, fcast: 1.84, vcast: 7.36, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 7, mul: 850, add: 0, fcast: 1.92, vcast: 7.69, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 6, mul: 800, add: 0, fcast: 2.00, vcast: 8.00, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 5, mul: 750, add: 0, fcast: 2.08, vcast: 8.33, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 4, mul: 700, add: 0, fcast: 2.16, vcast: 8.64, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 3, mul: 650, add: 0, fcast: 2.24, vcast: 8.97, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 2, mul: 600, add: 0, fcast: 2.32, vcast: 9.28, delay: 5, ct: 0, hit: 5, time: 0 },
+            { level: 1, mul: 550, add: 0, fcast: 2.40, vcast: 9.61, delay: 5, ct: 0, hit: 5, time: 0 },
         ]
     },
 ];
 
 const CONVERT_DATA = {};
-DATA.forEach(({ name, element, ignore_mdef, records }) => {
+DATA.forEach(({ name, element, records, ignore_mdef = 0, can_dc_cast = false }) => {
     let m = {};
-    records.forEach(({ level, mul, add, vcast, fcast, delay, ct, hit, time, motion }) => {
-        m[level] = new MagicSkill(name, element, level, ignore_mdef || 0, mul, add, vcast, fcast, delay, ct, hit, time, motion || 0.7);
+    records.forEach(({ level, mul, add, vcast, fcast, delay, ct, hit, time, motion = 0.7 }) => {
+        m[level] = new MagicSkill(name, element, level, ignore_mdef, mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast);
     });
     CONVERT_DATA[name] = m;
 })
