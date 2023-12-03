@@ -103,8 +103,8 @@ const DATA = [
         element: "火",
         target_skill: 'メテオストーム',
         records: [
-            { level: 10, mul: 550 * 5, prob: 100, ct: 0, hit: 5 },
-            { level: 7, mul: 550 * 5, prob: 100, ct: 0, hit: 5 },
+            { level: 10, mul: 550, prob: 100, ct: 0, hit: 5 },
+            { level: 7, mul: 550, prob: 100, ct: 0, hit: 5 },
             { level: 0, mul: 0, prob: 0, ct: 0, hit: 0 },
         ]
     },
@@ -128,7 +128,7 @@ const DATA = [
         element: "無",
         target_skill: 'ストームガスト',
         records: [
-            { level: 10, mul: 100 * (4.5 / 0.5), prob: 100, ct: 0, hit: 4.5 / 0.5 },
+            { level: 10, mul: 100, prob: 100, ct: 0, hit: 4.5 / 0.5 },
             { level: 0, mul: 0, prob: 0, ct: 0, hit: 0 },
         ]
     },
@@ -158,8 +158,8 @@ const DATA = [
         alias: "ウォーターボール",
         element: "水",
         records: [
-            { level:15, mul: 1500, add: 1005, prob:10, ct: 1, hit: 15 },
-            { level: 1, mul: 1500, add: 1005, prob: 5, ct: 1, hit: 15 },
+            { level:15, mul: 1500/15, add: 1005/15, prob:10, ct: 1, hit: 15 },
+            { level: 1, mul: 1500/15, add: 1005/15, prob: 5, ct: 1, hit: 15 },
             { level: 0, mul:    0, add:    0, prob: 0, ct: 1, hit:  0 },
         ],
     },
@@ -210,7 +210,7 @@ const DATA = [
         element: "水",
         show: true,
         records: [
-            { level: 1, mul: 800, add: 250, prob: 3, ct: 0.5, hit: 15 },
+            { level: 1, mul: 800/15, add: 250/15, prob: 3, ct: 0.5, hit: 15 },
             { level: 0, mul:   0, add:   0, prob: 0, ct: 0.5, hit:  0 },
         ],
     },
@@ -220,12 +220,13 @@ const DATA = [
         element: "水",
         show: true,
         records: [
-            { level: 1, mul: 800, add: 250, prob: 1, ct: 0.5, hit: 15 },
+            { level: 1, mul: 800/15, add: 250/15, prob: 1, ct: 0.5, hit: 15 },
             { level: 0, mul:   0, add:   0, prob: 0, ct: 0.5, hit:  0 },
         ],
     },
     {
         name: "アクアオーブ",
+        alias: "超水流",
         element: "水",
         records: [
             { level: 1, mul: 350, add: 0, prob: 10, ct: 0, hit: 1 },
