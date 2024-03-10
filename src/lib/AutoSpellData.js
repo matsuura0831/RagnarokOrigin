@@ -239,8 +239,8 @@ const DATA = [
         element: "地",
         show: true,
         records: [
-            { level: 1, mul: 350, add: 0, prob: 5, ct: 0, hit: 5 },
-            { level: 0, mul:   0, add: 0, prob: 0, ct: 0, hit: 0 },
+            { level: 1, mul: 350, add: 0, prob: 5, ct: 10, hit: 5 },
+            { level: 0, mul:   0, add: 0, prob: 0, ct:  0, hit: 0 },
         ],
     },
     {
