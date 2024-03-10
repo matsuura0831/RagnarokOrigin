@@ -423,9 +423,10 @@ class MagicDamageCalculator {
             const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
             const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
             const p = hits_ct.prob[k];
+            const h = hit / ct;
 
-            ret.push([p * hit, p * hit * d]);
-            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, hit:${hit}, ct:${ct} }, p=${p}, d=${d}, dps=${(p*hit*d).toLocaleString()}`);
+            ret.push([p * h, p * h * d]);
+            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, hit:${hit}, ct:${ct} }, p=${p}, d=${d}, dps=${(p*h*d).toLocaleString()}`);
         })
 
 
