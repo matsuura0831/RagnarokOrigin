@@ -233,6 +233,46 @@ const DATA = [
             { level: 0, mul:   0, add: 0, prob:  0, ct: 0, hit: 0 },
         ],
     },
+    {
+        name: "高潔の印/春告げの髪留め",
+        alias: "ヘキサブレイク",
+        element: "地",
+        show: true,
+        records: [
+            { level: 1, mul: 350, add: 0, prob: 5, ct: 0, hit: 5 },
+            { level: 0, mul:   0, add: 0, prob: 0, ct: 0, hit: 0 },
+        ],
+    },
+    {
+        name: "プーペヘッドドレス(FB)",
+        alias: "ファイアーボルト",
+        element: "火",
+        show: true,
+        records: [
+            { level: 1, mul: 500, add: 200, prob: 1, ct: 2, hit: 1 },
+            { level: 0, mul:   0, add:   0, prob: 0, ct: 0, hit: 0 },
+        ],
+    },
+    {
+        name: "プーペヘッドドレス(LB)",
+        alias: "ライトニングボルト",
+        element: "風",
+        show: true,
+        records: [
+            { level: 1, mul: 500, add: 200, prob: 1, ct: 2, hit: 1 },
+            { level: 0, mul:   0, add:   0, prob: 0, ct: 0, hit: 0 },
+        ],
+    },
+    {
+        name: "プーペヘッドドレス(CB)",
+        alias: "コールドボルト",
+        element: "水",
+        show: true,
+        records: [
+            { level: 1, mul: 500, add: 200, prob: 1, ct: 2, hit: 1 },
+            { level: 0, mul:   0, add:   0, prob: 0, ct: 0, hit: 0 },
+        ],
+    },
 
 
 ];
