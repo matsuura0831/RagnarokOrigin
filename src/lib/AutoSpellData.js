@@ -147,9 +147,9 @@ const DATA = [
         alias: "ヘブンズドライブ",
         element: "地",
         records: [
-            { level:15, mul: 1000, add: 225, prob:10, ct: 0, hit: 1 },
-            { level: 1, mul: 1000, add: 225, prob: 5, ct: 0, hit: 1 },
-            { level: 0, mul:    0, add:   0, prob: 0, ct: 0, hit: 0 },
+            { level:15, mul: 1000, add: 225, prob:10, ct: 2, hit: 1 },
+            { level: 1, mul: 1000, add: 225, prob: 5, ct: 2, hit: 1 },
+            { level: 0, mul:    0, add:   0, prob: 0, ct: 2, hit: 0 },
         ],
         tips: "ヘブンズドライブLv5取得済みとして計算します",
     },
