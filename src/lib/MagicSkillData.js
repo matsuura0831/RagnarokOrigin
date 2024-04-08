@@ -326,6 +326,99 @@ const DATA = [
             { level: 1, mul: 550, add: 0, fcast: 2.40, vcast: 9.61, delay: 5, ct: 0, hit: 5, time: 0 },
         ]
     },
+
+    // AutoSpell
+    {
+        name: "アドバンスFB",
+        element: "火",
+        records: [
+            { level: 10, mul: 600, hit: 1 },
+            { level: 7, mul: 450, hit: 1 },
+            { level: 6, mul: 400, hit: 1 },
+            { level: 4, mul: 300, hit: 1 },
+            { level: 3, mul: 250, hit: 1 },
+            { level: 2, mul: 200, hit: 1 },
+            { level: 1, mul: 150, hit: 1 },
+        ]
+    },
+    {
+        name: "アドバンスLB",
+        element: "風",
+        records: [
+            { level: 10, mul: 600, hit: 1 },
+            { level: 7, mul: 450, hit: 1 },
+            { level: 6, mul: 400, hit: 1 },
+            { level: 4, mul: 300, hit: 1 },
+            { level: 3, mul: 250, hit: 1 },
+            { level: 2, mul: 200, hit: 1 },
+            { level: 1, mul: 150, hit: 1 },
+        ]
+    },
+    {
+        name: "アドバンスCB",
+        element: "水",
+        records: [
+            { level: 10, mul: 600, hit: 1 },
+            { level: 7, mul: 450, hit: 1 },
+            { level: 6, mul: 400, hit: 1 },
+            { level: 4, mul: 300, hit: 1 },
+            { level: 3, mul: 250, hit: 1 },
+            { level: 2, mul: 200, hit: 1 },
+            { level: 1, mul: 150, hit: 1 },
+        ]
+    },
+    {
+        name: "アドバンスMS",
+        element: "火",
+        placeable: true,
+        records: [
+            { level: 10, mul: 550, hit: 5 },
+            { level: 7, mul: 500, hit: 5 },
+        ]
+    },
+    {
+        name: "磁気嵐パルス装置",
+        element: "風",
+        placeable: true,
+        records: [
+            { level: 10, mul: 600, hit: 1 },
+            { level: 7, mul: 400, hit: 1 },
+            { level: 6, mul: 350, hit: 1 },
+            { level: 4, mul: 250, hit: 1 },
+            { level: 3, mul: 200, hit: 1 },
+            { level: 2, mul: 150, hit: 1 },
+            { level: 1, mul: 100, hit: 1 },
+        ]
+    },
+    {
+        name: "アドバンスSG",
+        element: "無",
+        placeable: true,
+        records: [
+            { level: 10, mul: 100, hit: 4.5 / 0.5 },
+        ]
+    },
+    {
+        name: "古代海龍の杖",
+        element: "無",
+        records: [
+            { level: 1, mul: 300, hit: 1 },
+        ]
+    },
+    {
+        name: "ファイアードラゴンブレス",
+        element: "火",
+        records: [
+            { level: 1, mul: 400, add: 0, hit: 1 },
+        ],
+    },
+    {
+        name: "超水流",
+        element: "水",
+        records: [
+            { level: 1, mul: 350, add: 0, hit: 1 },
+        ],
+    },
 ];
 
 const CONVERT_DATA = {};
