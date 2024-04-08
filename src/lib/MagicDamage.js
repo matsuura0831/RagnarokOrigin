@@ -106,7 +106,9 @@ class MagicDamageCalculator {
     }
 
     total_skill_up() {
-        const v = (this.skill.mul + this.status.skill_add)
+        const mul = this.skill.placeable ? this.skill.mul : this.skill.mul * this.skill.hit;
+
+        const v = (mul + this.status.skill_add)
             * (100 + this.status.skill_up) / 100
             * (100 + this.status.specific_skill_up) / 100
             * (100 + this.status.custom_skill_up) / 100;
@@ -122,7 +124,9 @@ class MagicDamageCalculator {
     }
 
     total_extra_damage() {
-        const v = this.status.extra_damage + this.skill.add;
+        const add = this.skill.placeable ? this.skill.add : this.skill.add* this.skill.hit;
+
+        const v = this.status.extra_damage + add;
         return v;
     }
 
