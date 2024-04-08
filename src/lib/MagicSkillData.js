@@ -1,9 +1,9 @@
 class MagicSkill {
-    static VERSION = [5, 0];    // major, minor
+    static VERSION = [6, 0];    // major, minor
 
     constructor(
         name, element, level, ignore_mdef,
-        mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast
+        mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast, placeable
     ) {
         this.name = name;
         this.element = element;
@@ -19,6 +19,7 @@ class MagicSkill {
         this.time = time;
         this.motion = motion;
         this.can_dc_cast = can_dc_cast;
+        this.placeable = placeable
     }
 
     serialize() {
@@ -26,7 +27,7 @@ class MagicSkill {
             ...MagicSkill.VERSION,
             this.name, this.element, this.level, this.ignore_mdef,
             this.mul, this.add, this.vcast, this.fcast, this.delay, this.ct, this.hit, this.time,
-            this.motion, this.can_dc_cast
+            this.motion, this.can_dc_cast, this.placeable
         ];
     }
 
@@ -75,6 +76,7 @@ const DATA = [
         name: "グラビテーションフィールド",
         element: "念",
         ignore_mdef: 100,
+        placeable: true,
         records: [
             { level: 5, mul: 400, add: 30, vcast: 5.33, fcast: 1.0, delay: 5.0, ct: 0, hit: 20, time: 10.0 },
             { level: 4, mul: 330, add: 25, vcast: 5.00, fcast: 0.9, delay: 5.0, ct: 0, hit: 20, time: 10.0 },
@@ -103,6 +105,7 @@ const DATA = [
     {
         name: "メテオストーム",
         element: "火",
+        placeable: true,
         records: [
             { level: 10, mul: 550, add: 154, vcast: 6.54, fcast: 1.2, delay: 4.0, ct: 0, hit: 9, time: 5.4 },   // 0.6秒間隔で1個落ちている
             { level: 9, mul: 550, add: 118, vcast: 6.89, fcast: 1.2, delay: 4.0, ct: 0, hit: 8, time: 0 },
@@ -137,21 +140,22 @@ const DATA = [
         name: "ウォーターボール",
         element: "水",
         records: [
-            { level: 10, mul: 1500, add: 1005, vcast: 3.51, fcast: 0.88, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 9, mul: 1400, add: 885, vcast: 3.20, fcast: 0.80, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 8, mul: 1200, add: 780, vcast: 2.48, fcast: 0.72, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 7, mul: 1100, add: 675, vcast: 2.56, fcast: 0.64, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 6, mul: 900, add: 570, vcast: 2.24, fcast: 0.56, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 5, mul: 800, add: 465, vcast: 1.91, fcast: 0.48, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 4, mul: 600, add: 216, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 3, mul: 500, add: 162, vcast: 1.29, fcast: 0.32, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 2, mul: 300, add: 90, vcast: 0.96, fcast: 0.24, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 1, mul: 100, add: 15, vcast: 0.64, fcast: 0.16, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 10, mul: 1500/15, add: 1005/15, vcast: 3.51, fcast: 0.88, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 9, mul: 1400/15, add: 885/15, vcast: 3.20, fcast: 0.80, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 8, mul: 1200/15, add: 780/15, vcast: 2.48, fcast: 0.72, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 7, mul: 1100/15, add: 675/15, vcast: 2.56, fcast: 0.64, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 6, mul: 900/15, add: 570/15, vcast: 2.24, fcast: 0.56, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 5, mul: 800/15, add: 465/15, vcast: 1.91, fcast: 0.48, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 4, mul: 600/15, add: 216/15, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 3, mul: 500/15, add: 162/15, vcast: 1.29, fcast: 0.32, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 2, mul: 300/15, add: 90/15, vcast: 0.96, fcast: 0.24, delay: 0.0, ct: 0, hit: 15, time: 0 },
+            { level: 1, mul: 100/15, add: 15/15, vcast: 0.64, fcast: 0.16, delay: 0.0, ct: 0, hit: 15, time: 0 },
         ]
     },
     {
         // 表記は合計で記載されているのでhit数で割る必要がある
         name: "ストームガスト",
+        placeable: true,
         element: "水",
         records: [
             { level: 10, mul: 3740 / 10, add: 750 / 10, vcast: 9.60, fcast: 2.40, delay: 5.0, ct: 0, hit: 10, time: 0 },
@@ -187,22 +191,23 @@ const DATA = [
         name: "ユピテルサンダー",
         element: "風",
         records: [
-            { level: 10, mul: 1200, add: 800, vcast: 5.02, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 9, mul: 1080, add: 648, vcast: 4.64, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 8, mul: 960, add: 512, vcast: 4.25, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 7, mul: 840, add: 392, vcast: 3.88, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 6, mul: 720, add: 288, vcast: 3.49, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 5, mul: 600, add: 200, vcast: 3.12, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 4, mul: 480, add: 128, vcast: 2.73, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 3, mul: 360, add: 72, vcast: 2.36, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 2, mul: 240, add: 32, vcast: 1.97, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
-            { level: 1, mul: 120, add: 8, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 10, mul: 1200/12, add: 800/12, vcast: 5.02, fcast: 0.40, delay: 0.0, ct: 0, hit: 12, time: 0 },
+            { level: 9, mul: 1080/11, add: 648/11, vcast: 4.64, fcast: 0.40, delay: 0.0, ct: 0, hit: 11, time: 0 },
+            { level: 8, mul: 960/10, add: 512/10, vcast: 4.25, fcast: 0.40, delay: 0.0, ct: 0, hit: 10, time: 0 },
+            { level: 7, mul: 840/9, add: 392/9, vcast: 3.88, fcast: 0.40, delay: 0.0, ct: 0, hit: 9, time: 0 },
+            { level: 6, mul: 720/8, add: 288/8, vcast: 3.49, fcast: 0.40, delay: 0.0, ct: 0, hit: 8, time: 0 },
+            { level: 5, mul: 600/7, add: 200/7, vcast: 3.12, fcast: 0.40, delay: 0.0, ct: 0, hit: 7, time: 0 },
+            { level: 4, mul: 480/6, add: 128/6, vcast: 2.73, fcast: 0.40, delay: 0.0, ct: 0, hit: 6, time: 0 },
+            { level: 3, mul: 360/5, add: 72/5, vcast: 2.36, fcast: 0.40, delay: 0.0, ct: 0, hit: 5, time: 0 },
+            { level: 2, mul: 240/4, add: 32/4, vcast: 1.97, fcast: 0.40, delay: 0.0, ct: 0, hit: 4, time: 0 },
+            { level: 1, mul: 120/3, add: 8/3, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 3, time: 0 },
         ]
     },
     {
         // 表記は合計で記載されているのでhit数で割る必要がある
         name: "ロードオブヴァーミリオン",
         element: "風",
+        placeable: true,
         records: [
             { level: 10, mul: 3080 / 4, add: 580 / 4, vcast: 3.36, fcast: 3.34, delay: 4.0, ct: 0, hit: 4, time: 0 },
             { level: 9, mul: 2904 / 4, add: 460 / 4, vcast: 3.52, fcast: 3.50, delay: 4.0, ct: 0, hit: 4, time: 0 },
@@ -239,9 +244,9 @@ const DATA = [
         ]
     },
     {
-        // TODO: HITS数の確認
         name: "ヘキサブレイク",
         element: "地",
+        placeable: true,
         records: [
             { level: 10, mul: 2530 / 5, add: 0, vcast: 5.68, fcast: 1.42, delay: 5.0, ct: 0, hit: 5, time: 0 },
             { level: 9, mul: 2365 / 5, add: 0, vcast: 5.43, fcast: 1.38, delay: 5.0, ct: 0, hit: 5, time: 0 },
@@ -258,6 +263,7 @@ const DATA = [
     {
         name: "マグヌスエクソシズム",
         element: "聖",
+        placeable: true,
         records: [
             { level: 10, mul: 867, add: 0, vcast: 10.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 7, time: 14 },
             { level: 9, mul: 750, add: 0, vcast: 9.00, fcast: 2.5, delay: 2.0, ct: 5.0, hit: 6, time: 13 },
@@ -306,6 +312,7 @@ const DATA = [
     {
         name: "サイキックウェーブ",
         element: "無",
+        placeable: true,
         records: [
             { level: 10, mul: 1000, add: 0, fcast: 1.68, vcast: 6.72, delay: 5, ct: 0, hit: 5, time: 0 },
             { level: 9, mul: 950, add: 0, fcast: 1.76, vcast: 7.04, delay: 5, ct: 0, hit: 5, time: 0 },
@@ -322,10 +329,10 @@ const DATA = [
 ];
 
 const CONVERT_DATA = {};
-DATA.forEach(({ name, element, records, ignore_mdef = 0, can_dc_cast = false }) => {
+DATA.forEach(({ name, element, records, ignore_mdef = 0, can_dc_cast = false, placeable = false }) => {
     let m = {};
-    records.forEach(({ level, mul, add, vcast, fcast, delay, ct, hit, time, motion = 0.7 }) => {
-        m[level] = new MagicSkill(name, element, level, ignore_mdef, mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast);
+    records.forEach(({ level, hit, mul, add = 0, vcast = 0.0, fcast = 0.0, delay = 0.0, ct = 0.0, time = 0.0, motion = 0.7 }) => {
+        m[level] = new MagicSkill(name, element, level, ignore_mdef, mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast, placeable);
     });
     CONVERT_DATA[name] = m;
 })

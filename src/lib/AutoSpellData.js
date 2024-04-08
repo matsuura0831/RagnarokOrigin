@@ -1,21 +1,17 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 
 class AutoSpellSkill {
-    static VERSION = [1, 0];    // major, minor
+    static VERSION = [3, 0];    // major, minor
 
     constructor(
-        name, alias, element, level, mul, add, prob, hit, ct,
+        name, level, prob, ct, spells,
         target_skill, target_element,
     ) {
         this.name = name;
-        this.alias = alias;
-        this.element = element;
         this.level = level;
-        this.mul = mul;
-        this.add = add;
         this.prob = prob;
-        this.hit = hit;
         this.ct = ct;
+        this.spells = spells || [];
         this.target_skill = target_skill || undefined;
         this.target_element = target_element || undefined;
     }
@@ -29,7 +25,7 @@ class AutoSpellSkill {
     serialize() {
         return [
             ...AutoSpellSkill.VERSION,
-            this.name, this.alias, this.element, this.level, this.mul, this.add, this.prob, this.hit, this.ct,
+            this.name, this.level, this.prob, this.ct, this.spells,
             this.target_skill, this.target_element,
         ];
     }
@@ -55,222 +51,189 @@ class AutoSpellSkill {
 const DATA = [
     {
         name: "アドバンスFB",
-        element: "火",
         target_skill: 'ファイアーボルト',
         records: [
-            { level: 10, mul: 600, prob: 50, ct: 1, hit: 1 },
-            { level: 7, mul: 450, prob: 42, ct: 1, hit: 1 },
-            { level: 6, mul: 400, prob: 40, ct: 1, hit: 1 },
-            { level: 4, mul: 300, prob: 36, ct: 1, hit: 1 },
-            { level: 3, mul: 250, prob: 34, ct: 1, hit: 1 },
-            { level: 2, mul: 200, prob: 32, ct: 1, hit: 1 },
-            { level: 1, mul: 150, prob: 30, ct: 1, hit: 1 },
-            { level: 0, mul: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 10, prob: 50, ct: 1, spells: [ { spell: "アドバンスFB", level: 10, prob: 100 }, ]},
+            { level: 7, prob: 42, ct: 1, spells: [ { spell: "アドバンスFB", level: 7, prob: 100 }, ]},
+            { level: 6, prob: 40, ct: 1, spells: [ { spell: "アドバンスFB", level: 6, prob: 100 }, ]},
+            { level: 4, prob: 36, ct: 1, spells: [ { spell: "アドバンスFB", level: 4, prob: 100 }, ]},
+            { level: 3, prob: 34, ct: 1, spells: [ { spell: "アドバンスFB", level: 3, prob: 100 }, ]},
+            { level: 2, prob: 32, ct: 1, spells: [ { spell: "アドバンスFB", level: 2, prob: 100 }, ]},
+            { level: 1, prob: 30, ct: 1, spells: [ { spell: "アドバンスFB", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
     {
         name: "アドバンスLB",
-        element: "風",
         target_skill: 'ライトニングボルト',
         records: [
-            { level: 10, mul: 600, prob: 50, ct: 1, hit: 1 },
-            { level: 7, mul: 450, prob: 42, ct: 1, hit: 1 },
-            { level: 6, mul: 400, prob: 40, ct: 1, hit: 1 },
-            { level: 4, mul: 300, prob: 36, ct: 1, hit: 1 },
-            { level: 3, mul: 250, prob: 34, ct: 1, hit: 1 },
-            { level: 2, mul: 200, prob: 32, ct: 1, hit: 1 },
-            { level: 1, mul: 150, prob: 30, ct: 1, hit: 1 },
-            { level: 0, mul: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 10, prob: 50, ct: 1, spells: [ { spell: "アドバンスLB", level: 10, prob: 100 }, ]},
+            { level: 7, prob: 42, ct: 1, spells: [ { spell: "アドバンスLB", level: 7, prob: 100 }, ]},
+            { level: 6, prob: 40, ct: 1, spells: [ { spell: "アドバンスLB", level: 6, prob: 100 }, ]},
+            { level: 4, prob: 36, ct: 1, spells: [ { spell: "アドバンスLB", level: 4, prob: 100 }, ]},
+            { level: 3, prob: 34, ct: 1, spells: [ { spell: "アドバンスLB", level: 3, prob: 100 }, ]},
+            { level: 2, prob: 32, ct: 1, spells: [ { spell: "アドバンスLB", level: 2, prob: 100 }, ]},
+            { level: 1, prob: 30, ct: 1, spells: [ { spell: "アドバンスLB", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
     {
         name: "アドバンスCB",
-        element: "水",
         target_skill: 'コールドボルト',
         records: [
-            { level: 10, mul: 600, prob: 50, ct: 1, hit: 1 },
-            { level: 7, mul: 450, prob: 42, ct: 1, hit: 1 },
-            { level: 6, mul: 400, prob: 40, ct: 1, hit: 1 },
-            { level: 4, mul: 300, prob: 36, ct: 1, hit: 1 },
-            { level: 3, mul: 250, prob: 34, ct: 1, hit: 1 },
-            { level: 2, mul: 200, prob: 32, ct: 1, hit: 1 },
-            { level: 1, mul: 150, prob: 30, ct: 1, hit: 1 },
-            { level: 0, mul: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 10, prob: 50, ct: 1, spells: [ { spell: "アドバンスCB", level: 10, prob: 100 }, ]},
+            { level: 7, prob: 42, ct: 1, spells: [ { spell: "アドバンスCB", level: 7, prob: 100 }, ]},
+            { level: 6, prob: 40, ct: 1, spells: [ { spell: "アドバンスCB", level: 6, prob: 100 }, ]},
+            { level: 4, prob: 36, ct: 1, spells: [ { spell: "アドバンスCB", level: 4, prob: 100 }, ]},
+            { level: 3, prob: 34, ct: 1, spells: [ { spell: "アドバンスCB", level: 3, prob: 100 }, ]},
+            { level: 2, prob: 32, ct: 1, spells: [ { spell: "アドバンスCB", level: 2, prob: 100 }, ]},
+            { level: 1, prob: 30, ct: 1, spells: [ { spell: "アドバンスCB", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
     {
         name: "アドバンスMS",
-        element: "火",
         target_skill: 'メテオストーム',
         records: [
-            { level: 10, mul: 550, prob: 100, ct: 0, hit: 5 },
-            { level: 7, mul: 550, prob: 100, ct: 0, hit: 5 },
-            { level: 0, mul: 0, prob: 0, ct: 0, hit: 0 },
+            { level: 10, prob: 100, ct: 0, spells: [ { spell: "アドバンスMS", level: 10, prob: 100 }, ]},
+            { level: 7, prob: 100, ct: 0, spells: [ { spell: "アドバンスMS", level: 10, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
     {
         name: "磁気嵐パルス装置",
-        element: "風",
         target_skill: 'ロードオブヴァーミリオン',
         records: [
-            { level: 10, mul: 600, prob: 100, ct: 0, hit: 1 },
-            { level: 7, mul: 400, prob: 100, ct: 0, hit: 1 },
-            { level: 6, mul: 350, prob: 100, ct: 0, hit: 1 },
-            { level: 4, mul: 250, prob: 100, ct: 0, hit: 1 },
-            { level: 3, mul: 200, prob: 100, ct: 0, hit: 1 },
-            { level: 2, mul: 150, prob: 100, ct: 0, hit: 1 },
-            { level: 1, mul: 100, prob: 100, ct: 0, hit: 1 },
-            { level: 0, mul: 0, prob: 0, ct: 0, hit: 0 },
+            { level: 10, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 10, prob: 100 }, ]},
+            { level: 7, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 7, prob: 100 }, ]},
+            { level: 6, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 6, prob: 100 }, ]},
+            { level: 4, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 4, prob: 100 }, ]},
+            { level: 3, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 3, prob: 100 }, ]},
+            { level: 2, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 2, prob: 100 }, ]},
+            { level: 1, prob: 100, ct: 0, spells: [ { spell: "磁気嵐パルス装置", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
     {
         name: "アドバンスSG",
-        element: "無",
         target_skill: 'ストームガスト',
         records: [
-            { level: 10, mul: 100, prob: 100, ct: 0, hit: 4.5 / 0.5 },
-            { level: 0, mul: 0, prob: 0, ct: 0, hit: 0 },
+            { level: 10, prob: 100, ct: 0, spells: [ { spell: "アドバンスSG", level: 10, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
     {
         name: "古代海龍の杖",
-        element: "無",
         target_element: "水",
         records: [
-            { level: 1, mul: 0, prob: 100, ct: 1, hit: 1 }, // 倍率は武器の処理の中で上書きする
-            { level: 0, mul: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 1, prob: 100, ct: 1, spells: [ { spell: "古代海龍の杖", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ]
     },
 
     {
         name: "ピットマン",
-        alias: "ヘブンズドライブ",
-        element: "地",
         records: [
-            { level:15, mul: 1000, add: 225, prob:10, ct: 0, hit: 1 },
-            { level: 1, mul: 1000, add: 225, prob: 5, ct: 0, hit: 1 },
-            { level: 0, mul:    0, add:   0, prob: 0, ct: 0, hit: 0 },
+            { level: 15, prob: 10, ct: 2, spells: [ { spell: "ヘブンズドライブ", level: 5, prob: 100 }, ]},
+            { level: 1, prob: 5, ct: 2, spells: [ { spell: "ヘブンズドライブ", level: 5, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
         tips: "ヘブンズドライブLv5取得済みとして計算します",
     },
     {
         name: "レッドエルマ",
-        alias: "ウォーターボール",
-        element: "水",
         records: [
-            { level:15, mul: 1500/15, add: 1005/15, prob:10, ct: 1, hit: 15 },
-            { level: 1, mul: 1500/15, add: 1005/15, prob: 5, ct: 1, hit: 15 },
-            { level: 0, mul:    0, add:    0, prob: 0, ct: 1, hit:  0 },
+            { level: 15, prob: 10, ct: 1, spells: [ { spell: "ウォーターボール", level: 10, prob: 100 }, ]},
+            { level: 1, prob: 5, ct: 1, spells: [ { spell: "ウォーターボール", level: 10, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "ブラッディナイトR",
-        alias: "メテオストーム",
-        element: "火",
         records: [
-            { level: 15, mul: 220, add: 18, prob: 5, ct: 7, hit: 5 },
-            { level: 1, mul: 220, add: 18, prob: 3, ct: 7, hit: 5 },
-            { level: 0, mul:   0, add: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 15, prob: 5, ct: 7, spells: [ { spell: "メテオストーム", level: 3, prob: 100 }, ]},
+            { level: 1, prob: 3, ct: 7, spells: [ { spell: "メテオストーム", level: 3, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "ブラッディナイト",
-        alias: "メテオストーム",
-        element: "火",
         records: [
-            { level: 15, mul: 330, add: 63, prob: 10, ct: 7, hit: 7 },
-            { level: 1, mul: 330, add: 63, prob: 5, ct: 7, hit: 7 },
-            { level: 0, mul:   0, add: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 15, prob: 10, ct: 7, spells: [ { spell: "メテオストーム", level: 6, prob: 100 }, ]},
+            { level: 1, prob: 5, ct: 7, spells: [ { spell: "メテオストーム", level: 6, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "ミュータントドラゴン",
-        alias: "ファイアードラゴンブレス",
-        element: "火",
         records: [
-            { level: 15, mul: 400, add: 0, prob: 30, ct: 0, hit: 1 },
-            { level: 10, mul: 400, add: 0, prob: 30, ct: 2, hit: 1 },
-            { level: 5, mul: 400, add: 0, prob: 24, ct: 2, hit: 1 },
-            { level: 1, mul: 400, add: 0, prob: 20, ct: 2, hit: 1 },
-            { level: 0, mul:   0, add: 0, prob: 0, ct: 1, hit: 0 },
+            { level: 15, prob: 30, ct: 0, spells: [ { spell: "ファイアードラゴンブレス", level: 1, prob: 100 }, ]},
+            { level: 10, prob: 30, ct: 2, spells: [ { spell: "ファイアードラゴンブレス", level: 1, prob: 100 }, ]},
+            { level: 5, prob: 24, ct: 2, spells: [ { spell: "ファイアードラゴンブレス", level: 1, prob: 100 }, ]},
+            { level: 1, prob: 20, ct: 2, spells: [ { spell: "ファイアードラゴンブレス", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "マーリン",
-        alias: "ライトニングボルト",
-        element: "風",
         records: [
-            { level: 1, mul: 200, add: 32, prob: 5, ct: 2, hit: 1 },
-            { level: 0, mul:   0, add:  0, prob: 0, ct: 2, hit: 0 },
+            { level: 1, prob: 5, ct: 2, spells: [ { spell: "ライトニングボルト", level: 2, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "ボールステッカー",
-        alias: "ウォーターボール",
-        element: "水",
         show: true,
         records: [
-            { level: 1, mul: 800/15, add: 250/15, prob: 3, ct: 0.5, hit: 15 },
-            { level: 0, mul:   0, add:   0, prob: 0, ct: 0.5, hit:  0 },
+            { level: 1, prob: 3, ct: 0.5, spells: [ { spell: "ウォーターボール", level: 5, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "ピクニックハット",
-        alias: "ウォーターボール",
-        element: "水",
         show: true,
         records: [
-            { level: 1, mul: 800/15, add: 250/15, prob: 1, ct: 0.5, hit: 15 },
-            { level: 0, mul:   0, add:   0, prob: 0, ct: 0.5, hit:  0 },
+            { level: 1, prob: 1, ct: 0.5, spells: [ { spell: "ウォーターボール", level: 5, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "アクアオーブ",
-        alias: "超水流",
-        element: "水",
         records: [
-            { level: 1, mul: 350, add: 0, prob: 10, ct: 0, hit: 1 },
-            { level: 0, mul:   0, add: 0, prob:  0, ct: 0, hit: 0 },
+            { level: 1, prob: 10, ct: 0, spells: [ { spell: "超水流", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
         name: "高潔の印/春告げの髪留め",
-        alias: "ヘキサブレイク",
-        element: "地",
         show: true,
         records: [
-            { level: 1, mul: 350, add: 0, prob: 5, ct: 10, hit: 5 },
-            { level: 0, mul:   0, add: 0, prob: 0, ct:  0, hit: 0 },
+            { level: 1, prob: 3, ct: 10, spells: [ { spell: "ヘキサブレイク", level: 5, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
-        name: "プーペヘッドドレス(FB)",
-        alias: "ファイアーボルト",
-        element: "火",
+        name: "プーペヘッドドレス",
         show: true,
         records: [
-            { level: 1, mul: 500, add: 200, prob: 1, ct: 2, hit: 1 },
-            { level: 0, mul:   0, add:   0, prob: 0, ct: 0, hit: 0 },
+            { level: 1, prob: 3, ct: 0.5, merge_spells: [
+                { spell: "ファイアーボルト", level: 5, prob: 100 },
+                { spell: "コールドボルト", level: 5, prob: 100 },
+                { spell: "ライトニングボルト", level: 5, prob: 100 },
+            ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
     {
-        name: "プーペヘッドドレス(LB)",
-        alias: "ライトニングボルト",
-        element: "風",
+        name: "ヴンダーカンマー",
         show: true,
         records: [
-            { level: 1, mul: 500, add: 200, prob: 1, ct: 2, hit: 1 },
-            { level: 0, mul:   0, add:   0, prob: 0, ct: 0, hit: 0 },
-        ],
-    },
-    {
-        name: "プーペヘッドドレス(CB)",
-        alias: "コールドボルト",
-        element: "水",
-        show: true,
-        records: [
-            { level: 1, mul: 500, add: 200, prob: 1, ct: 2, hit: 1 },
-            { level: 0, mul:   0, add:   0, prob: 0, ct: 0, hit: 0 },
+            { level: 1, prob: 100, ct: 0, multi_spells: [
+                { spell: "ファイアーボルト", level: 5, prob: 1, ct: 2 },
+                { spell: "コールドボルト", level: 5, prob: 1, ct: 2 },
+                { spell: "ライトニングボルト", level: 5, prob: 1, ct: 2 },
+            ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
 
@@ -279,11 +242,12 @@ const DATA = [
 
 const CONVERT_DATA = {};
 const CONVERT_DISPLAY_DATA = {};
-DATA.forEach(({ name, element, records, target_skill = undefined, target_element = undefined, show = false, tips = '', alias = '' }) => {
+DATA.forEach(({ name, records=[], target_skill = undefined, target_element = undefined, show = false, tips = '' }) => {
     let m = {};
 
-    records.forEach(({ level, mul, prob, ct, hit, add = 0 }) => {
-        let instance = new AutoSpellSkill(name, alias, element, level, mul, add, prob, hit, ct, target_skill, target_element);
+    records.forEach(({ level, prob, ct, spells=[], multi_spells=[], merge_spells=[] }) => {
+        let instance = new AutoSpellSkill(name, level, prob, ct, spells, target_skill, target_element);
+
 
         m[level] = {
             instance: instance,
@@ -291,18 +255,52 @@ DATA.forEach(({ name, element, records, target_skill = undefined, target_element
             handler() {
                 return new class extends MagicDamageHandler {
                     run(status, ismin, ismax) {
-                        if(level > 0) {
-                            if(name in status.pursuits) {
-                                // 同名がある場合は確率を加算する
-                                status.pursuits[name].prob += instance.prob;
+                        function _set(key, ins) {
+                            if(key in status.pursuits) {
+                                status.pursuits[key].prob += ins.prob;
                             } else {
-                                status.pursuits[name] = instance.clone();
+                                status.pursuits[key] = ins;
+                            }
+                        }
+
+                        if(level > 0) {
+                            // multi_spells指定がある場合は独立で発生するとして計算する
+                            let instances = (spells.length && !multi_spells.length)
+                                ? [instance]
+                                : multi_spells.map(({ spell, level: spell_level, prob: spell_prob, ct: spell_ct = 0 }) => {
+                                    return new AutoSpellSkill(`${name}@${spell}`, spell_level, (prob/100) * (spell_prob/100)*100, ct + spell_ct, [
+                                        { spell: spell, level: spell_level, prob: 100 }
+                                    ])
+                                });
+                            instances.forEach(ins => {
+                                ins.spells.forEach(spell => {
+                                    const key = `${spell.spell}-${spell.level}-${ins.ct}`;
+
+                                    if(key in status.pursuits) {
+                                        // 同じ名称で同じレベルのスキル かつ CTが同じスキルの場合は確率を加算するだけ
+                                        status.pursuits[key].prob += ins.prob;
+                                    } else {
+                                        const i = ins.clone();
+                                        i.spells = [spell];
+
+                                        status.pursuits[key] = i;
+                                    }
+                                })
+                            });
+
+                            if(merge_spells.length) {
+                                const merge_key = `${instance.name}Lv.${instance.level}-CT${instance.ct}`;
+                                const merge_ins = instance.clone()
+                                merge_ins.spells = merge_spells;
+                                _set(merge_key, merge_ins);
                             }
                         }
                     }
                 }
             },
         }
+
+        console.log(name, level, m)
     });
 
     CONVERT_DATA[name] = m;
