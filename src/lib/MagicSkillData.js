@@ -419,6 +419,7 @@ const DATA = [
             { level: 1, mul: 350, add: 0, hit: 1 },
         ],
     },
+
 ];
 
 const CONVERT_DATA = {};
