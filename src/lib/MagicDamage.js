@@ -289,20 +289,25 @@ class MagicDamageCalculator {
             function _calc(parent_name, parent_element, parent_hit, pursuits) {
                 Object.keys(pursuits).forEach(k => {
                     const pursuit = pursuits[k]
-                    const { prob, element, hit, ct, alias = '' } = pursuit;
+                    const { prob, ct, spells } = pursuit;
 
                     if (pursuit.check(parent_name, parent_element)) {
-                        let h = parent_hit * prob / 100 * hit;
-                        if (ct <= 0 && h >= TH_HIT) {
-                            hits['total'] += h;
-                            hits.skill[alias || k][k] += h;
-                            hits.element[element][k] += h;
+                        spells.forEach(({spell, level, prob: sub_prob}) => {
+                            const skill = MagicSkillData.getSkill(spell, level);
+                            const p = (prob / 100) * (sub_prob / 100);
 
-                            _calc(k, element, h, Object.keys(base_pursuits).reduce((p, i) => {
-                                if (k != i) p[i] = base_pursuits[i];
-                                return p;
-                            }, {}));
-                        }
+                            let h = parent_hit * p * skill.hit;
+                            if (ct <= 0 && h >= TH_HIT) {
+                                hits['total'] += h;
+                                hits.skill[skill.name][k] += h;
+                                hits.element[skill.element][k] += h;
+
+                                _calc(k, skill.element, h, Object.keys(base_pursuits).reduce((p, i) => {
+                                    if (k != i) p[i] = base_pursuits[i];
+                                    return p;
+                                }, {}));
+                            }
+                        })
                     }
                 })
             }
@@ -325,7 +330,7 @@ class MagicDamageCalculator {
                 hits_ct.total = 0;
 
                 Object.keys(pursuits).forEach(k => {
-                    const { prob, element, hit, ct, target_skill, target_element, alias = '' } = pursuits[k];
+                    const { prob, ct, target_skill, target_element, spells } = pursuits[k];
 
                     let n = 0;
                     if (target_skill) {
@@ -340,14 +345,20 @@ class MagicDamageCalculator {
                         }, 0);
                     }
 
-                    const np = (1.0 - prob / 100) ** (n * ct);  // CTが2秒なら判定回数は2倍、CTが0.5秒なら判定回数は0.5倍
-                    const pp = (1.0 - np);
-                    const h = pp * hit / ct;                    // CTが2秒ならヒット数は0.5倍、CTが0.5秒ならヒット数は2倍
-                    hits_ct.total += h;
-                    hits_ct.skill[alias || k][k] = h;
-                    hits_ct.element[element][k] = h;
+                    spells.forEach(({spell, level, prob: sub_prob}) => {
+                        const skill = MagicSkillData.getSkill(spell, level);
 
-                    hits_ct.prob[k] = pp;
+                        const p = (prob / 100) * (sub_prob / 100);
+                        const np = (1.0 - p) ** (n * ct);     // CTが2秒なら判定回数は2倍、CTが0.5秒なら判定回数は0.5倍
+                        const pp = (1.0 - np);
+
+                        const h = pp * skill.hit / ct;              // CTが2秒ならヒット数は0.5倍、CTが0.5秒ならヒット数は2倍
+                        hits_ct.total += h;
+                        hits_ct.skill[skill.name][k] = h;
+                        hits_ct.element[skill.element][k] = h;
+
+                        hits_ct.prob[k] = pp;
+                    });
                 })
             } while ((hits_ct.total - prev_total) > TH_HIT);
 
@@ -410,27 +421,50 @@ class MagicDamageCalculator {
 
         // noct
         Object.keys(pursuit_without_ct).forEach(k => {
-            const { element, level, mul, prob, hit, add = 0, alias=""} = pursuit_without_ct[k];
+            const { prob, spells } = pursuit_without_ct[k];
 
-            const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
-            const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
-            const n = hits_noct.skill[alias || k][k];
+            const results = []
+            spells.forEach(({spell, level, prob: sub_prob}) => {
+                const skill = MagicSkillData.getSkill(spell, level);
 
-            ret.push([n, n * d]);
-            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, hit:${hit}, ct:0 }, n=${n}, d=${d}, dps=${(n*d).toLocaleString()}`);
+                const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
+                const n = hits_noct.skill[skill.name][k];
+
+                // 設置系はHIT数を乗算する必要がある。非設置はCalculatorの中で計算済
+                const dps = (skill.placeable ? d * skill.hit : d) * n;
+
+                results.push([n, dps]);
+                console.log(`${k}{ prob:(${prob}*${sub_prob}), spell:${spell}, level:${level}, ct:0 }, (n=${n}, d=${d}), dps=${dps.toLocaleString()}`);
+            });
+
+            const hit = results.reduce((r, i) => r + i[0], 0) / spells.length;
+            const dps = results.reduce((r, i) => r + i[1], 0) / spells.length;
+            ret.push([hit, dps]);
         })
 
         // ct
         Object.keys(pursuit_with_ct).forEach(k => {
-            const { element, level, mul, prob, hit, ct, add = 0 } = pursuit_with_ct[k];
+            const { prob, ct, spells } = pursuit_with_ct[k];
 
-            const skill = new MagicSkillData.clazz(k, element, level, 0, mul, add, 0, 0, 0, 0, 1, 0, 0, false);
-            const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
-            const p = hits_ct.prob[k];
-            const h = hit / ct;
+            const results = []
+            spells.forEach(({spell, level, prob: sub_prob}) => {
+                const skill = MagicSkillData.getSkill(spell, level);
 
-            ret.push([p * h, p * h * d]);
-            console.log(`${k}{ level:${level}, el:${element}, mul:${mul}, add:${add}, prob:${prob}, hit:${hit}, ct:${ct} }, p=${p}, d=${d}, dps=${(p*h*d).toLocaleString()}`);
+                const d = (new MagicDamageCalculator(clone_status, skill, this.enemy, this.ismin, this.ismax)).get();
+                const p = hits_ct.prob[k];
+                const h = skill.hit;
+
+                // 設置系はHIT数を乗算する必要がある。非設置はCalculatorの中で計算済
+                const dps = (skill.placeable ? d * h : d) * p / ct;     // CTが2秒ならdpsはx1/2, CTが0.5秒ならdpsはx2
+                const hit = h * p / ct;
+
+                results.push([hit, dps]);
+                console.log(`${k}{ prob:(${prob}*${sub_prob}), spell:${spell}, level:${level}, ct:${ct} }, (p=${p}, h=${h}, d=${d}), hit=${hit}, dps=${dps.toLocaleString()}`);
+            })
+
+            const hit = results.reduce((r, i) => r + i[0], 0) / spells.length;
+            const dps = results.reduce((r, i) => r + i[1], 0) / spells.length;
+            ret.push([hit, dps]);
         })
 
 

@@ -331,7 +331,7 @@ const DATA = [
 const CONVERT_DATA = {};
 DATA.forEach(({ name, element, records, ignore_mdef = 0, can_dc_cast = false, placeable = false }) => {
     let m = {};
-    records.forEach(({ level, mul, add, vcast, fcast, delay, ct, hit, time, motion = 0.7 }) => {
+    records.forEach(({ level, hit, mul, add = 0, vcast = 0.0, fcast = 0.0, delay = 0.0, ct = 0.0, time = 0.0, motion = 0.7 }) => {
         m[level] = new MagicSkill(name, element, level, ignore_mdef, mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast, placeable);
     });
     CONVERT_DATA[name] = m;
