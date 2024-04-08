@@ -336,7 +336,7 @@ class MagicDamageCalculator {
                         }, 0);
                     }
 
-                    const np = (1.0 - prob / 100) ** n;
+                    const np = (1.0 - prob / 100) ** (n * ct);  // CTが2秒なら判定回数は2倍、CTが0.5秒なら判定回数は0.5倍
                     const pp = (1.0 - np);
                     const h = pp * hit / ct;                    // CTが2秒ならヒット数は0.5倍、CTが0.5秒ならヒット数は2倍
                     hits_ct.total += h;
