@@ -23,6 +23,10 @@ export default class CharacterStatus {
         element_override,
         sacred_gear,
         enhance_power,
+        element_wind_skill_add, element_earth_skill_add, element_fire_skill_add, element_water_skill_add,
+        element_normal_skill_add, element_holy_skill_add, element_dark_skill_add, element_ghost_skill_add, element_undead_skill_add, element_poison_skill_add,
+        element_wind_fix_cast_div, element_earth_fix_cast_div, element_fire_fix_cast_div, element_water_fix_cast_div,
+        element_normal_fix_cast_div, element_holy_fix_cast_div, element_dark_fix_cast_div, element_ghost_fix_cast_div, element_undead_fix_cast_div, element_poison_fix_cast_div,
     ) {
         this.base_atk = base_atk || 0;
         this.equip_atk = equip_atk || 0;
@@ -109,6 +113,30 @@ export default class CharacterStatus {
 
         // 魂：魔法ダメージ強化
         this.enhance_power = enhance_power || 0;
+
+        // 属性ごとのスキル倍率アップ
+        this.element_wind_skill_add = element_wind_skill_add || 0;
+        this.element_earth_skill_add = element_earth_skill_add || 0;
+        this.element_fire_skill_add = element_fire_skill_add || 0;
+        this.element_water_skill_add = element_water_skill_add || 0;
+        this.element_normal_skill_add = element_normal_skill_add || 0;
+        this.element_holy_skill_add = element_holy_skill_add || 0;
+        this.element_dark_skill_add = element_dark_skill_add || 0;
+        this.element_ghost_skill_add = element_ghost_skill_add || 0;
+        this.element_undead_skill_add = element_undead_skill_add || 0;
+        this.element_poison_skill_add = element_poison_skill_add || 0;
+
+        // 属性ごとの固定詠唱削減
+        this.element_wind_fix_cast_div = element_wind_fix_cast_div || 0;
+        this.element_earth_fix_cast_div = element_earth_fix_cast_div || 0;
+        this.element_fire_fix_cast_div = element_fire_fix_cast_div || 0;
+        this.element_water_fix_cast_div = element_water_fix_cast_div || 0;
+        this.element_normal_fix_cast_div = element_normal_fix_cast_div || 0;
+        this.element_holy_fix_cast_div = element_holy_fix_cast_div || 0;
+        this.element_dark_fix_cast_div = element_dark_fix_cast_div || 0;
+        this.element_ghost_fix_cast_div = element_ghost_fix_cast_div || 0;
+        this.element_undead_fix_cast_div = element_undead_fix_cast_div || 0;
+        this.element_poison_fix_cast_div = element_poison_fix_cast_div || 0;
     }
 
     serialize() {
@@ -135,6 +163,10 @@ export default class CharacterStatus {
             this.element_override,
             this.sacred_gear,
             this.enhance_power,
+            this.element_wind_skill_add, this.element_earth_skill_add, this.element_fire_skill_add, this.element_water_skill_add,
+            this.element_normal_skill_add, this.element_holy_skill_add, this.element_dark_skill_add, this.element_ghost_skill_add, this.element_undead_skill_add, this.element_poison_skill_add,
+            this.element_wind_fix_cast_div, this.element_earth_fix_cast_div, this.element_fire_fix_cast_div, this.element_water_fix_cast_div,
+            this.element_normal_fix_cast_div, this.element_holy_fix_cast_div, this.element_dark_fix_cast_div, this.element_ghost_fix_cast_div, this.element_undead_fix_cast_div, this.element_poison_fix_cast_div,
         ];
     }
 
@@ -211,6 +243,28 @@ export default class CharacterStatus {
             this.element_override + adj.element_override,
             this.sacred_gear + adj.sacred_gear,
             this.enhance_power + adj.enhance_power,
+
+            this.element_wind_skill_add + adj.element_wind_skill_add,
+            this.element_earth_skill_add + adj.element_earth_skill_add,
+            this.element_fire_skill_add + adj.element_fire_skill_add,
+            this.element_water_skill_add + adj.element_water_skill_add,
+            this.element_normal_skill_add + adj.element_normal_skill_add,
+            this.element_holy_skill_add + adj.element_holy_skill_add,
+            this.element_dark_skill_add + adj.element_dark_skill_add,
+            this.element_ghost_skill_add + adj.element_ghost_skill_add,
+            this.element_undead_skill_add + adj.element_undead_skill_add,
+            this.element_poison_skill_add + adj.element_poison_skill_add,
+
+            this.element_wind_fix_cast_div + adj.element_wind_fix_cast_div,
+            this.element_earth_fix_cast_div + adj.element_earth_fix_cast_div,
+            this.element_fire_fix_cast_div + adj.element_fire_fix_cast_div,
+            this.element_water_fix_cast_div + adj.element_water_fix_cast_div,
+            this.element_normal_fix_cast_div + adj.element_normal_fix_cast_div,
+            this.element_holy_fix_cast_div + adj.element_holy_fix_cast_div,
+            this.element_dark_fix_cast_div + adj.element_dark_fix_cast_div,
+            this.element_ghost_fix_cast_div + adj.element_ghost_fix_cast_div,
+            this.element_undead_fix_cast_div + adj.element_undead_fix_cast_div,
+            this.element_poison_fix_cast_div + adj.element_poison_fix_cast_div,
         );
     }
 }

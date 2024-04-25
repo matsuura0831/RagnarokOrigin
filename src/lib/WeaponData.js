@@ -93,10 +93,8 @@ const DATA = [
 
             return new class extends MagicDamageHandler {
                 run(status, ismin, ismax) {
-                    if(skill.element == '水') {
-                        status.skill_add += w.refine_effects.skill_mul_up_water;
-                        status.fix_cast_div += w.refine_effects.fcast_water;
-                    }
+                    status.element_water_skill_add += w.refine_effects.skill_mul_up_water;
+                    status.element_water_fix_cast_div += w.refine_effects.fcast_water;
 
                     let as = AutoSpellData.getAutoSpell(target, 1);
                     as.mul = w.refine_effects.bubble_mul;
