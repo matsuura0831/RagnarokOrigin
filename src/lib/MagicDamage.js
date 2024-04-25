@@ -119,9 +119,10 @@ class MagicDamageCalculator {
             "毒": this.status.element_poison_skill_add,
         }[this.skill.element];
 
-        const mul = this.skill.placeable ? this.skill.mul : this.skill.mul * this.skill.hit;
+        const mul = this.skill.mul;
+        const mul_add = (this.status.skill_add + element_value) / this.skill.hit;
 
-        const v = (mul + this.status.skill_add + element_value)
+        const v = (mul + mul_add)
             * (100 + this.status.skill_up) / 100
             * (100 + this.status.specific_skill_up) / 100
             * (100 + this.status.custom_skill_up) / 100;
@@ -137,7 +138,7 @@ class MagicDamageCalculator {
     }
 
     total_extra_damage() {
-        const add = this.skill.placeable ? this.skill.add : this.skill.add* this.skill.hit;
+        const add = this.skill.add;
 
         const v = this.status.extra_damage + add;
         return v;
@@ -163,6 +164,7 @@ class MagicDamageCalculator {
     get(...args) {
         const atk = this.total_atk();
 
+        const n = this.skill.placeable ? 1 : this.skill.hit;
         let d = Math.floor(
             (
                 Math.floor(
@@ -179,6 +181,7 @@ class MagicDamageCalculator {
             )
             * this.total_pve_damage_up() / 100
             * this.total_enhance_power() / 100
+            * n
         );
 
         if (this.status.last_up > 0 && this.ismin == false) {
@@ -378,9 +381,8 @@ class MagicDamageCalculator {
         let base_dmg = this.get();
         if(this.skill.placeable) base_dmg *= this.skill.hit;
 
-
         ret.push([hit_per_sec_with_dc, cast_per_sec * base_dmg]);
-        console.log(`${this.skill.name} Lv.${this.skill.level} prob=100, hit=${this.skill.hit}, placeable=${this.skill.placeable}, n=${hit_per_sec_with_dc}, d=${base_dmg.toLocaleString()}, dps=${(cast_per_sec*base_dmg).toLocaleString()}`);
+        console.log(`${this.skill.name} Lv.${this.skill.level} prob=100, hit=${this.skill.hit}, placeable=${this.skill.placeable}, n=${cast_per_sec}, d=${base_dmg.toLocaleString()}, dps=${(cast_per_sec*base_dmg).toLocaleString()}`);
 
         // AS
         
