@@ -236,6 +236,14 @@ const DATA = [
             { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
+    {
+        name: "蝶々の戯れ",
+        show: true,
+        records: [
+            { level: 1, prob: 5, ct: 5, spells: [ { spell: "ストームガスト", level: 1, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
+        ],
+    },
 
 
 ];
