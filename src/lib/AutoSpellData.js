@@ -1,7 +1,7 @@
 import { MagicDamageHandler } from "@/lib/MagicDamage";
 
 class AutoSpellSkill {
-    static VERSION = [3, 0];    // major, minor
+    static VERSION = [4, 0];    // major, minor
 
     constructor(
         name, level, prob, ct, spells,
@@ -244,8 +244,14 @@ const DATA = [
             { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
-
-
+    {
+        name: "飛沫の呪文書",
+        show: true,
+        records: [
+            { level: 1, prob: 3, ct: 0.5, spells: [ { spell: "ウォーターボール", level: 5, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
+        ],
+    },
 ];
 
 const CONVERT_DATA = {};
@@ -255,7 +261,6 @@ DATA.forEach(({ name, records=[], target_skill = undefined, target_element = und
 
     records.forEach(({ level, prob, ct, spells=[], multi_spells=[], merge_spells=[] }) => {
         let instance = new AutoSpellSkill(name, level, prob, ct, spells, target_skill, target_element);
-
 
         m[level] = {
             instance: instance,

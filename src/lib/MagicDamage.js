@@ -331,7 +331,7 @@ class MagicDamageCalculator {
                 // 発動条件を満たす判定回数を計算する
                 let n = 0;
                 if (target_skill) {
-                    n = _reduce_sum(CACHE_SKILL[target_skill], "hit");
+                    n = _reduce_sum(CACHE_SKILL[target_skill], "cast");
                 } else if (target_element) {
                     n = _reduce_sum(CACHE_ELEMENT[target_element], "hit");
                 } else {
@@ -358,6 +358,7 @@ class MagicDamageCalculator {
                         const pp = (1.0 - np);
                         const e_hit = pp * (skill.hit / ct);  // CTが2秒ならヒット数は0.5倍、CTが0.5秒ならヒット数は2倍
 
+                        CACHE_SKILL[skill.name][k].cast = pp / ct; // 期待キャスト = 期待発動率 / CT (100%発動だけどCT2秒だと0.5キャスト)
                         CACHE_SKILL[skill.name][k].prob = pp;
                         CACHE_SKILL[skill.name][k].hit = e_hit;
                         CACHE_ELEMENT[skill.element][k].hit = e_hit;
