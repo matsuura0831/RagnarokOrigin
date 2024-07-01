@@ -252,6 +252,14 @@ const DATA = [
             { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
+    {
+        name: "ラビットベレー",
+        show: true,
+        records: [
+            { level: 1, prob: 5, ct: 3, spells: [ { spell: "メテオストーム", level: 3, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
+        ],
+    },
 ];
 
 const CONVERT_DATA = {};
