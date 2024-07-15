@@ -53,6 +53,7 @@ const DATA = [
     {
         name: "ソウルストライク",
         element: "念",
+        motion: 0.74,
         records: [
             { level: 5, mul: 110, add: 40, vcast: 0.41, fcast: 0.10, delay: 2.0, ct: 0, hit: 5, time: 0 },
             { level: 4, mul: 112.5, add: 40, vcast: 0.41, fcast: 0.10, delay: 1.8, ct: 0, hit: 4, time: 0 },
@@ -88,6 +89,7 @@ const DATA = [
     {
         name: "ファイアーボルト",
         element: "火",
+        motion: 0.74,
         can_dc_cast: true,
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
@@ -122,6 +124,7 @@ const DATA = [
     {
         name: "コールドボルト",
         element: "水",
+        motion: 0.74,
         can_dc_cast: true,
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
@@ -138,6 +141,7 @@ const DATA = [
     },
     {
         name: "ウォーターボール",
+        motion: 0.74,
         element: "水",
         records: [
             { level: 10, mul: 1500/15, add: 1005/15, vcast: 3.51, fcast: 0.88, delay: 0.0, ct: 0, hit: 15, time: 0 },
@@ -171,8 +175,26 @@ const DATA = [
         ]
     },
     {
+        name: "フロストノヴァ",
+        placeable: true,
+        element: "水",
+        records: [
+            { level: 10, mul: 200, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  9, mul: 190, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  8, mul: 180, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  7, mul: 170, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  6, mul: 160, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  5, mul: 150, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  4, mul: 140, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  3, mul: 130, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  2, mul: 120, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+            { level:  1, mul: 110, add: 0, vcast: 0.73, fcast: 0.8, delay: 0.5, ct: 0, hit: 1, time: 0 },
+        ]
+    },
+    {
         name: "ライトニングボルト",
         element: "風",
+        motion: 0.74,
         can_dc_cast: true,
         records: [
             { level: 10, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
@@ -191,16 +213,16 @@ const DATA = [
         name: "ユピテルサンダー",
         element: "風",
         records: [
-            { level: 10, mul: 1200/12, add: 800/12, vcast: 5.02, fcast: 0.40, delay: 0.0, ct: 0, hit: 12, time: 0 },
-            { level: 9, mul: 1080/11, add: 648/11, vcast: 4.64, fcast: 0.40, delay: 0.0, ct: 0, hit: 11, time: 0 },
-            { level: 8, mul: 960/10, add: 512/10, vcast: 4.25, fcast: 0.40, delay: 0.0, ct: 0, hit: 10, time: 0 },
-            { level: 7, mul: 840/9, add: 392/9, vcast: 3.88, fcast: 0.40, delay: 0.0, ct: 0, hit: 9, time: 0 },
-            { level: 6, mul: 720/8, add: 288/8, vcast: 3.49, fcast: 0.40, delay: 0.0, ct: 0, hit: 8, time: 0 },
-            { level: 5, mul: 600/7, add: 200/7, vcast: 3.12, fcast: 0.40, delay: 0.0, ct: 0, hit: 7, time: 0 },
-            { level: 4, mul: 480/6, add: 128/6, vcast: 2.73, fcast: 0.40, delay: 0.0, ct: 0, hit: 6, time: 0 },
-            { level: 3, mul: 360/5, add: 72/5, vcast: 2.36, fcast: 0.40, delay: 0.0, ct: 0, hit: 5, time: 0 },
-            { level: 2, mul: 240/4, add: 32/4, vcast: 1.97, fcast: 0.40, delay: 0.0, ct: 0, hit: 4, time: 0 },
-            { level: 1, mul: 120/3, add: 8/3, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 3, time: 0 },
+            { level: 10, mul: 1200, add: 800, vcast: 5.02, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 9, mul: 1080, add: 648, vcast: 4.64, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 8, mul: 960, add: 512, vcast: 4.25, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 7, mul: 840, add: 392, vcast: 3.88, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 6, mul: 720, add: 288, vcast: 3.49, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 5, mul: 600, add: 200, vcast: 3.12, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 4, mul: 480, add: 128, vcast: 2.73, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 3, mul: 360, add: 72, vcast: 2.36, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 2, mul: 240, add: 32, vcast: 1.97, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
+            { level: 1, mul: 120, add: 8, vcast: 1.60, fcast: 0.40, delay: 0.0, ct: 0, hit: 1, time: 0 },
         ]
     },
     {
@@ -224,6 +246,7 @@ const DATA = [
     {
         name: "アーススパイク",
         element: "地",
+        motion: 0.74,
         records: [
             { level: 5, mul: 1000, add: 800, vcast: 3.01, fcast: 0.05, delay: 1.6, ct: 0, hit: 1, time: 0 },
             { level: 4, mul: 800, add: 512, vcast: 2.52, fcast: 0.07, delay: 1.4, ct: 0, hit: 1, time: 0 },
@@ -296,6 +319,7 @@ const DATA = [
     {
         name: "フォースアロー",
         element: "無",
+        motion: 0.74,
         records: [
             { level: 10, mul: 2000, add: 800, fcast: 0.05, vcast: 3.11, delay: 1.6, ct: 0, hit: 1, time: 0 },
             { level: 9, mul: 1880, add: 648, fcast: 0.06, vcast: 2.87, delay: 1.5, ct: 0, hit: 1, time: 0 },
@@ -420,12 +444,52 @@ const DATA = [
         ],
     },
 
+    // Warlock
+    /*
+    {
+        name: "クリムゾンロック",
+        element: "火",
+        records: [
+            { level: 5, mul: 1500, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 1, time: 0 },
+            { level: 4, mul: 1280, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 1, time: 0 },
+            { level: 3, mul: 1060, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 1, time: 0 },
+            { level: 2, mul:  840, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 1, time: 0 },
+            { level: 1, mul:  620, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 1, time: 0 },
+        ]
+    },
+    {
+        // TODO 
+        name: "コメット",
+        element: "火",
+        records: [
+            { level: 1, mul:  620, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 1, time: 0 },
+        ]
+    },
+    {
+        name: "ライトニングコンボ",
+        element: "風",
+        records: [
+            { level: 5, mul: 400, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 4, time: 0 },
+            { level: 4, mul: 350, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 4, time: 0 },
+            { level: 3, mul: 300, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 4, time: 0 },
+            { level: 2, mul: 250, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 4, time: 0 },
+            { level: 1, mul: 200, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 4, time: 0 },
+        ]
+    },
+    {
+        name: "チェーンライトニング",
+        element: "風",
+        records: [
+            { level: 1, mul: 810, add: 0, fcast: 0.1, vcast: 0.4, delay: 1.2, ct: 1.2, hit: 4, time: 0 },
+        ]
+    },
+    */
 ];
 
 const CONVERT_DATA = {};
-DATA.forEach(({ name, element, records, ignore_mdef = 0, can_dc_cast = false, placeable = false }) => {
+DATA.forEach(({ name, element, records, ignore_mdef = 0, can_dc_cast = false, placeable = false, motion = 0.8 }) => {
     let m = {};
-    records.forEach(({ level, hit, mul, add = 0, vcast = 0.0, fcast = 0.0, delay = 0.0, ct = 0.0, time = 0.0, motion = 0.7 }) => {
+    records.forEach(({ level, hit, mul, add = 0, vcast = 0.0, fcast = 0.0, delay = 0.0, ct = 0.0, time = 0.0 }) => {
         m[level] = new MagicSkill(name, element, level, ignore_mdef, mul, add, vcast, fcast, delay, ct, hit, time, motion, can_dc_cast, placeable);
     });
     CONVERT_DATA[name] = m;
