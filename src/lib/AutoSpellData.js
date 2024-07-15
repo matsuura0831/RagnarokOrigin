@@ -260,6 +260,22 @@ const DATA = [
             { level: 0, prob: 0, ct: 0, spells: [] },
         ],
     },
+    {
+        name: "トロピカルリゾート",
+        show: true,
+        records: [
+            { level: 1, prob: 5, ct: 0.5, spells: [ { spell: "フロストノヴァ", level: 5, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
+        ],
+    },
+    {
+        name: "リゾートペイント",
+        show: true,
+        records: [
+            { level: 1, prob: 5, ct: 0.5, spells: [ { spell: "ユピテルサンダー", level: 6, prob: 100 }, ]},
+            { level: 0, prob: 0, ct: 0, spells: [] },
+        ],
+    },
 ];
 
 const CONVERT_DATA = {};
